@@ -1,0 +1,104 @@
+{%- liquid
+  assign product = block.settings.product
+  assign product_form_id = 'product-form-' | append: section.id
+-%}
+
+{%- if product.selling_plan_groups.size > 0 -%}
+  <selling-plan-picker
+    id="selling-plan-picker-{{ section.id }}"
+    client:idle
+    {{ block.shopify_attributes }}
+  >
+    <fieldset class="grid gap-3">
+      <legend class="text-lead font-body-weight-bold pb-2">Purchase options</legend>
+
+      {%- comment -%} One-time purchase option {%- endcomment -%}
+      <label class="has-[:checked]:border-primary/50 flex cursor-pointer items-center gap-3 rounded border border-white/20 px-4 py-3">
+        <input
+          type="radio"
+          name="purchase_option"
+          value=""
+          checked
+          class="accent-primary"
+        >
+        <span>One-time purchase</span>
+      </label>
+
+      {%- for group in product.selling_plan_groups -%}
+        {%- assign first_selling_plan = group.selling_plans | first -%}
+        <label class="has-[:checked]:border-primary/50 flex cursor-pointer items-center gap-3 rounded border border-white/20 px-4 py-3">
+          <input
+            type="radio"
+            name="purchase_option"
+            value="{{ group.id }}"
+            data-default-plan="{{ first_selling_plan.id }}"
+            class="accent-primary"
+          >
+          <span class="flex flex-col">
+            <span>{{ group.name }}</span>
+            {%- assign first_plan = group.selling_plans | first -%}
+            {%- assign adjustment = first_plan.price_adjustments[0] -%}
+            {%- if adjustment.value > 0 -%}
+              <span class="text-sm text-white/60">
+                {%- case adjustment.value_type -%}
+                  {%- when 'percentage' -%}
+                    Subscribe & Save {{ adjustment.value }}%
+                  {%- when 'fixed_amount' -%}
+                    Subscribe & Save {{ adjustment.value | money }}
+                  {%- when 'price' -%}
+                    {{ adjustment.value | money }} each
+                {%- endcase -%}
+              </span>
+            {%- endif -%}
+          </span>
+        </label>
+
+        {%- if group.selling_plans.size > 1 -%}
+          <fieldset class="ml-8 grid gap-2" data-plan-group="{{ group.id }}" hidden>
+            <legend class="sr-only">{{ group.name }} frequency</legend>
+            {%- for plan in group.selling_plans -%}
+              <label class="flex cursor-pointer items-center gap-3">
+                <input
+                  type="radio"
+                  name="selling_plan_group_{{ group.id }}"
+                  value="{{ plan.id }}"
+                  {% if forloop.first %}
+                    checked
+                  {% endif %}
+                  class="accent-primary"
+                >
+                <span>{{ plan.name }}</span>
+              </label>
+            {%- endfor -%}
+          </fieldset>
+        {%- endif -%}
+      {%- endfor -%}
+    </fieldset>
+
+    <input
+      type="hidden"
+      name="selling_plan"
+      value=""
+      form="{{ product_form_id }}"
+    >
+  </selling-plan-picker>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Selling plan picker",
+  "tag": null,
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Selling plan picker"
+    }
+  ]
+}
+{% endschema %}

@@ -33,6 +33,12 @@
                 "product": "{{ closest.product }}"
               }
             },
+            "selling_plan_picker": {
+              "type": "selling-plan-picker",
+              "settings": {
+                "product": "{{ closest.product }}"
+              }
+            },
             "buy_buttons": {
               "type": "buy-buttons",
               "settings": {
@@ -48,6 +54,7 @@
             "vendor",
             "price",
             "variant_picker",
+            "selling_plan_picker",
             "buy_buttons",
             "tab"
           ]

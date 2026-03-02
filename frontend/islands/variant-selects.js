@@ -91,6 +91,19 @@ export default class VariantSelects extends window.HTMLElement {
         )
         if (source && destination) destination.innerHTML = source.innerHTML
 
+        const sellingPlanDest = document.getElementById(
+          `selling-plan-picker-${this.dataset.section}`
+        )
+        const sellingPlanSource = html.getElementById(
+          `selling-plan-picker-${
+            this.dataset.originalSection
+              ? this.dataset.originalSection
+              : this.dataset.section
+          }`
+        )
+        if (sellingPlanSource && sellingPlanDest)
+          sellingPlanDest.innerHTML = sellingPlanSource.innerHTML
+
         const price = document.getElementById(`price-${this.dataset.section}`)
 
         if (price) price.classList.remove('invisible')
