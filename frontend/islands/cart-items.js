@@ -1,3 +1,16 @@
+/**
+ * @file `<cart-items>` — manages line-item quantity updates on the full cart page.
+ *
+ * Listens for `change` events (debounced) on quantity inputs and POSTs to
+ * the Shopify Cart API. After a successful update the relevant page sections
+ * are re-rendered from the response and ARIA live regions are refreshed.
+ *
+ * @fires cart:updating - Before the fetch request (`{ line, quantity }`)
+ * @fires cart:updated  - After successful update (`{ cart, sections }`)
+ * @fires cart:removing - When quantity is set to 0 (`{ line }`)
+ * @fires cart:removed  - After successful removal (`{ line, cart, sections }`)
+ * @fires cart:error    - On fetch failure (`{ error, action }`)
+ */
 import { debounce, fetchConfig } from '@/lib/utils'
 import { trapFocus } from '@/lib/a11y'
 import { dispatchCartEvent } from '@/lib/cart-events'
@@ -29,6 +42,11 @@ export default class CartItems extends window.HTMLElement {
     )
   }
 
+  /**
+   * Sections to re-render after a cart update. Subclasses override this to
+   * target different DOM containers (e.g. the cart drawer).
+   * @returns {{ id: string, section: string, selector: string }[]}
+   */
   getSectionsToRender() {
     return [
       {
@@ -54,6 +72,12 @@ export default class CartItems extends window.HTMLElement {
     ]
   }
 
+  /**
+   * Update a line item's quantity via the Cart API and re-render sections.
+   * @param {string} line - 1-based line item index
+   * @param {string|number} quantity - New quantity (0 = remove)
+   * @param {string} [name] - Input name used to restore focus after DOM swap
+   */
   updateQuantity(line, quantity, name) {
     this.enableLoading(line)
 
@@ -151,6 +175,13 @@ export default class CartItems extends window.HTMLElement {
       })
   }
 
+  /**
+   * Update ARIA live regions to announce quantity changes or errors.
+   * If the item count hasn't changed (quantity limit hit), shows an error
+   * message on the affected line item.
+   * @param {string} line - 1-based line item index
+   * @param {number} itemCount - Total item count from the updated cart
+   */
   updateLiveRegions(line, itemCount) {
     if (this.currentItemCount === itemCount) {
       const lineItemError =

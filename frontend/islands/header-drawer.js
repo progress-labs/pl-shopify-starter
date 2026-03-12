@@ -1,3 +1,11 @@
+/**
+ * @file `<header-drawer>` — slide-out mobile navigation drawer.
+ *
+ * Extends {@link DetailsModal} with a CSS class-driven open animation
+ * (`menu-opening`) and a 400ms `requestAnimationFrame` close delay to
+ * allow the closing transition to complete before removing the `open`
+ * attribute. Applies responsive overflow locking (`lg:overflow-auto`).
+ */
 import { removeTrapFocus, trapFocus } from '@/lib/a11y'
 import DetailsModal from './details-modal'
 
