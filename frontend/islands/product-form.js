@@ -1,3 +1,27 @@
+/**
+ * Product Form Island
+ *
+ * Expected DOM:
+ *   <product-form client:idle>
+ *     <form id="product-form-{sectionId}" data-type="add-to-cart-form">
+ *       <input type="hidden" name="id" value="{variantId}" disabled>
+ *       <input type="hidden" name="quantity" value="1">
+ *       <input type="hidden" name="selling_plan" value="{sellingPlanId}">
+ *       <input type="hidden" name="properties[key]" value="value">
+ *       <button type="submit" name="add"><span>Add to cart</span></button>
+ *       <div data-error-message hidden></div>
+ *     </form>
+ *   </product-form>
+ *
+ * Form fields:
+ *   - id {string}                  - Variant ID (required, set by variant-selects/variant-radios)
+ *   - quantity {number}            - Defaults to 1 if missing
+ *   - selling_plan {string}        - Set by selling-plan-picker, empty for one-time purchase
+ *   - properties[{key}] {string}   - Arbitrary line item properties
+ *
+ * Events consumed: cart:added, cart:error
+ * Events dispatched: cart:add
+ */
 import { dispatchCartEvent, onCartEvent } from '@/lib/cart-events'
 
 class ProductForm extends window.HTMLElement {
