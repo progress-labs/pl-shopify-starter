@@ -16,6 +16,28 @@
  */
 
 /**
+ * @typedef {Object} CartAddDetail
+ * @property {number|string} variantId - Shopify variant ID (coerced to number before API call)
+ * @property {number} [quantity=1] - Quantity to add
+ * @property {Object<string, string>} [properties] - Line item properties
+ * @property {number|string} [sellingPlanId] - Selling plan ID for subscriptions (coerced to number)
+ */
+
+/**
+ * @typedef {Object} CartAddedDetail
+ * @property {number} variantId
+ * @property {number} quantity
+ * @property {Object} response - /cart/add.js response (line items, not the full cart object)
+ * @property {Object<string, string|null>} sections - Re-rendered section HTML keyed by section ID
+ */
+
+/**
+ * @typedef {Object} CartErrorDetail
+ * @property {string} error - Error message
+ * @property {'add'|'update'|'remove'} action - Which action failed
+ */
+
+/**
  * Dispatches a cart event on the document
  * @param {string} name - Event name without 'cart:' prefix
  * @param {object} detail - Event payload

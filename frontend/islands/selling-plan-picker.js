@@ -1,3 +1,20 @@
+/**
+ * Selling Plan Picker Island
+ *
+ * Expected DOM:
+ *   <selling-plan-picker client:idle>
+ *     <input type="radio" name="purchase_option" value="" checked>        <!-- one-time -->
+ *     <input type="radio" name="purchase_option" value="{groupId}"
+ *            data-default-plan="{planId}">                                <!-- subscription group -->
+ *     <fieldset data-plan-group="{groupId}" hidden>                       <!-- multi-plan group -->
+ *       <input type="radio" name="selling_plan_group_{groupId}" value="{planId}">
+ *     </fieldset>
+ *     <input type="hidden" name="selling_plan" form="product-form-{sectionId}">
+ *   </selling-plan-picker>
+ *
+ * Output: Updates the hidden selling_plan input with the selected plan ID
+ *         (empty string for one-time purchase).
+ */
 class SellingPlanPicker extends window.HTMLElement {
   constructor() {
     super()
