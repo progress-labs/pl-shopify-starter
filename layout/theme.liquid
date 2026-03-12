@@ -58,6 +58,13 @@
       }
     {% endstyle %}
 
+    <script>
+      {%- if settings.sentry_dsn != blank -%}
+        window.__SENTRY_DSN__ = {{ settings.sentry_dsn | json }};
+      {%- endif -%}
+      window.__SHOPIFY_DESIGN_MODE__ = {{ request.design_mode | json }};
+    </script>
+
     {%- liquid
       render 'vite-tag' with 'theme.css', preload_stylesheet: true
       render 'vite-tag' with 'theme.js'

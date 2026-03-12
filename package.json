@@ -25,5 +25,8 @@
     "tailwindcss": "^4.1.11",
     "vite": "^7.2.4",
     "vite-plugin-shopify": "^4.1.0"
+  },
+  "dependencies": {
+    "@sentry/browser": "^10.43.0"
   }
 }
