@@ -1,3 +1,5 @@
+import { captureException } from '@/lib/sentry.js'
+
 class ProductRecommendations extends window.HTMLElement {
   connectedCallback() {
     fetch(this.dataset.url)
@@ -12,6 +14,10 @@ class ProductRecommendations extends window.HTMLElement {
         }
       })
       .catch((e) => {
+        captureException(e, {
+          tags: { component: 'product-recommendations' },
+          extra: { url: this.dataset.url },
+        })
         console.error(e)
       })
   }
