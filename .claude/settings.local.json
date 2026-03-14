@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(npx eslint:*)",
+      "Bash(npx vite:*)",
+      "WebSearch",
+      "WebFetch(domain:shopify.dev)",
+      "WebFetch(domain:community.shopify.dev)",
+      "WebFetch(domain:ec-penguin.com)",
+      "WebFetch(domain:nozzlegear.com)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(gh pr:*)",
+      "Bash(node:*)",
+      "Bash(git status:*)",
+      "Bash(git checkout:*)",
+      "Bash(wc:*)",
+      "Bash(npm install:*)",
+      "WebFetch(domain:www.figma.com)",
+      "Bash(grep:*)",
+      "Bash(claude mcp:*)",
+      "Bash(git log:*)",
+      "mcp__figma-remote-mcp__get_design_context"
+    ]
+  }
+}
