@@ -2,9 +2,13 @@ import { defineConfig } from 'vite'
 import shopify from 'vite-plugin-shopify'
 import tailwindcss from '@tailwindcss/vite'
 
+const shopifyConfig = {
+  // tunnel: true
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [shopify({ tunnel: true }), tailwindcss()],
+  plugins: [shopify(shopifyConfig), tailwindcss()],
   build: {
     rollupOptions: {
       output: {
