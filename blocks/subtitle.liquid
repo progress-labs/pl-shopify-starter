@@ -1,0 +1,28 @@
+<p
+  class="text-[0.9375rem] font-medium uppercase leading-[1.4] tracking-[0.15em]"
+  data-slot="subtitle"
+  {{ block.shopify_attributes }}
+>
+  {{- block.settings.text | escape -}}
+</p>
+
+{% schema %}
+{
+  "name": "Subtitle",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "default": "Subtitle",
+      "label": "Text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subtitle",
+      "category": "Basic"
+    }
+  ]
+}
+{% endschema %}
