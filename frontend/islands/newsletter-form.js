@@ -27,10 +27,6 @@ class NewsletterForm extends window.HTMLElement {
     this.emailInput = this.querySelector('input[name="email"]')
     this.messageEl = this.querySelector('[data-message]')
     this.listId = this.getAttribute('list-id')
-    console.log('log attributes: ', {
-      listId: this.listId,
-      form: this.form
-    })
 
     if (!this.listId) {
       console.error('newsletter-form: missing required list-id attribute')
@@ -42,8 +38,6 @@ class NewsletterForm extends window.HTMLElement {
 
   onSubmit(e) {
     e.preventDefault()
-
-    console.log('onSubmit', this.listId)
 
     const email = this.emailInput.value
     this.setAttribute('loading', '')
