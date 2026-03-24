@@ -1,3 +1,29 @@
+/**
+ * Variant Selects Island
+ *
+ * Expected data attributes:
+ *   - data-section {string}           - Section ID for targeting DOM elements
+ *   - data-url {string}               - Product URL (e.g. /products/my-product)
+ *   - data-original-section {string}  - Original section ID (for theme editor)
+ *   - data-update-url {string}        - "false" to skip URL updates
+ *
+ * Expects a <script type="application/json"> child containing the product
+ * variants array serialized via {{ product.variants | json }}.
+ *
+ * @typedef {Object} VariantData
+ * @property {number} id - Variant ID
+ * @property {string} title - e.g. "Red / Small"
+ * @property {number} price - Price in cents
+ * @property {number|null} compare_at_price - Original price in cents
+ * @property {boolean} available - In stock
+ * @property {string[]} options - Option values matching product.options order
+ * @property {string} sku
+ * @property {string} barcode
+ * @property {{url: string, aspect_ratio: number, alt: string, width: number, height: number}|null} featured_image
+ * @property {boolean} requires_selling_plan - Whether a selling plan is mandatory
+ * @property {Object[]} selling_plan_allocations - Available selling plan options for this variant
+ * @property {Object|null} selected_selling_plan_allocation - Currently selected selling plan
+ */
 export default class VariantSelects extends window.HTMLElement {
   constructor() {
     super()
@@ -144,6 +170,7 @@ export default class VariantSelects extends window.HTMLElement {
     if (price) price.classList.add('invisible')
   }
 
+  /** @returns {VariantData[]} */
   getVariantData() {
     this.variantData =
       this.variantData ||

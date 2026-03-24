@@ -1,3 +1,15 @@
+/**
+ * @file Accessibility helpers for focus management and disclosure widgets.
+ */
+
+/**
+ * Returns all visible, focusable elements within a container.
+ * Uses a broad selector covering interactive elements: summary, anchors,
+ * enabled buttons/inputs/selects/textareas, tabbable elements, draggables,
+ * areas, objects, and iframes. Filters out elements with zero dimensions.
+ * @param {HTMLElement} container
+ * @returns {HTMLElement[]}
+ */
 export function getFocusableElements(container) {
   const elements = Array.from(
     container.querySelectorAll(
@@ -17,8 +29,19 @@ export function getFocusableElements(container) {
   )
 }
 
+/**
+ * Shared handler map for the active focus trap. Stores `focusin`, `focusout`,
+ * and `keydown` listeners so they can be removed by `removeTrapFocus`.
+ * @type {{ focusin?: EventListener, focusout?: EventListener, keydown?: EventListener }}
+ */
 const trapFocusHandlers = {}
 
+/**
+ * Trap keyboard focus within a container. Tab and Shift+Tab wrap between the
+ * first and last focusable elements. Any previous trap is removed first.
+ * @param {HTMLElement} container - Element whose focusable children form the trap
+ * @param {HTMLElement} [elementToFocus=container] - Element to focus immediately
+ */
 export function trapFocus(container, elementToFocus = container) {
   const elements = getFocusableElements(container)
   const first = elements[0]
@@ -66,6 +89,10 @@ export function trapFocus(container, elementToFocus = container) {
   elementToFocus.focus()
 }
 
+/**
+ * Remove the active focus trap and optionally return focus to an element.
+ * @param {HTMLElement | null} [elementToFocus=null] - Element to focus after removal
+ */
 export function removeTrapFocus(elementToFocus = null) {
   document.removeEventListener('focusin', trapFocusHandlers.focusin)
   document.removeEventListener('focusout', trapFocusHandlers.focusout)
@@ -74,6 +101,11 @@ export function removeTrapFocus(elementToFocus = null) {
   if (elementToFocus) elementToFocus.focus()
 }
 
+/**
+ * Keyup handler that closes the nearest open `<details>` on Escape.
+ * Updates `aria-expanded` and returns focus to the `<summary>`.
+ * @param {KeyboardEvent} event
+ */
 export function onKeyUpEscape(event) {
   if (event.code.toUpperCase() !== 'ESCAPE') return
 
@@ -86,6 +118,12 @@ export function onKeyUpEscape(event) {
   summaryElement.focus()
 }
 
+/**
+ * Enhance `<summary>` elements with ARIA disclosure semantics.
+ * Sets `role="button"`, syncs `aria-expanded`, adds `aria-controls` when
+ * the sibling content has an `id`, and registers Escape-to-close.
+ * @param {NodeListOf<HTMLElement>} summaries - `<summary>` elements to enhance
+ */
 export function initDisclosureWidgets(summaries) {
   summaries.forEach((summary) => {
     summary.setAttribute('role', 'button')

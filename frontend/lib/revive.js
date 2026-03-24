@@ -1,22 +1,20 @@
 /**
- * Island Hydration Engine
+ * @file Island hydration engine for lazy-loading Web Components.
  *
- * Lazily hydrates Web Component islands using Astro-style client directives.
- * On page load, walks the DOM to discover custom elements that have a
- * matching module in `frontend/islands/`. A `MutationObserver` watches for
- * dynamically added nodes so late-injected islands are also hydrated.
+ * Walks the DOM (and watches for mutations) to discover custom elements that
+ * have a corresponding module in `frontend/islands/`. Hydration is deferred
+ * based on Astro-style client directives:
  *
- * Directives (evaluated in order on each element):
- * - `client:visible` — defers import until the element enters the viewport (IntersectionObserver)
- * - `client:media="(query)"` — defers import until the media query matches
- * - `client:idle` — defers import until the main thread is idle (requestIdleCallback, 200 ms fallback)
+ * - `client:visible` — hydrate when the element enters the viewport (IntersectionObserver)
+ * - `client:media="(query)"` — hydrate when the media query matches
+ * - `client:idle` — hydrate when the main thread is idle (requestIdleCallback)
  *
- * If no directive is present the module is imported immediately.
+ * If no directive is present the island hydrates immediately on discovery.
  */
 
 /**
  * Resolves when the given media query matches.
- * @param {object} options
+ * @param {Object} options
  * @param {string} options.query - CSS media query string
  * @returns {Promise<boolean>}
  */
@@ -33,8 +31,8 @@ function media({ query }) {
 
 /**
  * Resolves when the element enters the viewport.
- * @param {object} options
- * @param {Element} options.element - DOM element to observe
+ * @param {Object} options
+ * @param {HTMLElement} options.element - Element to observe
  * @returns {Promise<boolean>}
  */
 function visible({ element }) {
@@ -53,8 +51,8 @@ function visible({ element }) {
 }
 
 /**
- * Resolves when the main thread is idle.
- * Falls back to a 200 ms timeout when `requestIdleCallback` is unavailable.
+ * Resolves when the main thread is idle. Falls back to a 200ms timeout
+ * if `requestIdleCallback` is unavailable.
  * @returns {Promise<void>}
  */
 function idle() {
@@ -68,20 +66,20 @@ function idle() {
 }
 
 /**
- * Eager glob of all island modules.
+ * Eagerly resolved map of island modules produced by Vite's `import.meta.glob`.
  * Keys are paths like `/frontend/islands/product-form.js`; values are
- * dynamic import functions (`() => Promise<Module>`).
- * @type {Record<string, () => Promise<Module>>}
+ * dynamic import functions `() => Promise<Module>`.
+ * @type {Record<string, () => Promise<Record<string, any>>>}
  */
 export const islands = import.meta.glob('@/islands/*.js')
 
 /**
- * Boots the hydration engine.
+ * Bootstrap island hydration. Performs a depth-first walk of `document.body`
+ * to hydrate existing islands, then installs a `MutationObserver` to hydrate
+ * any islands added later (e.g. via section rendering).
  *
- * Performs an initial depth-first walk of `document.body`, then installs a
- * `MutationObserver` to hydrate any islands added after initial load.
- *
- * @param {Record<string, () => Promise<Module>>} islands - Glob map from `import.meta.glob`
+ * @param {Record<string, () => Promise<Record<string, any>>>} islands
+ *   Module map from `import.meta.glob` — keys are `/frontend/islands/<tag>.js` paths.
  */
 export function revive(islands) {
   const observer = new window.MutationObserver((mutations) => {

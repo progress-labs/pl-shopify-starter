@@ -1,3 +1,10 @@
+/**
+ * @file `<details-modal>` — full-screen modal built on a `<details>` element.
+ *
+ * Extends the native disclosure pattern with focus trapping, Escape-to-close,
+ * click-outside-to-close (including `.modal-overlay`), and body scroll lock.
+ * Base class for {@link HeaderDrawer} and {@link PasswordModal}.
+ */
 import { removeTrapFocus, trapFocus } from '@/lib/a11y'
 
 export default class DetailsModal extends window.HTMLElement {
@@ -23,6 +30,11 @@ export default class DetailsModal extends window.HTMLElement {
     return this.detailsContainer.hasAttribute('open')
   }
 
+  /**
+   * Toggle the modal on summary click. Prevents the native `<details>` toggle
+   * so open/close can be managed with focus trapping.
+   * @param {MouseEvent} event
+   */
   onSummaryClick(event) {
     event.preventDefault()
     event.target.closest('details').hasAttribute('open')
@@ -30,6 +42,10 @@ export default class DetailsModal extends window.HTMLElement {
       : this.open(event)
   }
 
+  /**
+   * Close when clicking outside the modal or on `.modal-overlay`.
+   * @param {MouseEvent} event
+   */
   onBodyClick(event) {
     if (
       !this.contains(event.target) ||
@@ -38,6 +54,10 @@ export default class DetailsModal extends window.HTMLElement {
       this.close(false)
   }
 
+  /**
+   * Open the modal, trap focus, and lock body scroll.
+   * @param {MouseEvent} event - Originating click event (used to find the `<details>`)
+   */
   open(event) {
     this.onBodyClickEvent = this.onBodyClickEvent || this.onBodyClick.bind(this)
     event.target.closest('details').setAttribute('open', true)
@@ -50,6 +70,10 @@ export default class DetailsModal extends window.HTMLElement {
     )
   }
 
+  /**
+   * Close the modal, release the focus trap, and restore body scroll.
+   * @param {boolean} [focusToggle=true] - Whether to return focus to the summary toggle
+   */
   close(focusToggle = true) {
     removeTrapFocus(focusToggle ? this.summaryToggle : null)
     this.detailsContainer.removeAttribute('open')

@@ -1,3 +1,12 @@
+/**
+ * @file `<cart-note>` — persists cart note changes to the Shopify Cart API.
+ *
+ * Listens for `change` events on its child textarea/input and POSTs the
+ * updated note to `window.routes.cart_update_url`.
+ *
+ * @fires cart:note-updated - On success (`{ note, cart }`)
+ * @fires cart:error        - On failure (`{ error, action: 'note-update' }`)
+ */
 import { fetchConfig } from '@/lib/utils'
 import { dispatchCartEvent } from '@/lib/cart-events'
 
