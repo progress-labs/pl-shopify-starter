@@ -1,3 +1,6 @@
+import { captureException } from '@/lib/sentry.js'
+
+
 /**
  * @file `<product-recommendations>` — fetches and renders product recommendations.
  *
@@ -8,6 +11,7 @@
  *
  * @attr data-url - Shopify product recommendations endpoint URL (required)
  */
+
 class ProductRecommendations extends window.HTMLElement {
   connectedCallback() {
     fetch(this.dataset.url)
@@ -22,6 +26,10 @@ class ProductRecommendations extends window.HTMLElement {
         }
       })
       .catch((e) => {
+        captureException(e, {
+          tags: { component: 'product-recommendations' },
+          extra: { url: this.dataset.url },
+        })
         console.error(e)
       })
   }
