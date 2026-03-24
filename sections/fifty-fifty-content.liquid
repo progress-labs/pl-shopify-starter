@@ -1,0 +1,216 @@
+{%- liquid
+  assign loading = 'lazy'
+  assign preload = false
+  assign fetchpriority = 'auto'
+  if section.index0 == 0
+    assign loading = 'eager'
+    assign preload = true
+    assign fetchpriority = 'high'
+  endif
+
+  assign height_class = ''
+  case section.settings.section_height
+    when 'md'
+      assign height_class = 'lg:min-h-[600px]'
+    when 'lg'
+      assign height_class = 'lg:min-h-[850px]'
+  endcase
+-%}
+
+<div
+  id="FiftyFifty-{{ section.id }}"
+  class="grid grid-cols-1 lg:grid-cols-2 {{ height_class }}"
+  {% if section.settings.background_color != blank %}
+    style="background-color: {{ section.settings.background_color }};"
+  {% endif %}
+>
+  {%- comment -%} Media (video or image) {%- endcomment -%}
+  <div class="aspect-[4/5] overflow-hidden lg:aspect-auto {% if section.settings.image_position == 'right' %}lg:order-2{% endif %}">
+    {%- if section.settings.video != blank -%}
+      {%- if section.settings.video_controls -%}
+        <video-player client:visible class="group relative block h-full" data-state="playing" data-muted="true">
+          <video
+            class="block h-full w-full object-cover"
+            autoplay
+            muted
+            loop
+            playsinline
+            {% if section.settings.image != blank %}
+              poster="{{ section.settings.image | image_url: width: 1500 }}"
+            {% endif %}
+          >
+            {%- for source in section.settings.video.sources -%}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {%- endfor -%}
+          </video>
+          <div class="absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-3 bg-black/40 backdrop-blur-sm">
+            <button
+              type="button"
+              data-play
+              class="text-white cursor-pointer opacity-85 hover:opacity-100 transition-opacity"
+              aria-label="Play / Pause"
+            >
+              <span class="block group-data-[state=playing]:hidden">{%- render 'icon-play' -%}</span>
+              <span class="hidden group-data-[state=playing]:block">{%- render 'icon-pause' -%}</span>
+            </button>
+            <button
+              type="button"
+              data-mute
+              class="text-white cursor-pointer opacity-85 hover:opacity-100 transition-opacity"
+              aria-label="Mute / Unmute"
+            >
+              <span class="block group-data-[muted=true]:hidden">{%- render 'icon-volume' -%}</span>
+              <span class="hidden group-data-[muted=true]:block">{%- render 'icon-volume-mute' -%}</span>
+            </button>
+          </div>
+        </video-player>
+      {%- else -%}
+        <video
+          class="block h-full w-full object-cover"
+          autoplay
+          muted
+          loop
+          playsinline
+          {% if section.settings.image != blank %}
+            poster="{{ section.settings.image | image_url: width: 1500 }}"
+          {% endif %}
+        >
+          {%- for source in section.settings.video.sources -%}
+            <source src="{{ source.url }}" type="{{ source.mime_type }}">
+          {%- endfor -%}
+        </video>
+      {%- endif -%}
+    {%- elsif section.settings.image != blank -%}
+      {%- assign image_height = section.settings.image.width | divided_by: section.settings.image.aspect_ratio -%}
+      {{
+        section.settings.image
+        | image_url: width: 1500
+        | image_tag:
+          loading: loading,
+          preload: preload,
+          fetchpriority: fetchpriority,
+          width: section.settings.image.width,
+          height: image_height,
+          class: 'block object-cover w-full h-full',
+          sizes: '(min-width: 1024px) 50vw, 100vw',
+          widths: '375, 550, 750, 1100, 1500, 1780, 2000',
+          alt: section.settings.image.alt
+        | escape
+      }}
+    {%- else -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'w-full h-full object-cover fill-primary/20' }}
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Content {%- endcomment -%}
+  <div class="flex items-center justify-center px-6 py-12 md:px-8 lg:px-12 lg:py-16">
+    <div class="flex max-w-md flex-col gap-3 *:data-[slot=button]:mt-5">
+      {%- content_for 'blocks' -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "50/50 content",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Also used as the video poster frame when a video is set."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "info": "When set, the video replaces the image. Autoplays muted and loops."
+    },
+    {
+      "type": "checkbox",
+      "id": "video_controls",
+      "default": false,
+      "label": "Show video controls"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left",
+      "label": "Image position"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#e7e7e0"
+    },
+    {
+      "type": "select",
+      "id": "section_height",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Auto"
+        },
+        {
+          "value": "md",
+          "label": "Medium"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        }
+      ],
+      "default": "lg",
+      "label": "Desktop height"
+    }
+  ],
+  "blocks": [{ "type": "@theme" }],
+  "presets": [
+    {
+      "name": "50/50 content",
+      "category": "Banners",
+      "blocks": {
+        "subtitle": {
+          "type": "subtitle",
+          "settings": {
+            "text": "SUBTITLE"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Heading text here",
+            "heading_size": "xl",
+            "heading_level": "h2"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "button_label": "Learn More"
+          }
+        }
+      },
+      "block_order": ["subtitle", "heading", "text", "button"]
+    }
+  ]
+}
+{% endschema %}
