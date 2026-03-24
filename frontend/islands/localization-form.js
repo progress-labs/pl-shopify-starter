@@ -1,3 +1,16 @@
+/**
+ * @file `<localization-form>` — language/country selector dropdown.
+ *
+ * Manages an ARIA-compliant dropdown built from a `<button>` toggle and a
+ * `<ul>` option list. Toggles `aria-expanded` and `hidden` on the list,
+ * handles Escape-to-close, click-outside-to-close, and focus-out-to-close.
+ *
+ * Expected child elements:
+ * - `input[name="language_code"]` or `input[name="country_code"]` — hidden input
+ * - `button` — dropdown toggle
+ * - `ul` — option list containing `<a data-value="...">` items
+ * - `form` — submitted on option selection
+ */
 class LocalizationForm extends window.HTMLElement {
   constructor() {
     super()

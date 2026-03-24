@@ -12,6 +12,16 @@
  *   - sellingPlanId: Selling plan ID for subscriptions
  */
 
+/**
+ * @typedef {Object} CartAddRequestBody
+ * @property {number} id - Variant ID
+ * @property {number} quantity
+ * @property {string[]} sections - Section IDs to re-render
+ * @property {string} sections_url - Current page pathname
+ * @property {Object<string, string>} [properties] - Line item custom properties
+ * @property {number} [selling_plan] - Selling plan ID
+ */
+
 import { fetchConfig } from '@/lib/utils'
 import { dispatchCartEvent, onCartEvent } from '@/lib/cart-events'
 
@@ -23,6 +33,10 @@ function getSectionsToRender() {
   return ['cart-icon-bubble']
 }
 
+/**
+ * @param {import('./cart-events').CartAddDetail} detail
+ * @returns {Promise<void>}
+ */
 async function addToCart({ variantId, quantity = 1, properties, sellingPlanId }) {
   if (!variantId) {
     dispatchCartEvent('error', {
@@ -38,7 +52,7 @@ async function addToCart({ variantId, quantity = 1, properties, sellingPlanId })
   })
 
   const body = {
-    id: variantId,
+    id: Number(variantId),
     quantity,
     sections: getSectionsToRender(),
     sections_url: window.location.pathname
@@ -49,7 +63,7 @@ async function addToCart({ variantId, quantity = 1, properties, sellingPlanId })
   }
 
   if (sellingPlanId) {
-    body.selling_plan = sellingPlanId
+    body.selling_plan = Number(sellingPlanId)
   }
 
   try {
@@ -70,9 +84,9 @@ async function addToCart({ variantId, quantity = 1, properties, sellingPlanId })
     }
 
     dispatchCartEvent('added', {
-      variantId,
+      variantId: Number(variantId),
       quantity,
-      cart: data,
+      response: data,
       sections: data.sections
     })
   } catch (e) {

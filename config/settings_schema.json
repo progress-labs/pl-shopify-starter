@@ -159,5 +159,16 @@
         "info": "https://vimeo.com/shopify"
       }
     ]
+  },
+  {
+    "name": "Developer tools",
+    "settings": [
+      {
+        "type": "text",
+        "id": "sentry_dsn",
+        "label": "Sentry DSN",
+        "info": "Paste your Sentry DSN to enable error tracking. Leave blank to disable."
+      }
+    ]
   }
 ]

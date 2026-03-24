@@ -1,3 +1,10 @@
+/**
+ * @file `<details-disclosure>` — lightweight disclosure with animation support.
+ *
+ * Wraps a native `<details>` element. Closes when focus leaves the component.
+ * Caches CSS animations (via `Element.getAnimations()`) on first toggle and
+ * replays/cancels them on subsequent open/close cycles.
+ */
 export default class DetailsDisclosure extends window.HTMLElement {
   constructor() {
     super()
@@ -28,6 +35,7 @@ export default class DetailsDisclosure extends window.HTMLElement {
     }
   }
 
+  /** Close the disclosure and update `aria-expanded` on the summary. */
   close() {
     this.mainDetailsToggle.removeAttribute('open')
     this.mainDetailsToggle

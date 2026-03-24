@@ -1,3 +1,15 @@
+/**
+ * @file `<sticky-header>` — scroll-aware header that hides/reveals on scroll.
+ *
+ * Uses an `IntersectionObserver` to capture the initial header bounds, then
+ * listens for scroll events to transition between three states:
+ * - **hide** — scrolling down past the header: translates it off-screen
+ * - **reveal** — scrolling up past the header: makes it sticky and visible
+ * - **reset** — scrolled back to the top: removes all sticky/transform classes
+ *
+ * Integrates with predictive search — scroll handling is paused while
+ * `this.predictiveSearch.isOpen` is true.
+ */
 class StickyHeader extends window.HTMLElement {
   connectedCallback() {
     this.header = document.getElementById('shopify-section-header')
