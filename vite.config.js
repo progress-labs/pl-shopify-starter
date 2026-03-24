@@ -2,6 +2,10 @@ import { defineConfig } from 'vite'
 import shopify from 'vite-plugin-shopify'
 import tailwindcss from '@tailwindcss/vite'
 
+/*
+For some reason, when terminating or swapping branches early
+The tunnel feature bugs out and breaks the preview theme. 
+*/
 const shopifyConfig = {
   // tunnel: true
 }
