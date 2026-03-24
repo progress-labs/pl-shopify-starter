@@ -63,8 +63,13 @@ class CartDrawer extends window.HTMLElement {
     document.body.classList.remove('overflow-hidden')
   }
 
+  /**
+   * @param {import('../lib/cart-events').CartAddedDetail} detail - cart:added event detail
+   * @param {Object<string, string|null>} [detail.sections] - Section HTML keyed by ID
+   * @param {Object} [detail.response] - /cart/add.js response (sections accessed via detail.response.sections)
+   */
   renderContents(detail) {
-    const sections = detail.sections || detail.cart?.sections
+    const sections = detail.sections || detail.response?.sections
     this.getSectionsToRender().forEach((section) => {
       const sectionElement = section.selector
         ? document.querySelector(section.selector)

@@ -1,3 +1,7 @@
+/**
+ * @param {'json'|'javascript'} [type='json'] - Accept header type
+ * @returns {{ method: 'POST', headers: { 'Content-Type': string, Accept: string } }}
+ */
 export function fetchConfig(type = 'json') {
   return {
     method: 'POST',
