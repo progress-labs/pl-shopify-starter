@@ -1,3 +1,10 @@
+/**
+ * @file `<quantity-input>` — stepper control for numeric quantity inputs.
+ *
+ * Expects an `<input type="number">` and two `<button>` elements named
+ * `"plus"` and `"minus"`. Clicking a button calls `stepUp()` or `stepDown()`
+ * on the input and dispatches a bubbling `change` event when the value changes.
+ */
 class QuantityInput extends window.HTMLElement {
   constructor() {
     super()

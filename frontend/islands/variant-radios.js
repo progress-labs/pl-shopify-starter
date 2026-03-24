@@ -1,3 +1,10 @@
+/**
+ * @file `<variant-radios>` — variant picker using radio button fieldsets.
+ *
+ * Extends {@link VariantSelects} and overrides `updateOptions()` to read
+ * selected values from checked radio inputs within fieldsets, rather than
+ * from `<select>` elements.
+ */
 import VariantSelects from './variant-selects'
 
 class VariantRadios extends VariantSelects {
