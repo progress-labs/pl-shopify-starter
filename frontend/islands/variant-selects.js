@@ -103,9 +103,7 @@ export default class VariantSelects extends window.HTMLElement {
   async fetchSectionHtml(sectionId) {
     const url = `${this.dataset.url}?variant=${this.currentVariant.id}&section_id=${sectionId}`
     const response = await fetch(url)
-    console.log('fetchSectionHtml:: ', url, response)
     const text = await response.text()
-    console.log('fetchSectionHtml text:: ', text)
     return new window.DOMParser().parseFromString(text, 'text/html')
   }
 

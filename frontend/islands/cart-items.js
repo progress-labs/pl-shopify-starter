@@ -79,7 +79,6 @@ export default class CartItems extends window.HTMLElement {
    * @param {string} [name] - Input name used to restore focus after DOM swap
    */
   async updateQuantity(line, quantity, name) {
-    console.log('updateQuantity', line, quantity, name)
     this.enableLoading(line)
     this.pendingUpdate = { line, name }
 
