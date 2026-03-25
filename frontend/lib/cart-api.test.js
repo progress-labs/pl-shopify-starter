@@ -2,7 +2,7 @@ import * as cartEvents from './cart-events.js'
 
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { addToCart, updateCartItem } from './cart-api.js'
+import { addToCart, updateCartItem, updateCartNote } from './cart-api.js'
 
 describe('addToCart', () => {
   beforeEach(() => {
@@ -253,6 +253,92 @@ describe('updateCartItem', () => {
     global.fetch = vi.fn(() => Promise.reject(new Error('Network error')))
 
     const result = await updateCartItem({ line: '1', quantity: 2 })
+
+    expect(result).toBeUndefined()
+  })
+})
+
+describe('updateCartNote', () => {
+  beforeEach(() => {
+    window.routes = { cart_update_url: '/cart/update.js' }
+
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve({ note: 'Test note', item_count: 2 })
+      })
+    )
+    vi.spyOn(cartEvents, 'dispatchCartEvent')
+  })
+
+  it('sends note in request body', async () => {
+    await updateCartNote({ note: 'Please gift wrap' })
+
+    expect(fetch).toHaveBeenCalledWith('/cart/update.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({ note: 'Please gift wrap' })
+    })
+  })
+
+  it('dispatches note-updated event on success', async () => {
+    const mockCart = { note: 'Test note', item_count: 2 }
+    global.fetch = vi.fn(() =>
+      Promise.resolve({ json: () => Promise.resolve(mockCart) })
+    )
+
+    await updateCartNote({ note: 'Test note' })
+
+    expect(cartEvents.dispatchCartEvent).toHaveBeenCalledWith('note-updated', {
+      note: 'Test note',
+      cart: mockCart
+    })
+  })
+
+  it('dispatches error when API returns status', async () => {
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        json: () =>
+          Promise.resolve({ status: 422, description: 'Invalid note' })
+      })
+    )
+
+    await updateCartNote({ note: 'Bad note' })
+
+    expect(cartEvents.dispatchCartEvent).toHaveBeenCalledWith('error', {
+      error: 'Invalid note',
+      action: 'note-update'
+    })
+  })
+
+  it('dispatches error when fetch throws', async () => {
+    global.fetch = vi.fn(() => Promise.reject(new Error('Network error')))
+
+    await updateCartNote({ note: 'Test' })
+
+    expect(cartEvents.dispatchCartEvent).toHaveBeenCalledWith('error', {
+      error: 'Network error',
+      action: 'note-update'
+    })
+  })
+
+  it('returns cart data on success', async () => {
+    const mockCart = { note: 'Test', item_count: 2 }
+    global.fetch = vi.fn(() =>
+      Promise.resolve({ json: () => Promise.resolve(mockCart) })
+    )
+
+    const result = await updateCartNote({ note: 'Test' })
+
+    expect(result).toEqual(mockCart)
+  })
+
+  it('returns undefined on error', async () => {
+    global.fetch = vi.fn(() => Promise.reject(new Error('Network error')))
+
+    const result = await updateCartNote({ note: 'Test' })
 
     expect(result).toBeUndefined()
   })

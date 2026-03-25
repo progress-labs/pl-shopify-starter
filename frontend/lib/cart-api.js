@@ -6,12 +6,14 @@
  * Functions:
  *   - addToCart({ variantId, quantity, properties, sellingPlanId })
  *   - updateCartItem({ line, quantity, sections })
+ *   - updateCartNote({ note })
  *
  * Events dispatched:
- *   - cart:adding/added    - Add to cart lifecycle
- *   - cart:updating/updated - Update quantity lifecycle
- *   - cart:removing/removed - Remove item lifecycle (quantity = 0)
- *   - cart:error           - Any API error
+ *   - cart:adding/added       - Add to cart lifecycle
+ *   - cart:updating/updated   - Update quantity lifecycle
+ *   - cart:removing/removed   - Remove item lifecycle (quantity = 0)
+ *   - cart:note-updated       - Cart note updated
+ *   - cart:error              - Any API error
  */
 
 /**
@@ -179,6 +181,38 @@ export async function updateCartItem({ line, quantity, sections = [] }) {
     dispatchCartEvent('error', {
       error: e.message,
       action: isRemoving ? 'remove' : 'update'
+    })
+  }
+}
+
+/**
+ * Update the cart note
+ * @param {{ note: string }} detail
+ * @returns {Promise<Object|undefined>} Cart state on success, undefined on error
+ */
+export async function updateCartNote({ note }) {
+  try {
+    const response = await fetch(window.routes.cart_update_url, {
+      ...fetchConfig(),
+      body: JSON.stringify({ note })
+    })
+
+    const cart = await response.json()
+
+    if (cart.status) {
+      dispatchCartEvent('error', {
+        error: cart.description,
+        action: 'note-update'
+      })
+      return
+    }
+
+    dispatchCartEvent('note-updated', { note, cart })
+    return cart
+  } catch (e) {
+    dispatchCartEvent('error', {
+      error: e.message,
+      action: 'note-update'
     })
   }
 }
