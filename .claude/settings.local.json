@@ -22,7 +22,8 @@
       "Bash(grep:*)",
       "Bash(claude mcp:*)",
       "Bash(git log:*)",
-      "mcp__figma-remote-mcp__get_design_context"
+      "mcp__figma-remote-mcp__get_design_context",
+      "Bash(shopify theme:*)"
     ]
   }
 }

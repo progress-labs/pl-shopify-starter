@@ -1,0 +1,42 @@
+## This is an example Shopify Theme TOML file
+## This should be duplicated and setup with the Store relevant information
+
+[environments.development]
+# REQUIRED: Store URL (prefix or full myshopify.com URL)
+store = ""
+
+# Optional: Theme ID or name of the remote theme
+# theme = ""
+
+# Optional: Password from Theme Access app or Admin API token
+# password = ""
+
+# Optional: Password for storefronts with password protection
+# store-password = ""
+
+# Optional: Allow development on a live theme
+# allow-live = false
+
+# Optional: Prevent files from being deleted when removed locally
+# nodelete = false
+
+# Optional: Skip hot reloading files matching these patterns
+# ignore = ["config/*"]
+
+# Optional: Error overlay visibility: "silent" or "default"
+# error-overlay = "default"
+
+# Optional: File path or URL for change notifications
+# notify = ""
+
+# Optional: Auto-launch preview in default browser
+# open = false
+
+# Optional: Local port for theme preview
+# port = 9292
+
+# Optional: Sync Theme Editor updates to local files
+# theme-editor-sync = false
+
+# Optional: Disable color output
+# no-color = false
