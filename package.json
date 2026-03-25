@@ -9,7 +9,8 @@
     "deploy": "npm run build && shopify theme push",
     "lint": "eslint .",
     "format": "prettier --write --cache .",
-    "format-check": "prettier --check ."
+    "format-check": "prettier --check .",
+    "test": "vitest"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
@@ -24,7 +25,8 @@
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4.1.11",
     "vite": "^7.2.4",
-    "vite-plugin-shopify": "^4.1.0"
+    "vite-plugin-shopify": "^4.1.0",
+    "vitest": "^4.1.1"
   },
   "dependencies": {
     "@sentry/browser": "^10.43.0"
