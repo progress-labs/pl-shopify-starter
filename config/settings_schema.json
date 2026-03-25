@@ -161,6 +161,17 @@
     ]
   },
   {
+    "name": "Klaviyo",
+    "settings": [
+      {
+        "type": "text",
+        "id": "klaviyo_list_id",
+        "label": "Klaviyo list ID",
+        "info": "The ID of the Klaviyo list to subscribe to. This is used to track the newsletter signups. If not available, newsletters will not display."
+      }
+    ]
+  },
+  {
     "name": "Developer tools",
     "settings": [
       {

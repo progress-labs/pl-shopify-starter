@@ -12,6 +12,15 @@
     &copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url }}
     {{ powered_by_link }}
   </div>
+  {%- if settings.klaviyo_list_id != blank -%}
+    <newsletter-form client:visible list-id="{{ settings.klaviyo_list_id }}">
+      <form action="/" method="post">
+        <input class="text-black placeholder:text-black" type="email" name="email" placeholder="Email">
+        <button type="submit">Subscribe</button>
+        <span data-message></span>
+      </form>
+    </newsletter-form>
+  {%- endif -%}
 </footer>
 
 {% schema %}
