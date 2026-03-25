@@ -91,53 +91,48 @@ export default class VariantSelects extends window.HTMLElement {
     if (productForm) productForm.handleErrorMessage()
   }
 
-  renderProductInfo() {
-    fetch(
-      `${this.dataset.url}?variant=${this.currentVariant.id}&section_id=${
-        this.dataset.originalSection
-          ? this.dataset.originalSection
-          : this.dataset.section
-      }`
+  async renderProductInfo() {
+    const sectionId = this.dataset.originalSection || this.dataset.section
+    const html = await this.fetchSectionHtml(sectionId)
+
+    this.updatePriceFromHtml(html, sectionId)
+    this.updateSellingPlanFromHtml(html, sectionId)
+    this.updateAddButtonState()
+  }
+
+  async fetchSectionHtml(sectionId) {
+    const url = `${this.dataset.url}?variant=${this.currentVariant.id}&section_id=${sectionId}`
+    const response = await fetch(url)
+    console.log('fetchSectionHtml:: ', url, response)
+    const text = await response.text()
+    console.log('fetchSectionHtml text:: ', text)
+    return new window.DOMParser().parseFromString(text, 'text/html')
+  }
+
+  updatePriceFromHtml(html, sectionId) {
+    const source = html.getElementById(`price-${sectionId}`)
+    const destination = document.getElementById(`price-${this.dataset.section}`)
+    if (source && destination) {
+      destination.innerHTML = source.innerHTML
+      destination.classList.remove('invisible')
+    }
+  }
+
+  updateSellingPlanFromHtml(html, sectionId) {
+    const source = html.getElementById(`selling-plan-picker-${sectionId}`)
+    const destination = document.getElementById(
+      `selling-plan-picker-${this.dataset.section}`
     )
-      .then((response) => response.text())
-      .then((responseText) => {
-        const html = new window.DOMParser().parseFromString(
-          responseText,
-          'text/html'
-        )
-        const destination = document.getElementById(
-          `price-${this.dataset.section}`
-        )
-        const source = html.getElementById(
-          `price-${
-            this.dataset.originalSection
-              ? this.dataset.originalSection
-              : this.dataset.section
-          }`
-        )
-        if (source && destination) destination.innerHTML = source.innerHTML
+    if (source && destination) {
+      destination.innerHTML = source.innerHTML
+    }
+  }
 
-        const sellingPlanDest = document.getElementById(
-          `selling-plan-picker-${this.dataset.section}`
-        )
-        const sellingPlanSource = html.getElementById(
-          `selling-plan-picker-${
-            this.dataset.originalSection
-              ? this.dataset.originalSection
-              : this.dataset.section
-          }`
-        )
-        if (sellingPlanSource && sellingPlanDest)
-          sellingPlanDest.innerHTML = sellingPlanSource.innerHTML
-
-        const price = document.getElementById(`price-${this.dataset.section}`)
-
-        if (price) price.classList.remove('invisible')
-        this.toggleAddButton(
-          !this.currentVariant.available,
-          window.variantStrings.soldOut
-        )
-      })
+  updateAddButtonState() {
+    this.toggleAddButton(
+      !this.currentVariant.available,
+      window.variantStrings.soldOut
+    )
   }
 
   toggleAddButton(disable = true, text) {
