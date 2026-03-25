@@ -26,7 +26,7 @@ class NewsletterForm extends window.HTMLElement {
     this.form = this.querySelector('form')
     this.emailInput = this.querySelector('input[name="email"]')
     this.messageEl = this.querySelector('[data-message]')
-    this.listId = this.getAttribute('list-id')
+    this.listId = this.getAttribute('list-id') || window.__theme.klaviyo.listId
 
     if (!this.listId) {
       console.error('newsletter-form: missing required list-id attribute')
