@@ -1,15 +1,19 @@
 /**
  * Cart API
  *
- * Listens for cart:add events and handles adding items to the cart.
- * This enables any component to add items without direct coupling to cart components.
+ * Centralized cart operations that dispatch events for UI components to react to.
  *
- * Usage:
- *   dispatchCartEvent('add', { variantId: '12345', quantity: 1 })
+ * Functions:
+ *   - addToCart({ variantId, quantity, properties, sellingPlanId })
+ *   - updateCartItem({ line, quantity, sections })
+ *   - updateCartNote({ note })
  *
- * Optional properties:
- *   - properties: Object of line item properties
- *   - sellingPlanId: Selling plan ID for subscriptions
+ * Events dispatched:
+ *   - cart:adding/added       - Add to cart lifecycle
+ *   - cart:updating/updated   - Update quantity lifecycle
+ *   - cart:removing/removed   - Remove item lifecycle (quantity = 0)
+ *   - cart:note-updated       - Cart note updated
+ *   - cart:error              - Any API error
  */
 
 /**
@@ -22,9 +26,13 @@
  * @property {number} [selling_plan] - Selling plan ID
  */
 
+import { dispatchCartEvent } from '@/lib/cart-events'
 import { fetchConfig } from '@/lib/utils'
-import { dispatchCartEvent, onCartEvent } from '@/lib/cart-events'
 
+/**
+ *
+ * @question - Why do we only render the cart-icon-bubble section?
+ */
 function getSectionsToRender() {
   const cartDrawer = document.querySelector('cart-drawer')
   if (cartDrawer) {
@@ -37,7 +45,12 @@ function getSectionsToRender() {
  * @param {import('./cart-events').CartAddDetail} detail
  * @returns {Promise<void>}
  */
-async function addToCart({ variantId, quantity = 1, properties, sellingPlanId }) {
+export async function addToCart({
+  variantId,
+  quantity = 1,
+  properties,
+  sellingPlanId
+}) {
   if (!variantId) {
     dispatchCartEvent('error', {
       error: 'No variant ID provided',
@@ -97,5 +110,109 @@ async function addToCart({ variantId, quantity = 1, properties, sellingPlanId })
   }
 }
 
-// Listen for cart:add events
-onCartEvent('add', addToCart)
+/**
+ * @typedef {Object} CartUpdateDetail
+ * @property {string|number} line - 1-based line item index
+ * @property {number} quantity - New quantity (0 = remove)
+ * @property {string[]} sections - Section IDs to re-render
+ */
+
+/**
+ * Update a line item's quantity in the cart
+ * @param {CartUpdateDetail} detail
+ * @returns {Promise<Object|undefined>} Cart state on success, undefined on error
+ */
+export async function updateCartItem({ line, quantity, sections = [] }) {
+  if (!line) {
+    dispatchCartEvent('error', {
+      error: 'No line item index provided',
+      action: 'update'
+    })
+    return
+  }
+
+  const isRemoving = parseInt(quantity) === 0
+
+  dispatchCartEvent('updating', { line, quantity })
+
+  if (isRemoving) {
+    dispatchCartEvent('removing', { line })
+  }
+
+  const body = {
+    line,
+    quantity: parseInt(quantity),
+    sections,
+    sections_url: window.location.pathname
+  }
+
+  try {
+    const response = await fetch(window.routes.cart_change_url, {
+      ...fetchConfig(),
+      body: JSON.stringify(body)
+    })
+
+    const data = await response.json()
+
+    if (data.status) {
+      dispatchCartEvent('error', {
+        error: data.description,
+        action: isRemoving ? 'remove' : 'update'
+      })
+      return
+    }
+
+    dispatchCartEvent('updated', {
+      line,
+      cart: data,
+      sections: data.sections
+    })
+
+    if (isRemoving) {
+      dispatchCartEvent('removed', {
+        line,
+        cart: data,
+        sections: data.sections
+      })
+    }
+
+    return data
+  } catch (e) {
+    dispatchCartEvent('error', {
+      error: e.message,
+      action: isRemoving ? 'remove' : 'update'
+    })
+  }
+}
+
+/**
+ * Update the cart note
+ * @param {{ note: string }} detail
+ * @returns {Promise<Object|undefined>} Cart state on success, undefined on error
+ */
+export async function updateCartNote({ note }) {
+  try {
+    const response = await fetch(window.routes.cart_update_url, {
+      ...fetchConfig(),
+      body: JSON.stringify({ note })
+    })
+
+    const cart = await response.json()
+
+    if (cart.status) {
+      dispatchCartEvent('error', {
+        error: cart.description,
+        action: 'note-update'
+      })
+      return
+    }
+
+    dispatchCartEvent('note-updated', { note, cart })
+    return cart
+  } catch (e) {
+    dispatchCartEvent('error', {
+      error: e.message,
+      action: 'note-update'
+    })
+  }
+}
