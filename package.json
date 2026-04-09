@@ -4,7 +4,7 @@
   "type": "module",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite & shopify theme dev -s progresslabs-functions",
+    "dev": "vite & shopify theme dev -s terrakaffe",
     "build": "vitest run && vite build",
     "deploy": "vitest run && npm run build && shopify theme push",
     "lint": "eslint .",
@@ -23,13 +23,14 @@
     "globals": "^16.0.0",
     "jsdom": "^29.0.1",
     "prettier": "^3.5.2",
-    "prettier-plugin-tailwindcss": "^0.6.11",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.1.11",
     "vite": "^7.2.4",
     "vite-plugin-shopify": "^4.1.0",
     "vitest": "^4.1.1"
   },
   "dependencies": {
-    "@sentry/browser": "^10.43.0"
+    "@sentry/browser": "^10.43.0",
+    "klaviyo-subscribe": "^1.0.0"
   }
 }
