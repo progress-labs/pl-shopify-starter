@@ -4,7 +4,7 @@
   "type": "module",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite & shopify theme dev -s terrakaffe",
+    "dev": "vite & shopify theme dev -s progresslabs-functions",
     "build": "vitest run && vite build",
     "deploy": "vitest run && npm run build && shopify theme push",
     "lint": "eslint .",
