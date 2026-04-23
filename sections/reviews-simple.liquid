@@ -1,0 +1,358 @@
+{%- liquid
+  assign loading = 'lazy'
+  assign preload = false
+  assign fetchpriority = 'auto'
+  if section.index0 == 0
+    assign loading = 'eager'
+    assign preload = true
+    assign fetchpriority = 'high'
+  endif
+-%}
+
+<div
+  id="ReviewsSimple-{{ section.id }}"
+  class="grid gap-8 px-4 py-20 md:grid-cols-2 md:gap-16 md:px-16 md:py-24"
+  {% if section.settings.background_color != blank %}
+    style="background-color: {{ section.settings.background_color }}; color: {{ section.settings.text_color }};"
+  {% endif %}
+>
+  {%- comment -%} Left column: heading, description, image, primary CTA {%- endcomment -%}
+  <div>
+    <div class="md:sticky md:top-24">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="font-heading text-3xl leading-tight md:text-7xl md:leading-none mb-4">
+          {{- section.settings.heading | escape -}}
+        </h2>
+      {%- endif -%}
+      {%- if section.settings.description != blank -%}
+        <p class="text-sm leading-snug md:text-base md:leading-relaxed mb-8">
+          {{- section.settings.description | escape -}}
+        </p>
+      {%- endif -%}
+      <div class="mb-8">
+        {%- if section.settings.video != blank -%}
+          <video-player client:visible class="group relative block" data-state="playing" data-muted="true">
+            <video
+              class="block w-full object-cover"
+              style="aspect-ratio: {{ section.settings.video.aspect_ratio }};"
+              autoplay
+              muted
+              loop
+              playsinline
+              {% if section.settings.image != blank %}
+                poster="{{ section.settings.image | image_url: width: 1200 }}"
+              {% endif %}
+            >
+              {%- for source in section.settings.video.sources -%}
+                <source src="{{ source.url }}" type="{{ source.mime_type }}">
+              {%- endfor -%}
+            </video>
+            <div class="absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-3 bg-black/40 backdrop-blur-sm">
+              <button
+                type="button"
+                data-play
+                class="text-white cursor-pointer opacity-85 hover:opacity-100 transition-opacity"
+                aria-label="Play / Pause"
+              >
+                <span class="block group-data-[state=playing]:hidden">{%- render 'icon-play' -%}</span>
+                <span class="hidden group-data-[state=playing]:block">{%- render 'icon-pause' -%}</span>
+              </button>
+              <button
+                type="button"
+                data-mute
+                class="text-white cursor-pointer opacity-85 hover:opacity-100 transition-opacity"
+                aria-label="Mute / Unmute"
+              >
+                <span class="block group-data-[muted=true]:hidden">{%- render 'icon-volume' -%}</span>
+                <span class="hidden group-data-[muted=true]:block">{%- render 'icon-volume-mute' -%}</span>
+              </button>
+            </div>
+          </video-player>
+        {%- elsif section.settings.image != blank -%}
+          {%- assign image_height = section.settings.image.width | divided_by: section.settings.image.aspect_ratio -%}
+          {{
+            section.settings.image
+            | image_url: width: 1200
+            | image_tag:
+              loading: loading,
+              preload: preload,
+              fetchpriority: fetchpriority,
+              width: section.settings.image.width,
+              height: image_height,
+              class: 'block w-full object-cover',
+              sizes: '(min-width: 768px) 50vw, 100vw',
+              widths: '375, 550, 750, 1100, 1200',
+              alt: section.settings.image.alt
+            | escape
+          }}
+        {%- endif -%}
+
+      {%- if section.settings.primary_button_label != blank -%}
+        <div class="hidden md:block mt-8">
+          <a
+            {% if section.settings.primary_button_link != blank %}href="{{ section.settings.primary_button_link }}"{% endif %}
+            class="inline-flex items-center justify-center rounded-full px-6 py-3 text-base transition hover:opacity-90"
+            {% if section.settings.primary_button_color != blank and section.settings.primary_button_text_color != blank %}
+              style="background-color: {{ section.settings.primary_button_color }}; color: {{ section.settings.primary_button_text_color }};"
+            {% endif %}
+          >
+            {{- section.settings.primary_button_label | escape -}}
+          </a>
+        </div>
+      {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} Right column: review cards + secondary CTA {%- endcomment -%}
+  <div class="grid gap-8 md:gap-16 content-center">
+    {%- for block in section.blocks -%}
+      <div {{ block.shopify_attributes }} class="grid gap-2">
+        <div class="flex gap-1">
+          {%- assign rating_whole = block.settings.rating | default: 5 | floor -%}
+          {%- for i in (1..rating_whole) -%}
+            <span class="size-4 text-amber-400">{%- render 'icon-star' -%}</span>
+          {%- endfor -%}
+        </div>
+        {%- if block.settings.title != blank -%}
+          <h3 class="font-heading text-xl leading-snug md:text-2xl md:leading-snug">
+            {{- block.settings.title | escape -}}
+          </h3>
+        {%- endif -%}
+        {%- if block.settings.body != blank -%}
+          <p class="text-sm leading-snug md:text-base md:leading-relaxed">
+            {{- block.settings.body | escape -}}
+          </p>
+        {%- endif -%}
+        {%- if block.settings.attribution != blank -%}
+          <p class="text-xs leading-snug md:text-sm md:leading-relaxed">
+            {{- block.settings.attribution | escape -}}
+          </p>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+
+    {%- comment -%} Desktop: secondary button only {%- endcomment -%}
+    {%- if section.settings.secondary_button_label != blank -%}
+      <div class="hidden md:block">
+        <a
+          {% if section.settings.secondary_button_link != blank %}href="{{ section.settings.secondary_button_link }}"{% endif %}
+          class="inline-flex items-center justify-center rounded-full border border-current px-6 py-3 text-base transition hover:opacity-90"
+        >
+          {{- section.settings.secondary_button_label | escape -}}
+        </a>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Mobile: both buttons stacked full-width {%- endcomment -%}
+    <div class="grid gap-4 md:hidden">
+      {%- if section.settings.secondary_button_label != blank -%}
+        <div>
+          <a
+            {% if section.settings.secondary_button_link != blank %}href="{{ section.settings.secondary_button_link }}"{% endif %}
+            class="flex w-full items-center justify-center rounded-full border border-current px-6 py-3 text-base transition hover:opacity-90"
+          >
+            {{- section.settings.secondary_button_label | escape -}}
+          </a>
+        </div>
+      {%- endif -%}
+      {%- if section.settings.primary_button_label != blank -%}
+        <div>
+          <a
+            {% if section.settings.primary_button_link != blank %}href="{{ section.settings.primary_button_link }}"{% endif %}
+            class="flex w-full items-center justify-center rounded-full px-6 py-3 text-base transition hover:opacity-90"
+            {% if section.settings.primary_button_color != blank and section.settings.primary_button_text_color != blank %}
+              style="background-color: {{ section.settings.primary_button_color }}; color: {{ section.settings.primary_button_text_color }};"
+            {% endif %}
+          >
+            {{- section.settings.primary_button_label | escape -}}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Reviews simple",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Superior quality, shaped by you"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Our flavors transform everyday cooking into a shared, meaningful experience, delivering quality and innovation in everything we do."
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Also used as the video poster frame when a video is set."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "info": "When set, the video replaces the image. Autoplays muted and loops."
+    },
+    {
+      "type": "header",
+      "content": "Primary button"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_label",
+      "label": "Label",
+      "default": "Shop Best Sellers"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Link"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_color",
+      "label": "Button color"
+    },
+    {
+      "type": "color",
+      "id": "primary_button_text_color",
+      "label": "Button text color"
+    },
+    {
+      "type": "header",
+      "content": "Secondary button"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_label",
+      "label": "Label",
+      "default": "Read More Reviews"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Star rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Results seen!"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Review text",
+          "default": "I am amazed that after just 2 months I've already seen huge results. It is absolutely working, and I really wasn't expecting to see it sooner than 3 months..."
+        },
+        {
+          "type": "text",
+          "id": "attribution",
+          "label": "Attribution",
+          "default": "Lara S. – Verified Buyer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews simple",
+      "category": "Social proof",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Results seen!",
+            "body": "I am amazed that after just 2 months I've already seen huge results in my nail growth and skin texture. It is absolutely working, and I really wasn't expecting to see it sooner than 3 months...",
+            "attribution": "Lara S. – Verified Buyer"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "3 months into relationship with Primal Greens",
+            "body": "I've enjoyed making Primal Greens part of my daily routine. It feels like I have more energy to get through busy days and evenings and workouts.",
+            "attribution": "Michael G. – Verified Buyer"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Primal Probiotics saved my life",
+            "body": "Since I've been taking this probiotic my stomach issues have resolved and I feel much better. Primal Probiotics helped clear up my stomach issues that I suffered with for over 2 years.",
+            "attribution": "Erin J. – Verified Buyer"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Best sleep ever!",
+            "body": "I am so pleased with how well rested I have been and how easy it has been to fall asleep. I sleep straight through! Highly recommend this product.",
+            "attribution": "Priscilla – Verified Buyer"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Converted skeptic",
+            "body": "Leaves me feeling energized and is half the price of competitive products.",
+            "attribution": "Paul A. – Verified Buyer"
+          }
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10
+}
+{% endschema %}

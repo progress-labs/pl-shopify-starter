@@ -29,6 +29,7 @@
         <video-player client:visible class="group relative block" data-state="playing" data-muted="true">
           <video
             class="block w-full object-cover"
+            style="aspect-ratio: {{ section.settings.video.aspect_ratio }};"
             autoplay
             muted
             loop
