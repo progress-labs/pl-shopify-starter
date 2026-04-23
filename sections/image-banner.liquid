@@ -1,137 +1,316 @@
 {%- liquid
-  assign banner_class = 'aspect-[4/5] sm:aspect-square md:aspect-[5/4] lg:aspect-[3/2] xl:aspect-[2/1]'
-  if section.settings.full_page_height_enable
-    assign banner_class = 'h-screen-no-nav'
-  endif
-
-  assign preload = true
   assign loading = 'eager'
+  assign preload = true
   assign fetchpriority = 'high'
   if section.index0 > 0
     assign loading = 'lazy'
     assign preload = false
     assign fetchpriority = 'auto'
   endif
+
+  assign vertical = section.settings.vertical_position
+  assign horizontal = section.settings.horizontal_position
+
+  case vertical
+    when 'top'
+      assign items_y = 'items-start'
+    when 'center'
+      assign items_y = 'items-center'
+    when 'bottom'
+      assign items_y = 'items-end'
+  endcase
+
+  case horizontal
+    when 'left'
+      assign items_x = 'justify-start'
+      assign text_align = 'text-left'
+      assign controls_position = 'right-4 md:right-16'
+    when 'center'
+      assign items_x = 'justify-center'
+      assign text_align = 'text-center'
+      assign controls_position = 'right-4 md:right-16'
+    when 'right'
+      assign items_x = 'justify-end'
+      assign text_align = 'text-right'
+      assign controls_position = 'left-4 md:left-16'
+  endcase
 -%}
 
-<div id="Banner-{{ section.id }}" class="relative flex w-full flex-col justify-end {{ banner_class }}">
-  <div class="pointer-events-none absolute inset-0 -z-10 grid flex-grow auto-cols-fr grid-flow-col content-stretch overflow-clip">
-    {%- if section.settings.image != blank -%}
-      <div>
-        {%- liquid
-          assign image_height = section.settings.image.width | divided_by: section.settings.image.aspect_ratio
-          if section.settings.image_2 != blank
-            assign sizes = '50vw'
-          else
-            assign sizes = '100vw'
-          endif
-        -%}
-        {{
-          section.settings.image
-          | image_url: width: 1500
-          | image_tag:
-            loading: loading,
-            preload: preload,
-            fetchpriority: fetchpriority,
-            width: section.settings.image.width,
-            height: image_height,
-            class: 'block object-cover w-full h-full',
-            sizes: sizes,
-            widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
-            alt: section.settings.image.alt
-          | escape
-        }}
+<style>
+  #MediaBillboard-{{ section.id }} {
+    {%- if section.settings.text_color != blank %}
+      color: {{ section.settings.text_color }};
+    {%- endif %}
+  }
+  #MediaBillboard-{{ section.id }} .ib-btn {
+    {%- if section.settings.button_color != blank %}
+      background-color: {{ section.settings.button_color }};
+    {%- endif %}
+    {%- if section.settings.button_text_color != blank %}
+      color: {{ section.settings.button_text_color }};
+    {%- endif %}
+  }
+  {%- if section.settings.overlay_enable %}
+    #MediaBillboard-{{ section.id }} .ib-overlay {
+      background: rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }});
+    }
+  {%- endif %}
+</style>
+
+<div
+  id="MediaBillboard-{{ section.id }}"
+  class="relative flex min-h-svh overflow-hidden px-4 py-20 md:px-16 md:py-24 {{ items_y }} {{ items_x }}"
+>
+  {%- comment -%} Background media {%- endcomment -%}
+  {%- if section.settings.video != blank -%}
+    <video-player client:visible class="group absolute inset-0 z-0" data-state="playing" data-muted="true">
+      <video
+        class="block size-full object-cover"
+        style="aspect-ratio: {{ section.settings.video.aspect_ratio }};"
+        autoplay
+        muted
+        loop
+        playsinline
+        {% if section.settings.image != blank %}
+          poster="{{ section.settings.image | image_url: width: 3840 }}"
+        {% endif %}
+      >
+        {%- for source in section.settings.video.sources -%}
+          <source src="{{ source.url }}" type="{{ source.mime_type }}">
+        {%- endfor -%}
+      </video>
+      <div class="absolute bottom-4 z-20 flex gap-4 {{ controls_position }}">
+        <button
+          type="button"
+          data-play
+          class="text-white cursor-pointer opacity-85 hover:opacity-100 transition-opacity"
+          aria-label="Play / Pause"
+        >
+          <span class="block group-data-[state=playing]:hidden">{%- render 'icon-play' -%}</span>
+          <span class="hidden group-data-[state=playing]:block">{%- render 'icon-pause' -%}</span>
+        </button>
+        <button
+          type="button"
+          data-mute
+          class="text-white cursor-pointer opacity-85 hover:opacity-100 transition-opacity"
+          aria-label="Mute / Unmute"
+        >
+          <span class="block group-data-[muted=true]:hidden">{%- render 'icon-volume' -%}</span>
+          <span class="hidden group-data-[muted=true]:block">{%- render 'icon-volume-mute' -%}</span>
+        </button>
       </div>
-    {%- elsif section.settings.image_2 == blank -%}
-      <div>
-        {{ 'lifestyle-2' | placeholder_svg_tag: 'w-full h-full object-cover fill-primary/20' }}
-      </div>
+    </video-player>
+  {%- elsif section.settings.image != blank -%}
+    <div class="pointer-events-none absolute inset-0 z-0">
+      {%- assign image_height = section.settings.image.width | divided_by: section.settings.image.aspect_ratio -%}
+      {{
+        section.settings.image
+        | image_url: width: 3840
+        | image_tag:
+          loading: loading,
+          preload: preload,
+          fetchpriority: fetchpriority,
+          width: section.settings.image.width,
+          height: image_height,
+          class: 'block size-full object-cover',
+          sizes: '100vw',
+          widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
+          alt: section.settings.image.alt
+        | escape
+      }}
+    </div>
+  {%- else -%}
+    <div class="pointer-events-none absolute inset-0 z-0">
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'size-full object-cover fill-primary/20' }}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Overlay {%- endcomment -%}
+  {%- if section.settings.overlay_enable -%}
+    <div class="ib-overlay pointer-events-none absolute inset-0 z-5"></div>
+  {%- endif -%}
+
+  {%- comment -%} Content {%- endcomment -%}
+  <div class="z-10 max-w-xl {{ text_align }}">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="mb-4 text-sm font-semibold uppercase tracking-widest md:mb-10 md:text-base">
+        {{- section.settings.eyebrow | escape -}}
+      </p>
     {%- endif -%}
-    {%- if section.settings.image_2 != blank -%}
-      <div class="hidden md:block">
-        {%- liquid
-          assign image_height_2 = section.settings.image_2.width | divided_by: section.settings.image_2.aspect_ratio
-          if section.settings.image != blank
-            assign sizes = '50vw'
-          else
-            assign sizes = '100vw'
-          endif
-        -%}
-        {{
-          section.settings.image_2
-          | image_url: width: 1500
-          | image_tag:
-            loading: loading,
-            fetchpriority: fetchpriority,
-            width: section.settings.image_2.width,
-            height: image_height_2,
-            class: 'block object-cover w-full h-full',
-            sizes: sizes,
-            widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
-            alt: section.settings.image_2.alt
-          | escape
-        }}
-      </div>
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="font-heading text-5xl leading-none mb-2 md:text-7xl md:mb-2">
+        {{- section.settings.heading | escape -}}
+      </h2>
     {%- endif -%}
-  </div>
-  <div class="from-contrast/60 to-contrast/0 text-primary *:data-[slot=text]:max-w-prose-narrow flex flex-col items-baseline justify-between gap-4 bg-gradient-to-t px-6 py-8 *:data-[slot=heading]:max-w-md sm:px-8 md:px-12">
-    {%- content_for 'blocks' -%}
+
+    {%- if section.settings.description != blank -%}
+      <p class="text-base leading-relaxed mb-8">
+        {{- section.settings.description | escape -}}
+      </p>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      {%- if section.settings.button_style == 'button' -%}
+        <div>
+          <a
+            {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
+            class="ib-btn inline-flex cursor-pointer items-center justify-center rounded-full px-6 py-3 text-base transition hover:opacity-90"
+          >
+            {{- section.settings.button_label | escape -}}
+          </a>
+        </div>
+      {%- else -%}
+        <div>
+          <a
+            {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
+            class="inline-block cursor-pointer border-b border-current pb-0.5 text-base leading-relaxed"
+          >
+            {{- section.settings.button_label | escape -}}
+          </a>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
   </div>
 </div>
 
 {% schema %}
 {
-  "name": "Image banner",
+  "name": "Media billboard",
   "tag": "section",
   "settings": [
     {
-      "type": "image_picker",
-      "id": "image",
-      "label": "First image"
+      "type": "header",
+      "content": "Media"
     },
     {
       "type": "image_picker",
-      "id": "image_2",
-      "label": "Second image"
+      "id": "image",
+      "label": "Image",
+      "info": "Also used as the video poster frame when a video is set."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "info": "When set, the video replaces the image. Autoplays muted and loops."
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "info": "Optional small text above the heading."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "We turn everyday meals into moments of connection and joy."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Our flavors transform everyday cooking into a shared, meaningful experience, delivering quality and innovation in everything we do."
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color"
+    },
+    {
+      "type": "select",
+      "id": "vertical_position",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "top",
+      "label": "Vertical position"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left",
+      "label": "Horizontal position"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "options": [
+        { "value": "button", "label": "Button" },
+        { "value": "text", "label": "Text link" }
+      ],
+      "default": "button",
+      "label": "Button style"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button color"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color"
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
     },
     {
       "type": "checkbox",
-      "id": "full_page_height_enable",
-      "default": true,
-      "label": "Full page height"
+      "id": "overlay_enable",
+      "label": "Enable overlay",
+      "default": false,
+      "info": "Add a dark overlay on the media for better text contrast."
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 20,
+      "unit": "%",
+      "info": "Only applies when overlay is enabled."
     }
   ],
-  "blocks": [{ "type": "@theme" }],
   "presets": [
     {
-      "name": "Image banner",
+      "name": "Media billboard",
       "category": "Banners",
-      "blocks": {
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Image banner",
-            "heading_size": "xl",
-            "heading_level": "h2"
-          }
-        },
-        "text": {
-          "type": "text",
-          "settings": {
-            "text": "<p><strong>Give customers details about the banner image(s) or content on the template.</strong></p>",
-            "text_size": "lg"
-          }
-        },
-        "button": {
-          "type": "button",
-          "settings": {
-            "button_label": "Shop all →",
-            "button_variant": "link",
-            "button_size": "lg"
-          }
-        }
-      },
-      "block_order": ["heading", "text", "button"]
+      "settings": {
+        "heading": "We turn everyday meals into moments of connection and joy.",
+        "description": "Our flavors transform everyday cooking into a shared, meaningful experience, delivering quality and innovation in everything we do.",
+        "button_label": "Learn More"
+      }
     }
   ]
 }
