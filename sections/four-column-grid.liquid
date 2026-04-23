@@ -1,3 +1,30 @@
+{%- comment -%}
+  README
+  Four Column Grid — Content grid with image, heading, description, and link per column.
+
+  Displays up to 4 columns in a row on desktop, stacked on mobile. Each column
+  has a centered image, heading, description, and a link. Links can be styled
+  as either underlined text links or filled pill buttons at the section level.
+  Button colors are managed via a scoped style block.
+
+  Section settings:
+  | Setting          | Type   | Required |
+  |------------------|--------|----------|
+  | background_color | color  | No       |
+  | link_style       | select | No       |
+  | button_color     | color  | No       |
+  | button_text_color| color  | No       |
+
+  Block settings (column):
+  | Setting     | Type         | Required |
+  |-------------|--------------|----------|
+  | image       | image_picker | No       |
+  | heading     | text         | No       |
+  | description | textarea     | No       |
+  | link_label  | text         | No       |
+  | link_url    | url          | No       |
+{%- endcomment -%}
+
 <style>
   #FourColumnGrid-{{ section.id }} {
     {%- if section.settings.background_color != blank %}

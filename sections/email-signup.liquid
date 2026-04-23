@@ -1,3 +1,25 @@
+{%- comment -%}
+  README
+  Email Signup — Klaviyo newsletter subscription section.
+
+  Centered heading and description with an email input and submit button.
+  Uses the <newsletter-form> island for Klaviyo integration. The button can
+  be displayed inline beside the input or stacked beneath it. On mobile the
+  layout always stacks vertically.
+
+  Section settings:
+  | Setting          | Type     | Required |
+  |------------------|----------|----------|
+  | heading          | text     | No       |
+  | description      | textarea | No       |
+  | placeholder      | text     | No       |
+  | button_label     | text     | No       |
+  | button_color     | color    | No       |
+  | button_text_color| color    | No       |
+  | button_layout    | select   | No       |
+  | background_color | color    | No       |
+{%- endcomment -%}
+
 <div
   id="EmailSignup-{{ section.id }}"
   class="grid justify-items-center px-4 py-24 md:px-16 md:py-24"

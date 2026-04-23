@@ -1,3 +1,31 @@
+{%- comment -%}
+  README
+  Testimonials — Social proof section displaying customer review cards.
+
+  Displays a centered heading and subheading with a row of testimonial cards
+  beneath. Each card includes a star rating, quote, attribution, and a colored
+  badge that links to a product. Desktop shows cards in a row; mobile stacks
+  them vertically.
+
+  Section settings:
+  | Setting          | Type     | Required |
+  |------------------|----------|----------|
+  | heading          | text     | No       |
+  | subheading       | textarea | No       |
+  | background_color | color    | No       |
+
+  Block settings (testimonial_card):
+  | Setting         | Type     | Required |
+  |-----------------|----------|----------|
+  | rating          | text     | No       |
+  | quote           | textarea | No       |
+  | attribution     | text     | No       |
+  | badge_label     | text     | No       |
+  | badge_color     | color    | No       |
+  | badge_text_dark | checkbox | No       |
+  | badge_product   | product  | No       |
+{%- endcomment -%}
+
 <div
   id="Testimonials-{{ section.id }}"
   class="py-12 px-4 md:py-20 md:px-0"

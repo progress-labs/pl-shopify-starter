@@ -1,3 +1,38 @@
+{%- comment -%}
+  README
+  Reviews Simple — Two-column social proof section with media and stacked reviews.
+
+  Left column displays heading, description, media (image or video), and a
+  primary CTA button. The entire left column is sticky on desktop. Right column
+  shows stacked review cards with star ratings. Includes a secondary outline
+  button for linking to more reviews. On mobile everything stacks vertically
+  with both buttons displayed full-width at the bottom.
+
+  Section settings:
+  | Setting                    | Type         | Required |
+  |----------------------------|--------------|----------|
+  | heading                    | text         | No       |
+  | description                | textarea     | No       |
+  | image                      | image_picker | No       |
+  | video                      | video        | No       |
+  | primary_button_label       | text         | No       |
+  | primary_button_link        | url          | No       |
+  | primary_button_color       | color        | No       |
+  | primary_button_text_color  | color        | No       |
+  | secondary_button_label     | text         | No       |
+  | secondary_button_link      | url          | No       |
+  | background_color           | color        | No       |
+  | text_color                 | color        | No       |
+
+  Block settings (review):
+  | Setting     | Type     | Required |
+  |-------------|----------|----------|
+  | rating      | range    | No       |
+  | title       | text     | No       |
+  | body        | textarea | No       |
+  | attribution | text     | No       |
+{%- endcomment -%}
+
 {%- liquid
   assign loading = 'lazy'
   assign preload = false

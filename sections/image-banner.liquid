@@ -1,3 +1,35 @@
+{%- comment -%}
+  README
+  Media Billboard — Full-screen hero banner with background media and overlaid content.
+
+  Displays a full-viewport-height background image or video with text content
+  overlaid on top. Content position is configurable on both vertical (top,
+  center, bottom) and horizontal (left, center, right) axes. Text alignment
+  follows the horizontal position. Includes an optional dark overlay with
+  adjustable opacity for text contrast. The CTA supports button or text link
+  styles. Video uses the <video-player> island with play/pause and mute
+  controls positioned opposite the content.
+
+  Section settings:
+  | Setting             | Type         | Required |
+  |---------------------|--------------|----------|
+  | image               | image_picker | No       |
+  | video               | video        | No       |
+  | eyebrow             | text         | No       |
+  | heading             | text         | No       |
+  | description         | textarea     | No       |
+  | text_color          | color        | No       |
+  | vertical_position   | select       | No       |
+  | horizontal_position | select       | No       |
+  | button_style        | select       | No       |
+  | button_label        | text         | No       |
+  | button_link         | url          | No       |
+  | button_color        | color        | No       |
+  | button_text_color   | color        | No       |
+  | overlay_enable      | checkbox     | No       |
+  | overlay_opacity     | range        | No       |
+{%- endcomment -%}
+
 {%- liquid
   assign loading = 'eager'
   assign preload = true
