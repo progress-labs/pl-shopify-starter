@@ -1,0 +1,120 @@
+{%- liquid
+  assign preload = true
+  assign loading = 'eager'
+  assign fetchpriority = 'high'
+  if section.index0 > 0
+    assign loading = 'lazy'
+    assign preload = false
+    assign fetchpriority = 'auto'
+  endif
+-%}
+
+<div id="Hero-{{ section.id }}" class="relative flex min-h-svh w-full flex-col justify-end">
+  <div class="pointer-events-none absolute inset-0 -z-10 overflow-clip">
+    {%- if section.settings.image != blank -%}
+      {%- liquid
+        assign image_height = section.settings.image.width | divided_by: section.settings.image.aspect_ratio
+      -%}
+      {{
+        section.settings.image
+        | image_url: width: 3840
+        | image_tag:
+          loading: loading,
+          preload: preload,
+          fetchpriority: fetchpriority,
+          width: section.settings.image.width,
+          height: image_height,
+          class: 'size-full object-cover',
+          sizes: '100vw',
+          widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
+          alt: section.settings.image.alt
+        | escape
+      }}
+    {%- else -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'size-full object-cover fill-primary/20' }}
+    {%- endif -%}
+  </div>
+
+  <div class="relative m-6 flex max-w-xl flex-col items-start gap-4 rounded-2xl bg-white/10 px-8 py-8 ring-1 ring-white/20 backdrop-blur-xl sm:m-10 sm:px-10 sm:py-10 md:m-16 lg:m-20 lg:gap-5">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="text-sm font-normal tracking-widest text-white/60">
+        {{- section.settings.eyebrow | escape -}}
+      </p>
+    {%- endif -%}
+
+    <h1 class="max-w-[20ch] text-3xl font-medium tracking-tight text-balance text-white sm:text-4xl lg:text-5xl">
+      {{- section.settings.heading | escape -}}
+    </h1>
+
+    {%- if section.settings.description != blank -%}
+      <p class="max-w-[48ch] text-base font-normal text-pretty text-white/75">
+        {{- section.settings.description | escape -}}
+      </p>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <a
+        {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
+        class="mt-1 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-neutral-900 transition hover:bg-white/90"
+      >
+        {{- section.settings.button_label | escape -}}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-4">
+          <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638l-3.96-3.96a.75.75 0 1 1 1.06-1.06l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 1 1-1.06-1.06l3.96-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd" />
+        </svg>
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero banner",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "info": "Optional small text above the headline"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your headline here"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "info": "Optional supporting text below the headline"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero banner",
+      "category": "Banners",
+      "settings": {
+        "heading": "Your headline here",
+        "button_label": "Shop now"
+      }
+    }
+  ]
+}
+{% endschema %}
