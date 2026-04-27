@@ -16,18 +16,18 @@ cart-drawer                    # Main drawer container, handles open/close
 
 ## File Structure
 
-| File | Purpose |
-|------|---------|
-| `snippets/cart-drawer.liquid` | Main Liquid template with HTML structure |
-| `sections/cart-drawer.liquid` | Section wrapper (renders the snippet) |
-| `frontend/lib/cart-events.js` | Global cart event helpers |
-| `frontend/lib/cart-api.js` | Handles `cart:add` events, adds items to cart |
-| `frontend/islands/cart-drawer.js` | Drawer open/close behavior, focus management |
-| `frontend/islands/cart-drawer-items.js` | Cart updates, extends `cart-items.js` |
-| `frontend/islands/cart-items.js` | Base class for cart item management |
-| `frontend/islands/quantity-input.js` | Quantity increment/decrement |
-| `frontend/islands/cart-remove-button.js` | Item removal |
-| `frontend/islands/cart-note.js` | Order note persistence |
+| File                                     | Purpose                                       |
+| ---------------------------------------- | --------------------------------------------- |
+| `snippets/cart-drawer.liquid`            | Main Liquid template with HTML structure      |
+| `sections/cart-drawer.liquid`            | Section wrapper (renders the snippet)         |
+| `frontend/lib/cart-events.js`            | Global cart event helpers                     |
+| `frontend/lib/cart-api.js`               | Handles `cart:add` events, adds items to cart |
+| `frontend/islands/cart-drawer.js`        | Drawer open/close behavior, focus management  |
+| `frontend/islands/cart-drawer-items.js`  | Cart updates, extends `cart-items.js`         |
+| `frontend/islands/cart-items.js`         | Base class for cart item management           |
+| `frontend/islands/quantity-input.js`     | Quantity increment/decrement                  |
+| `frontend/islands/cart-remove-button.js` | Item removal                                  |
+| `frontend/islands/cart-note.js`          | Order note persistence                        |
 
 ## Component Relationships
 
@@ -36,6 +36,7 @@ cart-drawer                    # Main drawer container, handles open/close
 The outer container that controls drawer visibility and manages accessibility.
 
 **Responsibilities:**
+
 - Opens/closes the drawer with slide animation via `.active` class
 - Traps focus within the drawer when open (accessibility)
 - Listens for Escape key to close
@@ -44,6 +45,7 @@ The outer container that controls drawer visibility and manages accessibility.
 - Listens for `cart:added` event to open and render new contents
 
 **Key Methods:**
+
 - `open(triggeredBy)` - Opens drawer, stores triggering element for focus return
 - `close()` - Closes drawer, returns focus to triggering element
 - `renderContents(detail)` - Re-renders drawer content from event detail
@@ -54,6 +56,7 @@ The outer container that controls drawer visibility and manages accessibility.
 Extends `cart-items` base class. Manages quantity changes and cart updates within the drawer context.
 
 **Responsibilities:**
+
 - Listens for `change` events on quantity inputs (debounced)
 - Calls Shopify's `/cart/change.js` endpoint
 - Re-renders affected sections using Section Rendering API
@@ -65,6 +68,7 @@ Extends `cart-items` base class. Manages quantity changes and cart updates withi
 Shared logic between drawer cart and full cart page. Located at `frontend/islands/cart-items.js`.
 
 **Key Methods:**
+
 - `updateQuantity(line, quantity, name)` - Updates item quantity via API, dispatches `cart:updating`, `cart:updated`, `cart:removing`, `cart:removed` events
 - `getSectionsToRender()` - Override in subclasses to specify which sections to re-render
 - `enableLoading(line)` / `disableLoading()` - Toggle loading UI state
@@ -102,10 +106,10 @@ Shared logic between drawer cart and full cart page. Located at `frontend/island
 
 Cart behavior is controlled via theme settings in `config/settings_schema.json`:
 
-| Setting | Values | Description |
-|---------|--------|-------------|
-| `cart_type` | `drawer`, `page` | Whether to use drawer or redirect to cart page |
-| `show_cart_note` | `true/false` | Display order note textarea in drawer |
+| Setting          | Values           | Description                                    |
+| ---------------- | ---------------- | ---------------------------------------------- |
+| `cart_type`      | `drawer`, `page` | Whether to use drawer or redirect to cart page |
+| `show_cart_note` | `true/false`     | Display order note textarea in drawer          |
 
 The drawer only renders when `settings.cart_type == 'drawer'` (see `layout/theme.liquid`).
 
@@ -114,6 +118,7 @@ The drawer only renders when `settings.cart_type == 'drawer'` (see `layout/theme
 The cart drawer uses Shopify's [Section Rendering API](https://shopify.dev/docs/api/ajax/reference/cart#bundled-section-rendering) to efficiently update only the changed parts of the page.
 
 Sections rendered on cart update:
+
 - `cart-drawer` - The drawer contents
 - `cart-icon-bubble` - Header cart icon with item count
 
@@ -138,22 +143,22 @@ Cart components dispatch events on the `document` to enable loose coupling. Any 
 
 **Action Events (dispatch these to trigger cart actions):**
 
-| Event | Purpose | Detail Payload |
-|-------|---------|----------------|
+| Event      | Purpose          | Detail Payload                                          |
+| ---------- | ---------------- | ------------------------------------------------------- |
 | `cart:add` | Add item to cart | `{ variantId, quantity?, properties?, sellingPlanId? }` |
 
 **Lifecycle Events (listen to these to react to cart changes):**
 
-| Event | When Fired | Detail Payload |
-|-------|------------|----------------|
-| `cart:adding` | Before add-to-cart API call | `{ variantId, quantity, form? }` |
-| `cart:added` | After successful add | `{ variantId, quantity, cart, sections }` |
-| `cart:updating` | Before quantity change | `{ line, quantity }` |
-| `cart:updated` | After successful update | `{ cart, sections }` |
-| `cart:removing` | Before item removal | `{ line }` |
-| `cart:removed` | After item removed | `{ line, cart, sections }` |
-| `cart:note-updated` | After note saved | `{ note, cart }` |
-| `cart:error` | On any cart API error | `{ error, action }` |
+| Event               | When Fired                  | Detail Payload                            |
+| ------------------- | --------------------------- | ----------------------------------------- |
+| `cart:adding`       | Before add-to-cart API call | `{ variantId, quantity, form? }`          |
+| `cart:added`        | After successful add        | `{ variantId, quantity, cart, sections }` |
+| `cart:updating`     | Before quantity change      | `{ line, quantity }`                      |
+| `cart:updated`      | After successful update     | `{ cart, sections }`                      |
+| `cart:removing`     | Before item removal         | `{ line }`                                |
+| `cart:removed`      | After item removed          | `{ line, cart, sections }`                |
+| `cart:note-updated` | After note saved            | `{ note, cart }`                          |
+| `cart:error`        | On any cart API error       | `{ error, action }`                       |
 
 ### Listening to Events
 

@@ -96,6 +96,7 @@ export function captureException(error, context) {
 ```
 
 Key design decisions:
+
 - **Session Replay enabled** — 10% baseline sampling, 100% on error. Replay lets you see exactly what the user did before an error occurred
 - **`onCartEvent('error')`** covers `cart-api.js`, `cart-items.js`, `cart-note.js` without modifying them
 - **`captureException` export** is safe to call even when Sentry is disabled (no DSN)
@@ -137,14 +138,14 @@ console.error(e)  // keep for dev visibility
 
 ## File summary
 
-| File | Action |
-|------|--------|
-| `package.json` | Modify — add `@sentry/browser` dependency |
-| `config/settings_schema.json` | Modify — add "Developer tools" settings group |
-| `layout/theme.liquid` | Modify — add `<script>` block in `<head>` for DSN + design mode |
-| `frontend/lib/sentry.js` | **Create** — init, cart error listener, captureException export |
-| `frontend/entrypoints/theme.js` | Modify — add sentry import as first line |
-| `frontend/islands/product-recommendations.js` | Modify — add captureException in `.catch()` |
+| File                                          | Action                                                          |
+| --------------------------------------------- | --------------------------------------------------------------- |
+| `package.json`                                | Modify — add `@sentry/browser` dependency                       |
+| `config/settings_schema.json`                 | Modify — add "Developer tools" settings group                   |
+| `layout/theme.liquid`                         | Modify — add `<script>` block in `<head>` for DSN + design mode |
+| `frontend/lib/sentry.js`                      | **Create** — init, cart error listener, captureException export |
+| `frontend/entrypoints/theme.js`               | Modify — add sentry import as first line                        |
+| `frontend/islands/product-recommendations.js` | Modify — add captureException in `.catch()`                     |
 
 ## Verification
 

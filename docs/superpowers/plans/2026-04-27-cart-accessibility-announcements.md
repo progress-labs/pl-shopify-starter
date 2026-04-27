@@ -13,10 +13,12 @@
 ## File Structure
 
 **Create:**
+
 - `frontend/lib/cart-live-region.js` — `announce(message)` helper + `initCartAnnouncements()` event wiring
 - `frontend/lib/cart-live-region.test.js` — Unit tests with jsdom
 
 **Modify:**
+
 - `frontend/islands/cart-items.js` — Remove `cart-live-region-text` from `getSectionsToRender()`, refactor `updateLiveRegions()` to use `announce()`, drop `aria-hidden` toggling on the live region
 - `frontend/lib/cart-init.js` — Call `initCartAnnouncements()` at module load
 - `layout/theme.liquid` — Move the live region `<p>` here so it's globally available; add new `cartStrings` keys
@@ -25,6 +27,7 @@
 - `locales/en.default.json` — Add `accessibility.cart_announcements.{added,removed,updated}` translation keys
 
 **Delete:**
+
 - `sections/cart-live-region-text.liquid` — Section is no longer rendered or referenced
 
 ---
@@ -32,6 +35,7 @@
 ## Task 1: Create `cart-live-region.js` module with TDD
 
 **Files:**
+
 - Create: `frontend/lib/cart-live-region.test.js`
 - Create: `frontend/lib/cart-live-region.js`
 
@@ -267,6 +271,7 @@ EOF
 ## Task 2: Add translation keys for announcement strings
 
 **Files:**
+
 - Modify: `locales/en.default.json` (under `accessibility`)
 
 - [ ] **Step 1: Add three new keys**
@@ -336,6 +341,7 @@ EOF
 ## Task 3: Expose the new strings via `window.cartStrings`
 
 **Files:**
+
 - Modify: `layout/theme.liquid:110-113`
 - Modify: `snippets/theme-global-object.liquid:11-14`
 
@@ -412,6 +418,7 @@ EOF
 ## Task 4: Move the live region element to the layout
 
 **Files:**
+
 - Modify: `layout/theme.liquid` (add the `<p>` near the existing `<a id="a11y-new-window-message">` hidden list)
 - Modify: `blocks/cart-products.liquid:251` (remove the `<p>`)
 
@@ -454,9 +461,11 @@ Leave the `<p id="shopping-cart-line-item-status">` line below it untouched — 
 
 Run: `grep -rn "cart-live-region-text" --include="*.liquid"`
 Expected output:
+
 ```
 layout/theme.liquid:<line>:    <p
 ```
+
 …and nothing else (no matches in `blocks/`, `sections/` content references, etc.).
 
 - [ ] **Step 4: Commit**
@@ -480,6 +489,7 @@ EOF
 ## Task 5: Wire announcements at app boot
 
 **Files:**
+
 - Modify: `frontend/lib/cart-init.js`
 
 - [ ] **Step 1: Import and call `initCartAnnouncements()`**
@@ -523,6 +533,7 @@ EOF
 ## Task 6: Refactor `cart-items.js` to drop the broken pattern
 
 **Files:**
+
 - Modify: `frontend/islands/cart-items.js`
 
 This task: (1) removes `cart-live-region-text` from `getSectionsToRender()`, (2) refactors `updateLiveRegions()` to call `announce()` directly only for the special "quantity-limit-reached" case, and (3) drops `aria-hidden` toggling on the live region.
@@ -711,6 +722,7 @@ EOF
 ## Task 7: Delete the obsolete section file
 
 **Files:**
+
 - Delete: `sections/cart-live-region-text.liquid`
 
 - [ ] **Step 1: Verify nothing references the section**
@@ -792,6 +804,7 @@ Expected: announcements still fire (because the live region now lives in the lay
 `Cmd+F5`.
 
 > **If any announcement is missing or wrong**, the most likely root causes are:
+>
 > - `window.cartStrings.<key>` is undefined → check that Task 3's edits to `theme.liquid` survived a hard refresh.
 > - The event isn't being dispatched → set a console listener on the relevant `cart:*` event and reproduce.
 > - The live region element isn't on the page → inspect the DOM, confirm the `<p id="cart-live-region-text">` is present.
@@ -801,6 +814,7 @@ Expected: announcements still fire (because the live region now lives in the lay
 ## Self-Review Notes
 
 **Spec coverage:**
+
 - ✅ Drop `aria-hidden` toggling — Task 6 step 3 removes both toggle calls on the live region.
 - ✅ Announce contextual messages (added/removed/updated/error) — Task 1 wires all four events.
 - ✅ Use clear-on-delay so consecutive identical messages re-trigger — Task 1 step 3 implements clear-then-set with a 50ms delay.
@@ -810,12 +824,14 @@ Expected: announcements still fire (because the live region now lives in the lay
 **Placeholder scan:** No "TBD"/"TODO"/"add appropriate error handling"/etc. All code blocks contain literal code.
 
 **Type/name consistency:**
+
 - `announce(message)` signature matches everywhere: tests, `initCartAnnouncements`, `cart-items.js`.
 - `initCartAnnouncements` (no args) — consistent.
 - `window.cartStrings.added` / `.removed` / `.updated` / `.error` — keys consistent across `theme.liquid`, `theme-global-object.liquid`, the announcer, and the tests.
 - `id="cart-live-region-text"` — consistent across layout, announcer, and tests.
 
 **Out of scope (intentionally not addressed):**
+
 - The unrelated `routes =` syntax bug in `snippets/theme-global-object.liquid:6` — flagged in Task 3 step 2 note.
 - The `shopping-cart-line-item-status` loading-state live region's separate `aria-hidden` toggling — different live region with different purpose.
 - A new `cart:limit-reached` event — kept simple by overriding via direct `announce()` call instead.
