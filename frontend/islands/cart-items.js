@@ -14,6 +14,7 @@
 import { debounce } from '@/lib/utils'
 import { trapFocus } from '@/lib/a11y'
 import { updateCartItem } from '@/lib/cart-api'
+import { announce } from '@/lib/cart-live-region'
 
 export default class CartItems extends window.HTMLElement {
   constructor() {
@@ -57,11 +58,6 @@ export default class CartItems extends window.HTMLElement {
       {
         id: 'cart-icon-bubble',
         section: 'cart-icon-bubble',
-        selector: '.shopify-section'
-      },
-      {
-        id: 'cart-live-region-text',
-        section: 'cart-live-region-text',
         selector: '.shopify-section'
       },
       {
@@ -174,23 +170,21 @@ export default class CartItems extends window.HTMLElement {
       const quantityElement =
         document.getElementById(`Quantity-${line}`) ||
         document.getElementById(`Drawer-quantity-${line}`)
-      lineItemError.innerHTML = window.cartStrings.quantityError.replace(
+
+      const message = window.cartStrings.quantityError.replace(
         '[quantity]',
         quantityElement.value
       )
+      lineItemError.innerHTML = message
+
+      // Override the generic cart:updated announcement scheduled by
+      // initCartAnnouncements with the more specific quantity-limit message.
+      // announce() cancels any pending announcement, so this wins.
+      announce(stripHtml(message))
     }
 
     this.currentItemCount = itemCount
     this.lineItemStatusElement.setAttribute('aria-hidden', true)
-
-    const cartStatus =
-      document.getElementById('cart-live-region-text') ||
-      document.getElementById('CartDrawer-LiveRegionText')
-    cartStatus.setAttribute('aria-hidden', false)
-
-    setTimeout(() => {
-      cartStatus.setAttribute('aria-hidden', true)
-    }, 1000)
   }
 
   getSectionInnerHTML(html, selector) {
@@ -226,6 +220,12 @@ export default class CartItems extends window.HTMLElement {
       document.getElementById('CartDrawer-CartItems')
     mainCartItems.classList.remove('loading')
   }
+}
+
+function stripHtml(html) {
+  const tmp = document.createElement('div')
+  tmp.innerHTML = html
+  return tmp.textContent || ''
 }
 
 window.customElements.define('cart-items', CartItems)
