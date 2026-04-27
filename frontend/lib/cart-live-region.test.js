@@ -50,6 +50,19 @@ describe('announce', () => {
     expect(() => announce('Anything')).not.toThrow()
     vi.runAllTimers()
   })
+
+  it('no-ops when message is falsy', () => {
+    const region = document.getElementById('cart-live-region-text')
+    region.textContent = 'previous'
+
+    announce(undefined)
+    vi.runAllTimers()
+    expect(region.textContent).toBe('previous')
+
+    announce('')
+    vi.runAllTimers()
+    expect(region.textContent).toBe('previous')
+  })
 })
 
 import { dispatchCartEvent } from './cart-events.js'

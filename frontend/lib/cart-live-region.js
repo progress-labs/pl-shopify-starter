@@ -18,10 +18,11 @@ let pendingTimer = null
 /**
  * Announce a message to the cart live region.
  * Repeated calls cancel any pending announcement (last write wins).
- * No-ops if the live region element is not on the page.
+ * No-ops if the message is falsy or the live region element is not on the page.
  * @param {string} message
  */
 export function announce(message) {
+  if (!message) return
   const region = document.getElementById('cart-live-region-text')
   if (!region) return
 
