@@ -35,11 +35,11 @@ This theme leverages the [default Shopify theme folder structure](https://shopif
 
 ## 🧞 Commands
 
-| Command                             | Action                                                                  |
-| :---------------------------------- | :---------------------------------------------------------------------- |
-| `npm install`                      | Installs dependencies                                                   |
+| Command                                | Action                                                                  |
+| :------------------------------------- | :---------------------------------------------------------------------- |
+| `npm install`                          | Installs dependencies                                                   |
 | `npm run dev -- --store johns-apparel` | Launch the Shopify and Vite servers in parallel                         |
-| `npm run deploy`                   | Bundle your theme's assets and upload your local theme files to Shopify |
+| `npm run deploy`                       | Bundle your theme's assets and upload your local theme files to Shopify |
 
 ## 🏝️ Hydration Directives
 
