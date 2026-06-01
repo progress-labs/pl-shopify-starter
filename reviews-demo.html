@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Featured Reviews Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;0,9..144,800;1,9..144,400;1,9..144,500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .font-fraunces { font-family: 'Fraunces', serif; }
+      .font-dm { font-family: 'DM Sans', sans-serif; }
+    </style>
+  </head>
+  <body class="m-0 min-h-full antialiased">
+
+    <div data-uidotsh-pick="Reviews layout" class="contents">
+
+      <!-- ============================================================
+           Option 1: SPLIT SCROLL
+           Faithful to the Figma structure — 50/50 split with left
+           column sticky (headline + image + CTA) and right column
+           scrollable reviews. Adapted to goodboy brand palette.
+           ============================================================ -->
+      <div data-uidotsh-option="Split Scroll" class="contents">
+        <section class="font-dm" style="background-color: #3A1F0B">
+          <div class="mx-auto flex max-w-7xl flex-col gap-10 px-6 py-20 sm:px-10 lg:flex-row lg:gap-16 lg:px-16 lg:py-28">
+            <!-- left column — sticky on desktop -->
+            <div class="flex flex-col gap-10 lg:sticky lg:top-28 lg:w-[45%] lg:self-start">
+              <div class="flex flex-col gap-6">
+                <h2 class="font-fraunces max-w-[16ch] text-balance text-[2.5rem] sm:text-[3rem] lg:text-[3.5rem]" style="color: #FFFBF5; font-weight: 500; line-height: 1.1">
+                  Real families. Real <em class="italic" style="color: #D4A04A">recoveries.</em>
+                </h2>
+                <p class="max-w-[40ch] text-pretty text-base" style="color: #C4A78D; line-height: 1.6; letter-spacing: 0.16px">
+                  We make food for the dogs who need it most. But don't take our word for it — hear from the families who've seen the difference.
+                </p>
+              </div>
+
+              <div class="aspect-[4/3] w-full overflow-hidden rounded-3xl" style="background-color: #5A3520">
+                <img
+                  src="https://images.unsplash.com/photo-1530041539828-114de669390e?w=1200&q=80&auto=format&fit=crop"
+                  alt="Family with their dog"
+                  class="h-full w-full object-cover"
+                >
+              </div>
+
+              <div class="flex items-center gap-4">
+                <a
+                  href="#"
+                  class="inline-flex items-center justify-center rounded-full px-7 py-3 text-[0.9375rem] font-semibold transition"
+                  style="background-color: #FFFBF5; color: #3A1F0B"
+                  onmouseover="this.style.backgroundColor='#F5EDE0'"
+                  onmouseout="this.style.backgroundColor='#FFFBF5'"
+                >
+                  Shop Best Sellers
+                </a>
+                <div class="flex items-center gap-2">
+                  <div class="flex gap-0.5">
+                    <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  </div>
+                  <p class="text-[0.8125rem] tabular-nums" style="color: #C4A78D">
+                    <span class="font-semibold" style="color: #FFFBF5">4.8</span> · 60k+ reviews
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- right column — stacked reviews -->
+            <div class="flex flex-col gap-12 lg:w-[55%] lg:gap-16">
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-1">
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <h3 class="text-2xl font-medium" style="color: #FFFBF5">Beau is a different dog</h3>
+                <p class="max-w-[52ch] text-pretty text-base" style="color: #C4A78D; line-height: 1.6">
+                  We adopted Beau at 9 after his cancer diagnosis. Within a month on goodboy, his energy was back and his coat started filling in again. Our vet couldn't believe the bloodwork.
+                </p>
+                <p class="text-sm" style="color: #8C7263">The Ramirez family – Denver</p>
+              </div>
+
+              <div class="h-px w-full" style="background-color: #FFFBF510"></div>
+
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-1">
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <h3 class="text-2xl font-medium" style="color: #FFFBF5">Morning zoomies are back</h3>
+                <p class="max-w-[52ch] text-pretty text-base" style="color: #C4A78D; line-height: 1.6">
+                  Maggie was barely eating after treatment. We tried four different brands. Goodboy is the only one she runs to — and she's thriving on it.
+                </p>
+                <p class="text-sm" style="color: #8C7263">Jess &amp; Tom – Portland</p>
+              </div>
+
+              <div class="h-px w-full" style="background-color: #FFFBF510"></div>
+
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-1">
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <h3 class="text-2xl font-medium" style="color: #FFFBF5">Our vet is impressed</h3>
+                <p class="max-w-[52ch] text-pretty text-base" style="color: #C4A78D; line-height: 1.6">
+                  Cooper's bloodwork has never looked this good. Our vet noticed the improvement before we did. The duck recipe is his absolute favorite.
+                </p>
+                <p class="text-sm" style="color: #8C7263">The Nguyens – Seattle</p>
+              </div>
+
+              <div class="h-px w-full" style="background-color: #FFFBF510"></div>
+
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-1">
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <h3 class="text-2xl font-medium" style="color: #FFFBF5">Worth every penny</h3>
+                <p class="max-w-[52ch] text-pretty text-base" style="color: #C4A78D; line-height: 1.6">
+                  Yes it's more expensive than kibble. But Luna is 12, beat lymphoma, and has never been healthier. That's not a cost — that's an investment.
+                </p>
+                <p class="text-sm" style="color: #8C7263">Sarah – Brooklyn</p>
+              </div>
+
+              <a
+                href="#"
+                class="inline-flex w-fit items-center justify-center rounded-full px-5 py-2.5 text-[0.9375rem] font-medium transition"
+                style="border: 1.5px solid #FFFBF530; color: #FFFBF5"
+                onmouseover="this.style.borderColor='#FFFBF560'"
+                onmouseout="this.style.borderColor='#FFFBF530'"
+              >
+                Read More Reviews
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================================
+           Option 2: CARD CAROUSEL
+           Centered heading + horizontal scroll of review cards on a
+           warm light background. Each card is a contained unit with
+           its own background. More dynamic/browsable than a wall of text.
+           ============================================================ -->
+      <div data-uidotsh-option="Card Carousel" class="contents" hidden>
+        <section class="font-dm overflow-hidden py-20 sm:py-28" style="background-color: #FFF5EC">
+          <!-- heading cluster -->
+          <div class="mx-auto max-w-7xl px-6 sm:px-10 lg:px-16">
+            <div class="flex flex-col items-start gap-6 sm:flex-row sm:items-end sm:justify-between">
+              <div class="flex flex-col gap-4">
+                <p class="text-[0.8125rem] font-semibold tracking-widest" style="color: #C8653C">60,000+ HAPPY FAMILIES</p>
+                <h2 class="font-fraunces max-w-[18ch] text-balance text-[2.25rem] sm:text-[2.75rem]" style="color: #3A1F0B; font-weight: 500; line-height: 1.1">
+                  Don't take our word for it
+                </h2>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="flex gap-0.5">
+                  <svg class="h-5 w-5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-5 w-5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-5 w-5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-5 w-5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-5 w-5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <p class="text-base font-semibold tabular-nums" style="color: #3A1F0B">4.8 <span class="font-normal" style="color: #7D5A50">from 60k+ reviews</span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- horizontally scrollable cards -->
+          <div class="mt-10 flex gap-5 overflow-x-auto px-6 pb-4 sm:mt-14 sm:px-10 lg:px-16" style="scrollbar-width: none; -ms-overflow-style: none;">
+            <div class="flex w-80 flex-shrink-0 flex-col gap-4 rounded-2xl p-7" style="background-color: #FFFBF5">
+              <div class="flex gap-1">
+                <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              </div>
+              <h3 class="text-lg font-semibold" style="color: #3A1F0B">Beau is a different dog</h3>
+              <p class="flex-1 text-[0.9375rem]" style="color: #7D5A50; line-height: 1.6">
+                "We adopted Beau at 9 after his cancer diagnosis. Within a month on goodboy, his energy was back and his coat started filling in again."
+              </p>
+              <div class="mt-2 flex items-center gap-3 border-t pt-4" style="border-color: #3A1F0B10">
+                <div class="flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold" style="background-color: #F5E6DA; color: #8B5E3C">R</div>
+                <div>
+                  <p class="text-sm font-semibold" style="color: #3A1F0B">The Ramirez family</p>
+                  <p class="text-[0.75rem]" style="color: #8C7263">Denver · Beef recipe</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex w-80 flex-shrink-0 flex-col gap-4 rounded-2xl p-7" style="background-color: #FFFBF5">
+              <div class="flex gap-1">
+                <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              </div>
+              <h3 class="text-lg font-semibold" style="color: #3A1F0B">Morning zoomies are back</h3>
+              <p class="flex-1 text-[0.9375rem]" style="color: #7D5A50; line-height: 1.6">
+                "Maggie was barely eating after treatment. We tried four different brands. Goodboy is the only one she runs to — and she's thriving on it."
+              </p>
+              <div class="mt-2 flex items-center gap-3 border-t pt-4" style="border-color: #3A1F0B10">
+                <div class="flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold" style="background-color: #F5E6DA; color: #8B5E3C">J</div>
+                <div>
+                  <p class="text-sm font-semibold" style="color: #3A1F0B">Jess &amp; Tom</p>
+                  <p class="text-[0.75rem]" style="color: #8C7263">Portland · Chicken recipe</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex w-80 flex-shrink-0 flex-col gap-4 rounded-2xl p-7" style="background-color: #FFFBF5">
+              <div class="flex gap-1">
+                <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              </div>
+              <h3 class="text-lg font-semibold" style="color: #3A1F0B">Our vet is impressed</h3>
+              <p class="flex-1 text-[0.9375rem]" style="color: #7D5A50; line-height: 1.6">
+                "Cooper's bloodwork has never looked this good. Our vet noticed the improvement before we did. The duck recipe is his absolute favorite."
+              </p>
+              <div class="mt-2 flex items-center gap-3 border-t pt-4" style="border-color: #3A1F0B10">
+                <div class="flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold" style="background-color: #F5E6DA; color: #8B5E3C">N</div>
+                <div>
+                  <p class="text-sm font-semibold" style="color: #3A1F0B">The Nguyens</p>
+                  <p class="text-[0.75rem]" style="color: #8C7263">Seattle · Duck recipe</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex w-80 flex-shrink-0 flex-col gap-4 rounded-2xl p-7" style="background-color: #FFFBF5">
+              <div class="flex gap-1">
+                <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              </div>
+              <h3 class="text-lg font-semibold" style="color: #3A1F0B">Worth every penny</h3>
+              <p class="flex-1 text-[0.9375rem]" style="color: #7D5A50; line-height: 1.6">
+                "Yes it's more expensive than kibble. But Luna is 12, beat lymphoma, and has never been healthier. That's not a cost — that's an investment."
+              </p>
+              <div class="mt-2 flex items-center gap-3 border-t pt-4" style="border-color: #3A1F0B10">
+                <div class="flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold" style="background-color: #F5E6DA; color: #8B5E3C">S</div>
+                <div>
+                  <p class="text-sm font-semibold" style="color: #3A1F0B">Sarah</p>
+                  <p class="text-[0.75rem]" style="color: #8C7263">Brooklyn · Chicken recipe</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- spacer for scroll padding -->
+            <div class="w-1 flex-shrink-0"></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================================
+           Option 3: FEATURED QUOTE
+           One large featured review front-and-center with a big pull
+           quote, flanked by smaller reviews. Centered layout on warm
+           dark bg. The "hero review" approach — editorial and impactful.
+           ============================================================ -->
+      <div data-uidotsh-option="Featured Quote" class="contents" hidden>
+        <section class="font-dm py-20 sm:py-28" style="background-color: #2C1810">
+          <div class="mx-auto max-w-5xl px-6 sm:px-10">
+            <!-- top: eyebrow + aggregate -->
+            <div class="mb-14 flex flex-col items-center gap-4 text-center sm:mb-20">
+              <div class="flex items-center gap-2">
+                <div class="flex gap-0.5">
+                  <svg class="h-5 w-5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-5 w-5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-5 w-5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-5 w-5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-5 w-5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <p class="text-base font-semibold tabular-nums" style="color: #FFFBF5">4.8 <span class="font-normal" style="color: #C4A78D">from 60,000+ reviews</span></p>
+              </div>
+            </div>
+
+            <!-- hero review -->
+            <div class="mb-16 flex flex-col items-center gap-8 text-center sm:mb-20">
+              <svg class="h-10 w-10" style="color: #D4603F40" viewBox="0 0 24 24" fill="currentColor"><path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 01-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z"/></svg>
+              <blockquote class="font-fraunces mx-auto max-w-[28ch] text-balance text-[1.75rem] sm:text-[2.25rem] lg:text-[2.75rem]" style="color: #FFFBF5; font-weight: 400; line-height: 1.2">
+                We adopted Beau at 9 after his cancer diagnosis. This food brought the light back to his eyes.
+              </blockquote>
+              <div class="flex flex-col items-center gap-1">
+                <p class="text-base font-semibold" style="color: #FFFBF5">The Ramirez family</p>
+                <p class="text-sm" style="color: #C4A78D">Denver · Beef recipe · Verified buyer</p>
+              </div>
+            </div>
+
+            <!-- supporting reviews — 3 column grid -->
+            <div class="grid gap-6 sm:grid-cols-3">
+              <div class="flex flex-col gap-3 rounded-xl p-6" style="background-color: #3A1F0B">
+                <div class="flex gap-1">
+                  <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <p class="text-[0.9375rem]" style="color: #C4A78D; line-height: 1.6">
+                  "Maggie was barely eating after treatment. Now she runs to her bowl every morning."
+                </p>
+                <p class="text-sm font-semibold" style="color: #FFFBF5">Jess &amp; Tom <span class="font-normal" style="color: #8C7263">· Portland</span></p>
+              </div>
+
+              <div class="flex flex-col gap-3 rounded-xl p-6" style="background-color: #3A1F0B">
+                <div class="flex gap-1">
+                  <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <p class="text-[0.9375rem]" style="color: #C4A78D; line-height: 1.6">
+                  "Cooper's bloodwork has never looked this good. Our vet noticed the improvement before we did."
+                </p>
+                <p class="text-sm font-semibold" style="color: #FFFBF5">The Nguyens <span class="font-normal" style="color: #8C7263">· Seattle</span></p>
+              </div>
+
+              <div class="flex flex-col gap-3 rounded-xl p-6" style="background-color: #3A1F0B">
+                <div class="flex gap-1">
+                  <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <p class="text-[0.9375rem]" style="color: #C4A78D; line-height: 1.6">
+                  "Luna is 12, beat lymphoma, and has never been healthier. That's not a cost — that's an investment."
+                </p>
+                <p class="text-sm font-semibold" style="color: #FFFBF5">Sarah <span class="font-normal" style="color: #8C7263">· Brooklyn</span></p>
+              </div>
+            </div>
+
+            <!-- bottom CTA -->
+            <div class="mt-12 flex justify-center">
+              <a
+                href="#"
+                class="inline-flex items-center gap-2 rounded-full px-7 py-3 text-[0.9375rem] font-semibold transition"
+                style="background-color: #D4A04A; color: #2C1810"
+                onmouseover="this.style.backgroundColor='#E0B05A'"
+                onmouseout="this.style.backgroundColor='#D4A04A'"
+              >
+                Read all reviews
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4"><path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638l-3.96-3.96a.75.75 0 1 1 1.06-1.06l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 1 1-1.06-1.06l3.96-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd" /></svg>
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================================
+           Option 4: PRODUCT COLLAGE
+           Central product image surrounded by review cards at various
+           angles and positions. Scrapbook/moodboard feel. Warm cream bg.
+           Reviews float around the hero product like sticky notes.
+           ============================================================ -->
+      <div data-uidotsh-option="Product Collage" class="contents" hidden>
+        <section class="font-dm relative overflow-hidden py-20 sm:py-28" style="background-color: #FFF8F0">
+          <!-- subtle texture -->
+          <div class="pointer-events-none absolute inset-0 opacity-[0.025]" style="background-image: radial-gradient(circle at 1px 1px, #3A1F0B 1px, transparent 0); background-size: 20px 20px"></div>
+
+          <!-- header -->
+          <div class="relative mx-auto mb-16 max-w-7xl px-6 text-center sm:mb-20 sm:px-10 lg:px-16">
+            <p class="mb-3 text-[0.8125rem] font-semibold tracking-widest" style="color: #C8653C">WHAT FAMILIES ARE SAYING</p>
+            <h2 class="font-fraunces mx-auto max-w-[20ch] text-balance text-[2.25rem] sm:text-[2.75rem] lg:text-[3.25rem]" style="color: #3A1F0B; font-weight: 500; line-height: 1.1">
+              60,000+ families trust <em class="italic" style="color: #D4603F">goodboy</em>
+            </h2>
+          </div>
+
+          <!-- collage area -->
+          <div class="relative mx-auto max-w-6xl px-6 sm:px-10 lg:px-16">
+            <!-- mobile: stacked cards + image -->
+            <!-- desktop: positioned collage -->
+            <div class="relative min-h-[700px] max-lg:flex max-lg:flex-col max-lg:items-center max-lg:gap-6">
+
+              <!-- center product image -->
+              <div class="relative z-10 mx-auto w-64 sm:w-72 lg:absolute lg:left-1/2 lg:top-1/2 lg:w-80 lg:-translate-x-1/2 lg:-translate-y-1/2">
+                <div class="aspect-square overflow-hidden rounded-3xl shadow-2xl ring-4" style="background-color: #F5E6DA; ring-color: #FFFBF5; box-shadow: 0 25px 60px rgba(58, 31, 11, 0.15)">
+                  <img
+                    src="https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?w=800&q=80&auto=format&fit=crop"
+                    alt="Dog food product"
+                    class="h-full w-full object-cover"
+                  >
+                </div>
+                <!-- aggregate badge -->
+                <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-full px-5 py-2.5 shadow-lg" style="background-color: #3A1F0B">
+                  <div class="flex gap-0.5">
+                    <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  </div>
+                  <p class="text-[0.75rem] font-semibold tabular-nums" style="color: #FFFBF5">4.8 · 60k+</p>
+                </div>
+              </div>
+
+              <!-- review card: top-left -->
+              <div class="w-72 rounded-2xl p-5 shadow-md ring-1 lg:absolute lg:left-0 lg:top-0" style="background-color: #FFFBF5; ring-color: rgba(58,31,11,0.04); transform: rotate(-3deg)">
+                <div class="flex gap-1 mb-2">
+                  <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <p class="text-[0.875rem] font-semibold" style="color: #3A1F0B">"Beau is a different dog"</p>
+                <p class="mt-1 text-[0.8125rem]" style="color: #7D5A50; line-height: 1.5">His energy was back within a month. Our vet couldn't believe the bloodwork.</p>
+                <p class="mt-2 text-[0.75rem] font-semibold" style="color: #C8653C">The Ramirez family · Denver</p>
+              </div>
+
+              <!-- review card: top-right -->
+              <div class="w-64 rounded-2xl p-5 shadow-md ring-1 lg:absolute lg:right-4 lg:top-8" style="background-color: #FFFBF5; ring-color: rgba(58,31,11,0.04); transform: rotate(2deg)">
+                <div class="flex gap-1 mb-2">
+                  <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <p class="text-[0.875rem] font-semibold" style="color: #3A1F0B">"Morning zoomies are back"</p>
+                <p class="mt-1 text-[0.8125rem]" style="color: #7D5A50; line-height: 1.5">She runs to her bowl every morning now.</p>
+                <p class="mt-2 text-[0.75rem] font-semibold" style="color: #C8653C">Jess &amp; Tom · Portland</p>
+              </div>
+
+              <!-- review card: bottom-left -->
+              <div class="w-64 rounded-2xl p-5 shadow-md ring-1 lg:absolute lg:bottom-8 lg:left-8" style="background-color: #FFFBF5; ring-color: rgba(58,31,11,0.04); transform: rotate(1.5deg)">
+                <div class="flex gap-1 mb-2">
+                  <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <p class="text-[0.875rem] font-semibold" style="color: #3A1F0B">"Our vet is impressed"</p>
+                <p class="mt-1 text-[0.8125rem]" style="color: #7D5A50; line-height: 1.5">Cooper's bloodwork has never looked this good.</p>
+                <p class="mt-2 text-[0.75rem] font-semibold" style="color: #C8653C">The Nguyens · Seattle</p>
+              </div>
+
+              <!-- review card: bottom-right -->
+              <div class="w-72 rounded-2xl p-5 shadow-md ring-1 lg:absolute lg:bottom-0 lg:right-0" style="background-color: #FFFBF5; ring-color: rgba(58,31,11,0.04); transform: rotate(-2deg)">
+                <div class="flex gap-1 mb-2">
+                  <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <p class="text-[0.875rem] font-semibold" style="color: #3A1F0B">"Worth every penny"</p>
+                <p class="mt-1 text-[0.8125rem]" style="color: #7D5A50; line-height: 1.5">Luna is 12, beat lymphoma, and has never been healthier. That's not a cost — that's an investment.</p>
+                <p class="mt-2 text-[0.75rem] font-semibold" style="color: #C8653C">Sarah · Brooklyn</p>
+              </div>
+
+              <!-- review card: mid-right (partially tucked) -->
+              <div class="w-56 rounded-2xl p-5 shadow-md ring-1 lg:absolute lg:right-16 lg:top-[45%]" style="background-color: #FFFBF5; ring-color: rgba(58,31,11,0.04); transform: rotate(-1deg)">
+                <div class="flex gap-1 mb-2">
+                  <svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <p class="text-[0.875rem] font-semibold" style="color: #3A1F0B">"Best decision we made"</p>
+                <p class="mt-1 text-[0.8125rem]" style="color: #7D5A50; line-height: 1.5">Real food for a real fighter.</p>
+                <p class="mt-2 text-[0.75rem] font-semibold" style="color: #C8653C">The Carters · Austin</p>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div class="relative mt-16 flex justify-center sm:mt-20">
+            <a href="#" class="inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold transition" style="background-color: #3A1F0B; color: #FFFBF5" onmouseover="this.style.backgroundColor='#5A3520'" onmouseout="this.style.backgroundColor='#3A1F0B'">
+              Shop Best Sellers
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4"><path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638l-3.96-3.96a.75.75 0 1 1 1.06-1.06l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 1 1-1.06-1.06l3.96-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd" /></svg>
+            </a>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================================
+           Option 5: TICKER WALL
+           Full-width reviews flowing in two rows going in opposite
+           directions like a ticker/marquee — continuous, alive, social
+           proof as a living wall. Dark brand bg with warm cards.
+           ============================================================ -->
+      <div data-uidotsh-option="Ticker Wall" class="contents" hidden>
+        <style>
+          @keyframes ticker-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+          @keyframes ticker-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+          .ticker-left { animation: ticker-left 40s linear infinite; }
+          .ticker-right { animation: ticker-right 40s linear infinite; }
+          .ticker-left:hover, .ticker-right:hover { animation-play-state: paused; }
+        </style>
+        <section class="font-dm overflow-hidden py-20 sm:py-28" style="background-color: #2C1810">
+          <!-- heading -->
+          <div class="mx-auto mb-14 max-w-7xl px-6 text-center sm:mb-16 sm:px-10">
+            <div class="flex items-center justify-center gap-3 mb-4">
+              <div class="flex gap-0.5">
+                <svg class="h-5 w-5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="h-5 w-5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="h-5 w-5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="h-5 w-5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="h-5 w-5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              </div>
+              <p class="text-lg font-semibold tabular-nums" style="color: #FFFBF5">4.8</p>
+            </div>
+            <h2 class="font-fraunces mx-auto max-w-[24ch] text-balance text-[2.25rem] sm:text-[3rem]" style="color: #FFFBF5; font-weight: 500; line-height: 1.1">
+              60,000+ families. One mission.
+            </h2>
+          </div>
+
+          <!-- row 1: scrolls left -->
+          <div class="relative mb-4 w-full">
+            <div class="ticker-left flex w-max gap-4">
+              <div class="flex w-80 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"Beau is a different dog"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">His energy was back within a month. Our vet couldn't believe the bloodwork.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">The Ramirez family · Denver</p></div>
+              <div class="flex w-72 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"Morning zoomies are back"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">She runs to her bowl every morning now. We're so grateful.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">Jess &amp; Tom · Portland</p></div>
+              <div class="flex w-80 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"Our vet is impressed"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">Cooper's bloodwork has never looked this good. The duck recipe is his favorite.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">The Nguyens · Seattle</p></div>
+              <div class="flex w-72 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"Worth every penny"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">Luna is 12, beat lymphoma, and has never been healthier.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">Sarah · Brooklyn</p></div>
+              <!-- duplicate for seamless loop -->
+              <div class="flex w-80 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"Beau is a different dog"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">His energy was back within a month. Our vet couldn't believe the bloodwork.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">The Ramirez family · Denver</p></div>
+              <div class="flex w-72 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"Morning zoomies are back"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">She runs to her bowl every morning now. We're so grateful.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">Jess &amp; Tom · Portland</p></div>
+              <div class="flex w-80 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"Our vet is impressed"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">Cooper's bloodwork has never looked this good. The duck recipe is his favorite.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">The Nguyens · Seattle</p></div>
+              <div class="flex w-72 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"Worth every penny"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">Luna is 12, beat lymphoma, and has never been healthier.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">Sarah · Brooklyn</p></div>
+            </div>
+          </div>
+
+          <!-- row 2: scrolls right -->
+          <div class="relative w-full">
+            <div class="ticker-right flex w-max gap-4">
+              <div class="flex w-72 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"Best decision we made"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">We switched from kibble and the difference in two weeks was unreal.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">The Carters · Austin</p></div>
+              <div class="flex w-80 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"She actually eats now"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">After chemo, Rosie wouldn't touch food. Goodboy changed everything for our family.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">Maria · Chicago</p></div>
+              <div class="flex w-72 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"Vet-approved"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">Our oncologist recommended real food. This was the only brand that checked every box.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">Dr. Patel recommends · NYC</p></div>
+              <div class="flex w-80 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"Three years cancer-free"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">Max has been on goodboy since his remission. We wouldn't feed him anything else.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">The Chens · San Francisco</p></div>
+              <!-- duplicate for seamless loop -->
+              <div class="flex w-72 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"Best decision we made"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">We switched from kibble and the difference in two weeks was unreal.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">The Carters · Austin</p></div>
+              <div class="flex w-80 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"She actually eats now"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">After chemo, Rosie wouldn't touch food. Goodboy changed everything for our family.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">Maria · Chicago</p></div>
+              <div class="flex w-72 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"Vet-approved"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">Our oncologist recommended real food. This was the only brand that checked every box.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">Dr. Patel recommends · NYC</p></div>
+              <div class="flex w-80 flex-shrink-0 flex-col gap-3 rounded-xl p-5" style="background-color: #3A1F0B"><p class="text-[0.875rem] font-semibold" style="color: #FFFBF5">"Three years cancer-free"</p><p class="text-[0.8125rem]" style="color: #C4A78D; line-height: 1.5">Max has been on goodboy since his remission. We wouldn't feed him anything else.</p><p class="mt-1 text-[0.75rem] font-semibold" style="color: #D4A04A">The Chens · San Francisco</p></div>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div class="mt-14 flex justify-center sm:mt-16">
+            <a href="#" class="inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold transition" style="background-color: #D4A04A; color: #2C1810" onmouseover="this.style.backgroundColor='#E0B05A'" onmouseout="this.style.backgroundColor='#D4A04A'">
+              Join 60,000+ families
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4"><path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638l-3.96-3.96a.75.75 0 1 1 1.06-1.06l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 1 1-1.06-1.06l3.96-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd" /></svg>
+            </a>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================================
+           Option 6: MASONRY MOSAIC
+           Staggered masonry grid mixing review cards with family photos.
+           Warm cream bg. Cards have different heights creating an organic,
+           Pinterest-like feel. Photos break up the text grid.
+           ============================================================ -->
+      <div data-uidotsh-option="Masonry Mosaic" class="contents" hidden>
+        <section class="font-dm py-20 sm:py-28" style="background-color: #FFF8F0">
+          <div class="mx-auto max-w-6xl px-6 sm:px-10 lg:px-16">
+            <!-- heading -->
+            <div class="mb-14 flex flex-col items-center gap-4 text-center sm:mb-16">
+              <p class="text-[0.8125rem] font-semibold tracking-widest" style="color: #C8653C">LOVED BY FAMILIES EVERYWHERE</p>
+              <h2 class="font-fraunces mx-auto max-w-[20ch] text-balance text-[2.25rem] sm:text-[2.75rem]" style="color: #3A1F0B; font-weight: 500; line-height: 1.1">
+                Stories from the <em class="italic" style="color: #D4603F">goodboy</em> family
+              </h2>
+              <div class="flex items-center gap-2 mt-2">
+                <div class="flex gap-0.5">
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="h-4 w-4" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <p class="text-sm tabular-nums" style="color: #7D5A50"><span class="font-semibold" style="color: #3A1F0B">4.8</span> from 60,000+ reviews</p>
+              </div>
+            </div>
+
+            <!-- masonry grid using CSS columns -->
+            <div class="gap-4 sm:columns-2 lg:columns-3" style="column-gap: 16px">
+              <!-- review card: long -->
+              <div class="mb-4 break-inside-avoid rounded-2xl p-6" style="background-color: #FFFBF5">
+                <div class="flex gap-1 mb-2"><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+                <h3 class="text-base font-semibold" style="color: #3A1F0B">Beau is a different dog</h3>
+                <p class="mt-2 text-[0.875rem]" style="color: #7D5A50; line-height: 1.6">We adopted Beau at 9 after his cancer diagnosis. Within a month on goodboy, his energy was back and his coat started filling in again. Our vet couldn't believe the bloodwork.</p>
+                <p class="mt-3 text-[0.75rem] font-semibold" style="color: #C8653C">The Ramirez family · Denver</p>
+              </div>
+
+              <!-- photo card -->
+              <div class="mb-4 break-inside-avoid overflow-hidden rounded-2xl">
+                <img src="https://images.unsplash.com/photo-1530041539828-114de669390e?w=600&q=80&auto=format&fit=crop" alt="Family with dog" class="w-full object-cover" style="aspect-ratio: 4/3">
+              </div>
+
+              <!-- review card: short -->
+              <div class="mb-4 break-inside-avoid rounded-2xl p-6" style="background-color: #FFFBF5">
+                <div class="flex gap-1 mb-2"><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+                <h3 class="text-base font-semibold" style="color: #3A1F0B">Morning zoomies are back</h3>
+                <p class="mt-2 text-[0.875rem]" style="color: #7D5A50; line-height: 1.6">She runs to her bowl every morning now.</p>
+                <p class="mt-3 text-[0.75rem] font-semibold" style="color: #C8653C">Jess &amp; Tom · Portland</p>
+              </div>
+
+              <!-- review card: medium -->
+              <div class="mb-4 break-inside-avoid rounded-2xl p-6" style="background-color: #FFFBF5">
+                <div class="flex gap-1 mb-2"><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+                <h3 class="text-base font-semibold" style="color: #3A1F0B">Our vet is impressed</h3>
+                <p class="mt-2 text-[0.875rem]" style="color: #7D5A50; line-height: 1.6">Cooper's bloodwork has never looked this good. Our vet noticed the improvement before we did. The duck recipe is his absolute favorite.</p>
+                <p class="mt-3 text-[0.75rem] font-semibold" style="color: #C8653C">The Nguyens · Seattle</p>
+              </div>
+
+              <!-- photo card -->
+              <div class="mb-4 break-inside-avoid overflow-hidden rounded-2xl">
+                <img src="https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?w=600&q=80&auto=format&fit=crop" alt="Happy dog" class="w-full object-cover" style="aspect-ratio: 1/1">
+              </div>
+
+              <!-- review card: short -->
+              <div class="mb-4 break-inside-avoid rounded-2xl p-6" style="background-color: #FFFBF5">
+                <div class="flex gap-1 mb-2"><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+                <h3 class="text-base font-semibold" style="color: #3A1F0B">Worth every penny</h3>
+                <p class="mt-2 text-[0.875rem]" style="color: #7D5A50; line-height: 1.6">Luna is 12, beat lymphoma, and has never been healthier. That's not a cost — that's an investment.</p>
+                <p class="mt-3 text-[0.75rem] font-semibold" style="color: #C8653C">Sarah · Brooklyn</p>
+              </div>
+
+              <!-- review card: short -->
+              <div class="mb-4 break-inside-avoid rounded-2xl p-6" style="background-color: #FFFBF5">
+                <div class="flex gap-1 mb-2"><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><svg class="h-3.5 w-3.5" style="color: #D4A04A" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></div>
+                <h3 class="text-base font-semibold" style="color: #3A1F0B">Three years cancer-free</h3>
+                <p class="mt-2 text-[0.875rem]" style="color: #7D5A50; line-height: 1.6">Max has been on goodboy since his remission. We wouldn't feed him anything else.</p>
+                <p class="mt-3 text-[0.75rem] font-semibold" style="color: #C8653C">The Chens · San Francisco</p>
+              </div>
+
+              <!-- photo card -->
+              <div class="mb-4 break-inside-avoid overflow-hidden rounded-2xl">
+                <img src="https://images.unsplash.com/photo-1534361960057-19889db9621e?w=600&q=80&auto=format&fit=crop" alt="Happy dog outdoors" class="w-full object-cover" style="aspect-ratio: 3/4">
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </div>
+
+    <script src="https://ui.sh/ui-picker.js"></script>
+  </body>
+</html>

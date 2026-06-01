@@ -1,0 +1,230 @@
+{%- comment -%}
+  README
+  Testimonials — Social proof section displaying customer review cards.
+
+  Displays a centered heading and subheading with a row of testimonial cards
+  beneath. Each card includes a star rating, quote, attribution, and a colored
+  badge that links to a product. Desktop shows cards in a row; mobile stacks
+  them vertically.
+
+  Section settings:
+  | Setting          | Type     | Required |
+  |------------------|----------|----------|
+  | heading          | text     | No       |
+  | subheading       | textarea | No       |
+  | background_color | color    | No       |
+
+  Block settings (testimonial_card):
+  | Setting         | Type     | Required |
+  |-----------------|----------|----------|
+  | rating          | text     | No       |
+  | quote           | textarea | No       |
+  | attribution     | text     | No       |
+  | badge_label     | text     | No       |
+  | badge_color     | color    | No       |
+  | badge_text_dark | checkbox | No       |
+  | badge_product   | product  | No       |
+{%- endcomment -%}
+
+<div
+  id="Testimonials-{{ section.id }}"
+  class="py-12 px-4 md:py-20 md:px-0"
+  {% if section.settings.background_color != blank %}
+    style="background-color: {{ section.settings.background_color }};"
+  {% endif %}
+>
+  <div class="mx-auto flex max-w-[1280px] flex-col gap-8 md:gap-12">
+    {%- comment -%} Header {%- endcomment -%}
+    <div class="flex flex-col gap-2 md:items-center md:gap-3">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="font-heading text-[32px] uppercase leading-[1.2] tracking-[0.06em] text-[#221F1B] md:text-center md:text-[40px] md:leading-none">
+          {{- section.settings.heading | escape -}}
+        </h2>
+      {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <p class="max-w-[800px] text-sm leading-[1.35] text-[#534C42] md:text-center md:text-lg">
+          {{- section.settings.subheading | escape -}}
+        </p>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Cards {%- endcomment -%}
+    {%- if section.blocks.size > 0 -%}
+      <div class="flex flex-col gap-10 lg:flex-row">
+        {%- for block in section.blocks -%}
+          <div
+            {{ block.shopify_attributes }}
+            class="relative flex flex-1 flex-col gap-4 rounded-xl bg-white p-6 pb-10 md:gap-6 md:p-8 md:pb-12"
+          >
+            {%- comment -%} Star Rating {%- endcomment -%}
+            <div class="flex items-center gap-1.5">
+              <div class="flex items-center gap-0.5 text-[#F37421]">
+                {%- assign rating_whole = block.settings.rating | floor -%}
+                {%- for i in (1..rating_whole) -%}
+                  <span class="size-4 md:size-[18px]">{%- render 'icon-star' -%}</span>
+                {%- endfor -%}
+              </div>
+              <span class="text-sm font-medium leading-[1.35] tracking-[0.01em] text-[#534C42] md:text-base">
+                {{- block.settings.rating -}}
+              </span>
+            </div>
+
+            {%- comment -%} Quote & Attribution {%- endcomment -%}
+            <div class="flex flex-1 flex-col gap-3 md:gap-4">
+              {%- if block.settings.quote != blank -%}
+                <p class="font-heading text-xl uppercase leading-[1.2] tracking-[0.06em] text-[#221F1B]">
+                  {{- block.settings.quote | escape -}}
+                </p>
+              {%- endif -%}
+              {%- if block.settings.attribution != blank -%}
+                <p class="text-sm font-medium leading-[1.35] text-[#534C42] md:text-base">
+                  {{- block.settings.attribution | escape -}}
+                </p>
+              {%- endif -%}
+            </div>
+
+            {%- comment -%} Badge {%- endcomment -%}
+            {%- if block.settings.badge_label != blank -%}
+              <a
+                {% if block.settings.badge_product != blank %}
+                  href="{{ block.settings.badge_product.url }}"
+                {% endif %}
+                class="absolute bottom-6 left-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 md:bottom-8 md:left-8"
+                {% if block.settings.badge_color != blank %}
+                  style="background-color: {{ block.settings.badge_color }};"
+                {% endif %}
+              >
+                <span class="text-sm font-semibold leading-[18px] md:text-base md:leading-[22px] {% if block.settings.badge_text_dark %}text-[#221F1B]{% else %}text-white{% endif %}">
+                  {{- block.settings.badge_label | escape -}}
+                </span>
+                <span class="size-6 {% if block.settings.badge_text_dark %}text-[#221F1B]{% else %}text-white{% endif %}">
+                  {%- render 'icon-arrow' -%}
+                </span>
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Real Routines. Real Results."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Your biology already runs on a rhythm. We built a system to match it."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#E9E7E5"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial_card",
+      "name": "Testimonial card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "rating",
+          "label": "Rating",
+          "default": "5.0",
+          "info": "Star rating value (e.g. 5.0)"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed."
+        },
+        {
+          "type": "text",
+          "id": "attribution",
+          "label": "Attribution",
+          "default": "— Attribution"
+        },
+        {
+          "type": "text",
+          "id": "badge_label",
+          "label": "Badge label",
+          "default": "Morning Energy"
+        },
+        {
+          "type": "color",
+          "id": "badge_color",
+          "label": "Badge color",
+          "default": "#FBAB18"
+        },
+        {
+          "type": "checkbox",
+          "id": "badge_text_dark",
+          "label": "Dark badge text",
+          "default": true,
+          "info": "Use dark text on light badges. Uncheck for white text on dark badges."
+        },
+        {
+          "type": "product",
+          "id": "badge_product",
+          "label": "Badge product link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "category": "Social proof",
+      "blocks": [
+        {
+          "type": "testimonial_card",
+          "settings": {
+            "rating": "5.0",
+            "quote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed.",
+            "attribution": "— Attribution",
+            "badge_label": "Morning Energy",
+            "badge_color": "#FBAB18",
+            "badge_text_dark": true
+          }
+        },
+        {
+          "type": "testimonial_card",
+          "settings": {
+            "rating": "5.0",
+            "quote": "Ut enim ad minim veniam, quis nostrud ullamco laboris nisi ut aliquip.",
+            "attribution": "— Attribution",
+            "badge_label": "Mid-Day Boost",
+            "badge_color": "#32C5F0",
+            "badge_text_dark": true
+          }
+        },
+        {
+          "type": "testimonial_card",
+          "settings": {
+            "rating": "5.0",
+            "quote": "Duis aute irure dolor in reprehenderit in voluptate velit esse.",
+            "attribution": "— Attribution",
+            "badge_label": "P.M. Relax",
+            "badge_color": "#5D479D",
+            "badge_text_dark": false
+          }
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6
+}
+{% endschema %}

@@ -1,0 +1,275 @@
+{%- comment -%}
+  README
+  Content Spotlight — Full-width media with eyebrow, heading, description, and CTA.
+
+  Displays a large media area (image or video) alongside text content with an
+  eyebrow, divider, heading, description, and a CTA button. Text can be
+  positioned above or below the media. The media can optionally be full-bleed
+  (edge-to-edge) while text always respects the container margin. Uses the
+  <video-player> island for video controls. On desktop the heading and button
+  sit side by side on a 12-column grid (9/3 split); on mobile they stack.
+
+  Note: Image and text blocks use {% capture %} with a Liquid conditional to
+  control DOM order. CSS order classes did not reliably apply in the Shopify
+  theme editor preview, so we render the blocks in the correct sequence
+  server-side instead.
+
+  Section settings:
+  | Setting           | Type         | Required |
+  |-------------------|--------------|----------|
+  | image             | image_picker | No       |
+  | video             | video        | No       |
+  | full_bleed_image  | checkbox     | No       |
+  | eyebrow           | text         | No       |
+  | heading           | text         | No       |
+  | description       | textarea     | No       |
+  | button_label      | text         | No       |
+  | button_link       | url          | No       |
+  | button_color      | color        | No       |
+  | button_text_color | color        | No       |
+  | text_position     | select       | No       |
+  | background_color  | color        | No       |
+{%- endcomment -%}
+
+{%- liquid
+  assign loading = 'lazy'
+  assign preload = false
+  assign fetchpriority = 'auto'
+  if section.index0 == 0
+    assign loading = 'eager'
+    assign preload = true
+    assign fetchpriority = 'high'
+  endif
+-%}
+
+<div
+  id="ContentSpotlight-{{ section.id }}"
+  class="grid gap-12 py-20 md:gap-16 md:py-[100px] {% unless section.settings.full_bleed_image %}px-4 md:px-16{% endunless %}"
+  {% if section.settings.background_color != blank %}
+    style="background-color: {{ section.settings.background_color }};"
+  {% endif %}
+>
+  {%- capture media_block -%}
+    <div>
+      {%- if section.settings.video != blank -%}
+        <video-player client:visible class="group relative block" data-state="playing" data-muted="true">
+          <video
+            class="block w-full object-cover"
+            style="aspect-ratio: {{ section.settings.video.aspect_ratio }};"
+            autoplay
+            muted
+            loop
+            playsinline
+            {% if section.settings.image != blank %}
+              poster="{{ section.settings.image | image_url: width: 2400 }}"
+            {% endif %}
+          >
+            {%- for source in section.settings.video.sources -%}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {%- endfor -%}
+          </video>
+          <div class="absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-3 bg-black/40 backdrop-blur-sm">
+            <button
+              type="button"
+              data-play
+              class="text-white cursor-pointer opacity-85 hover:opacity-100 transition-opacity"
+              aria-label="Play / Pause"
+            >
+              <span class="block group-data-[state=playing]:hidden">{%- render 'icon-play' -%}</span>
+              <span class="hidden group-data-[state=playing]:block">{%- render 'icon-pause' -%}</span>
+            </button>
+            <button
+              type="button"
+              data-mute
+              class="text-white cursor-pointer opacity-85 hover:opacity-100 transition-opacity"
+              aria-label="Mute / Unmute"
+            >
+              <span class="block group-data-[muted=true]:hidden">{%- render 'icon-volume' -%}</span>
+              <span class="hidden group-data-[muted=true]:block">{%- render 'icon-volume-mute' -%}</span>
+            </button>
+          </div>
+        </video-player>
+      {%- elsif section.settings.image != blank -%}
+        {%- assign image_height = section.settings.image.width | divided_by: section.settings.image.aspect_ratio -%}
+        {{
+          section.settings.image
+          | image_url: width: 2400
+          | image_tag:
+            loading: loading,
+            preload: preload,
+            fetchpriority: fetchpriority,
+            width: section.settings.image.width,
+            height: image_height,
+            class: 'block w-full object-cover',
+            sizes: '100vw',
+            widths: '375, 550, 750, 1100, 1500, 1780, 2000, 2400',
+            alt: section.settings.image.alt
+          | escape
+        }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'w-full object-cover fill-primary/20' }}
+      {%- endif -%}
+    </div>
+  {%- endcapture -%}
+
+  {%- capture text_block -%}
+    <div class="grid gap-6 {% if section.settings.full_bleed_image %}px-4 md:px-16{% endif %}">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="text-sm font-semibold uppercase tracking-[0.12em]">
+        {{- section.settings.eyebrow | escape -}}
+      </p>
+    {%- endif -%}
+
+    <hr class="border-t border-current opacity-20">
+
+    <div class="grid gap-10 md:grid-cols-12 md:items-end">
+      <div class="grid gap-4 md:col-span-9">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="font-heading text-[32px] leading-[1.1] md:text-5xl md:leading-[1.2]">
+            {{- section.settings.heading | escape -}}
+          </h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <p class="text-base leading-[1.5]">
+            {{- section.settings.description | escape -}}
+          </p>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.button_label != blank -%}
+        <div class="md:col-start-11 md:col-span-2">
+          <a
+            {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
+            class="inline-flex w-fit items-center justify-center rounded-full px-6 py-3 text-base font-normal transition hover:opacity-90"
+            {% if section.settings.button_color != blank and section.settings.button_text_color != blank %}
+              style="background-color: {{ section.settings.button_color }}; color: {{ section.settings.button_text_color }};"
+            {% endif %}
+          >
+            {{- section.settings.button_label | escape -}}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+    </div>
+  {%- endcapture -%}
+
+  {%- if section.settings.text_position == 'above' -%}
+    {{ text_block }}
+    {{ media_block }}
+  {%- else -%}
+    {{ media_block }}
+    {{ text_block }}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Content spotlight",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Also used as the video poster frame when a video is set."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "info": "When set, the video replaces the image. Autoplays muted and loops."
+    },
+    {
+      "type": "checkbox",
+      "id": "full_bleed_image",
+      "label": "Full-bleed media",
+      "default": false,
+      "info": "Extend the media edge-to-edge. Text content always respects the container margin."
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Lorem ipsum"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Rooted in craftsmanship and artistry, our bold flavors turn meals into moments that spark connection and lasting memories."
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button color",
+      "default": "#D8DF6D"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#001B00"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "text_position",
+      "options": [
+        {
+          "value": "below",
+          "label": "Below image"
+        },
+        {
+          "value": "above",
+          "label": "Above image"
+        }
+      ],
+      "default": "below",
+      "label": "Text position"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Content spotlight",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}
