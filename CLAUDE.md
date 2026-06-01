@@ -33,6 +33,7 @@ Islands are Web Components (extend `HTMLElement`) that are lazily hydrated based
 - `client:media` - Hydrate when media query matches
 
 Usage in Liquid:
+
 ```html
 <product-form client:visible>
   <!-- Content hydrated only when scrolled into view -->
@@ -44,6 +45,7 @@ The hydration engine (`lib/revive.js`) uses `MutationObserver` to detect custom 
 ### Island Pattern
 
 All islands follow this structure:
+
 ```javascript
 class MyIsland extends window.HTMLElement {
   constructor() {

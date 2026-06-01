@@ -13,15 +13,15 @@ This document outlines the plan to refactor cart components to use a global even
 
 All cart events will be namespaced with `cart:` prefix and use past/present tense to indicate lifecycle:
 
-| Event | When Fired | Detail Payload |
-|-------|------------|----------------|
-| `cart:adding` | Before add-to-cart API call | `{ productId, variantId, quantity, form }` |
-| `cart:added` | After successful add | `{ productId, variantId, cart, sections }` |
-| `cart:updating` | Before quantity/note change | `{ line, quantity }` |
-| `cart:updated` | After successful update | `{ cart, sections }` |
-| `cart:removing` | Before item removal | `{ line }` |
-| `cart:removed` | After item removed | `{ cart, sections }` |
-| `cart:error` | On any cart API error | `{ error, action }` |
+| Event           | When Fired                  | Detail Payload                             |
+| --------------- | --------------------------- | ------------------------------------------ |
+| `cart:adding`   | Before add-to-cart API call | `{ productId, variantId, quantity, form }` |
+| `cart:added`    | After successful add        | `{ productId, variantId, cart, sections }` |
+| `cart:updating` | Before quantity/note change | `{ line, quantity }`                       |
+| `cart:updated`  | After successful update     | `{ cart, sections }`                       |
+| `cart:removing` | Before item removal         | `{ line }`                                 |
+| `cart:removed`  | After item removed          | `{ cart, sections }`                       |
+| `cart:error`    | On any cart API error       | `{ error, action }`                        |
 
 ## New File Structure
 
@@ -78,17 +78,20 @@ export function onCartEvent(name, callback) {
 Remove direct `cart-drawer` reference. Dispatch events instead.
 
 **Changes:**
+
 - Remove `this.cart = document.querySelector('cart-drawer')`
 - Dispatch `cart:adding` before fetch
 - Dispatch `cart:added` on success with sections data
 - Dispatch `cart:error` on failure
 
 **Before:**
+
 ```javascript
 this.cart.renderContents(response)
 ```
 
 **After:**
+
 ```javascript
 dispatchCartEvent('added', {
   productId: this.productId,
@@ -103,11 +106,13 @@ dispatchCartEvent('added', {
 Listen for `cart:added` event to open and render.
 
 **Changes:**
+
 - Add event listener in constructor for `cart:added`
 - Keep `renderContents()` method but call it from event handler
 - Remove dependency on being called directly by other components
 
 **Add to constructor:**
+
 ```javascript
 document.addEventListener('cart:added', (event) => {
   this.renderContents(event.detail)
@@ -120,6 +125,7 @@ document.addEventListener('cart:added', (event) => {
 Dispatch events during quantity updates.
 
 **Changes:**
+
 - Dispatch `cart:updating` before API call in `updateQuantity()`
 - Dispatch `cart:updated` after successful response
 - Dispatch `cart:error` in catch block
@@ -129,6 +135,7 @@ Dispatch events during quantity updates.
 Dispatch removal-specific event.
 
 **Changes:**
+
 - Dispatch `cart:removing` before calling `updateQuantity(index, 0)`
 - Parent `cart-items` will dispatch `cart:updated` after completion
 
@@ -186,16 +193,16 @@ document.addEventListener('cart:updated', (event) => {
 
 ## Files to Modify
 
-| File | Change Type |
-|------|-------------|
-| `frontend/lib/cart-events.js` | Create |
-| `frontend/islands/product-form.js` | Modify |
-| `frontend/islands/cart-drawer.js` | Modify |
-| `frontend/islands/cart-items.js` | Modify |
-| `frontend/islands/cart-drawer-items.js` | Minor (inherits from cart-items) |
-| `frontend/islands/cart-remove-button.js` | Modify |
-| `frontend/entrypoints/theme.js` | Possibly add global event import |
-| `docs/cart-drawer.md` | Update |
+| File                                     | Change Type                      |
+| ---------------------------------------- | -------------------------------- |
+| `frontend/lib/cart-events.js`            | Create                           |
+| `frontend/islands/product-form.js`       | Modify                           |
+| `frontend/islands/cart-drawer.js`        | Modify                           |
+| `frontend/islands/cart-items.js`         | Modify                           |
+| `frontend/islands/cart-drawer-items.js`  | Minor (inherits from cart-items) |
+| `frontend/islands/cart-remove-button.js` | Modify                           |
+| `frontend/entrypoints/theme.js`          | Possibly add global event import |
+| `docs/cart-drawer.md`                    | Update                           |
 
 ## Open Questions
 
