@@ -5,8 +5,8 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite & shopify theme dev -s progresslabs-functions",
-    "build": "vitest run && vite build",
-    "deploy": "vitest run && npm run build && shopify theme push",
+    "build": "npm run typecheck && vitest run && vite build",
+    "deploy": "npm run typecheck && vitest run && npm run build && shopify theme push",
     "lint": "eslint .",
     "format": "prettier --write --cache .",
     "format-check": "prettier --check .",
