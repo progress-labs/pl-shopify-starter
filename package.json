@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "format": "prettier --write --cache .",
     "format-check": "prettier --check .",
-    "test": "vitest"
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@driver-digital/vite-plugin-shopify-clean": "^2.0.0",
