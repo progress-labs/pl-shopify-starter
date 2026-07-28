@@ -2,10 +2,12 @@ import js from '@eslint/js'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
-/** @type {import('eslint').Linter.Config[]} */
-export default [
+export default tseslint.config(
   js.configs.recommended,
-  ...tseslint.configs.recommended,
+  {
+    files: ['**/*.ts'],
+    extends: [...tseslint.configs.recommended]
+  },
   {
     languageOptions: {
       globals: {
@@ -17,4 +19,4 @@ export default [
   {
     ignores: ['assets/']
   }
-]
+)
