@@ -71,7 +71,7 @@ function idle() {
  * dynamic import functions `() => Promise<Module>`.
  * @type {Record<string, () => Promise<Record<string, any>>>}
  */
-export const islands = import.meta.glob('@/islands/*.js')
+export const islands = import.meta.glob('@/islands/*.{js,ts}')
 
 /**
  * Bootstrap island hydration. Performs a depth-first walk of `document.body`
@@ -94,10 +94,12 @@ export function revive(islands) {
 
   async function dfs(node) {
     const tagName = node.tagName.toLowerCase()
-    const potentialJsPath = `/frontend/islands/${tagName}.js`
+    const loader =
+      islands[`/frontend/islands/${tagName}.ts`] ??
+      islands[`/frontend/islands/${tagName}.js`]
     const isPotentialCustomElementName = /-/.test(tagName)
 
-    if (isPotentialCustomElementName && islands[potentialJsPath]) {
+    if (isPotentialCustomElementName && loader) {
       if (node.hasAttribute('client:visible')) {
         await visible({ element: node })
       }
@@ -111,7 +113,7 @@ export function revive(islands) {
         await idle()
       }
 
-      islands[potentialJsPath]()
+      loader()
     }
 
     let child = node.firstElementChild
