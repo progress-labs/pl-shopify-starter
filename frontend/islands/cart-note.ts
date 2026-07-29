@@ -15,7 +15,8 @@ class CartNote extends window.HTMLElement {
 
     this.addEventListener('change', (event) => {
       event.stopPropagation()
-      updateCartNote({ note: event.target.value })
+      const target = event.target as HTMLTextAreaElement
+      updateCartNote({ note: target.value })
     })
   }
 }
