@@ -16,24 +16,32 @@
  *   - cart:error              - Any API error
  */
 
-/**
- * @typedef {Object} CartAddRequestBody
- * @property {number} id - Variant ID
- * @property {number} quantity
- * @property {string[]} sections - Section IDs to re-render
- * @property {string} sections_url - Current page pathname
- * @property {Object<string, string>} [properties] - Line item custom properties
- * @property {number} [selling_plan] - Selling plan ID
- */
-
-import { dispatchCartEvent } from '@/lib/cart-events'
+import { CartAddDetail, dispatchCartEvent } from '@/lib/cart-events'
 import { fetchConfig } from '@/lib/utils'
+
+interface CartAddRequestBody {
+  id: number
+  quantity: number
+  sections: string[]
+  sections_url: string
+  properties?: Record<string, string>
+  selling_plan?: number
+}
+
+interface CartUpdateDetail {
+  /** 1-based line item index */
+  line: string | number
+  /** New quantity (0 = remove) */
+  quantity: number | string
+  /** Section IDs to re-render */
+  sections?: string[]
+}
 
 /**
  *
  * @question - Why do we only render the cart-icon-bubble section?
  */
-function getSectionsToRender() {
+function getSectionsToRender(): string[] {
   const cartDrawer = document.querySelector('cart-drawer')
   if (cartDrawer) {
     return cartDrawer.getSectionsToRender().map((section) => section.id)
@@ -41,16 +49,12 @@ function getSectionsToRender() {
   return ['cart-icon-bubble']
 }
 
-/**
- * @param {import('./cart-events').CartAddDetail} detail
- * @returns {Promise<void>}
- */
 export async function addToCart({
   variantId,
   quantity = 1,
   properties,
   sellingPlanId
-}) {
+}: CartAddDetail): Promise<void> {
   if (!variantId) {
     dispatchCartEvent('error', {
       error: 'No variant ID provided',
@@ -64,7 +68,7 @@ export async function addToCart({
     quantity
   })
 
-  const body = {
+  const body: CartAddRequestBody = {
     id: Number(variantId),
     quantity,
     sections: getSectionsToRender(),
@@ -104,25 +108,21 @@ export async function addToCart({
     })
   } catch (e) {
     dispatchCartEvent('error', {
-      error: e.message,
+      error: e instanceof Error ? e.message : String(e),
       action: 'add'
     })
   }
 }
 
 /**
- * @typedef {Object} CartUpdateDetail
- * @property {string|number} line - 1-based line item index
- * @property {number} quantity - New quantity (0 = remove)
- * @property {string[]} sections - Section IDs to re-render
- */
-
-/**
  * Update a line item's quantity in the cart
- * @param {CartUpdateDetail} detail
- * @returns {Promise<Object|undefined>} Cart state on success, undefined on error
+ * @returns Cart state on success, undefined on error
  */
-export async function updateCartItem({ line, quantity, sections = [] }) {
+export async function updateCartItem({
+  line,
+  quantity,
+  sections = []
+}: CartUpdateDetail): Promise<unknown> {
   if (!line) {
     dispatchCartEvent('error', {
       error: 'No line item index provided',
@@ -131,9 +131,9 @@ export async function updateCartItem({ line, quantity, sections = [] }) {
     return
   }
 
-  const isRemoving = parseInt(quantity) === 0
+  const isRemoving = parseInt(String(quantity), 10) === 0
 
-  dispatchCartEvent('updating', { line, quantity })
+  dispatchCartEvent('updating', { line, quantity: Number(quantity) })
 
   if (isRemoving) {
     dispatchCartEvent('removing', { line })
@@ -141,7 +141,7 @@ export async function updateCartItem({ line, quantity, sections = [] }) {
 
   const body = {
     line,
-    quantity: parseInt(quantity),
+    quantity: parseInt(String(quantity), 10),
     sections,
     sections_url: window.location.pathname
   }
@@ -179,7 +179,7 @@ export async function updateCartItem({ line, quantity, sections = [] }) {
     return data
   } catch (e) {
     dispatchCartEvent('error', {
-      error: e.message,
+      error: e instanceof Error ? e.message : String(e),
       action: isRemoving ? 'remove' : 'update'
     })
   }
@@ -187,10 +187,13 @@ export async function updateCartItem({ line, quantity, sections = [] }) {
 
 /**
  * Update the cart note
- * @param {{ note: string }} detail
- * @returns {Promise<Object|undefined>} Cart state on success, undefined on error
+ * @returns Cart state on success, undefined on error
  */
-export async function updateCartNote({ note }) {
+export async function updateCartNote({
+  note
+}: {
+  note: string
+}): Promise<unknown> {
   try {
     const response = await fetch(window.routes.cart_update_url, {
       ...fetchConfig(),
@@ -211,7 +214,7 @@ export async function updateCartNote({ note }) {
     return cart
   } catch (e) {
     dispatchCartEvent('error', {
-      error: e.message,
+      error: e instanceof Error ? e.message : String(e),
       action: 'note-update'
     })
   }
