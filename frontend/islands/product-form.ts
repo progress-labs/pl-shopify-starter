@@ -23,16 +23,22 @@
  * Events dispatched: cart:add
  */
 import { dispatchCartEvent, onCartEvent } from '@/lib/cart-events'
+import { must } from '@/lib/dom'
+import type { CartErrorDetail } from '@/lib/cart-events'
 
 class ProductForm extends window.HTMLElement {
+  form!: HTMLFormElement
+  submitButton!: HTMLButtonElement
+  pending = false
+  errorMessage?: HTMLElement
+
   constructor() {
     super()
 
-    this.form = this.querySelector('form')
-    this.form.querySelector('[name="id"]').disabled = false
+    this.form = must(this, 'form')
+    must<HTMLInputElement>(this.form, '[name="id"]').disabled = false
     this.form.addEventListener('submit', this.onSubmitHandler.bind(this))
-    this.submitButton = this.querySelector('[type="submit"]')
-    this.pending = false
+    this.submitButton = must(this, '[type="submit"]')
 
     if (document.querySelector('cart-drawer'))
       this.submitButton.setAttribute('aria-haspopup', 'dialog')
@@ -41,20 +47,21 @@ class ProductForm extends window.HTMLElement {
     onCartEvent('error', this.onCartError.bind(this))
   }
 
-  onSubmitHandler(evt) {
+  onSubmitHandler(evt: SubmitEvent) {
     evt.preventDefault()
-    if (this.submitButton.getAttribute('aria-disabled') === true) return
+    if (this.submitButton.getAttribute('aria-disabled') === 'true') return
 
     this.handleErrorMessage()
-    this.submitButton.setAttribute('aria-disabled', true)
+    this.submitButton.setAttribute('aria-disabled', 'true')
     this.submitButton.classList.add('loading')
     this.pending = true
 
     const formData = new window.FormData(this.form)
-    const variantId = formData.get('id')
-    const quantity = parseInt(formData.get('quantity')) || 1
+    const variantId = formData.get('id') as string
+    const quantityValue = formData.get('quantity')
+    const quantity = (quantityValue ? parseInt(String(quantityValue)) : NaN) || 1
     const properties = this.getLineItemProperties(formData)
-    const sellingPlanId = formData.get('selling_plan')
+    const sellingPlanId = formData.get('selling_plan') as string | null
 
     dispatchCartEvent('add', {
       variantId,
@@ -64,12 +71,12 @@ class ProductForm extends window.HTMLElement {
     })
   }
 
-  getLineItemProperties(formData) {
-    const properties = {}
+  getLineItemProperties(formData: FormData) {
+    const properties: Record<string, string> = {}
     for (const [key, value] of formData.entries()) {
       const match = key.match(/^properties\[(.+)\]$/)
       if (match && value) {
-        properties[match[1]] = value
+        properties[match[1]] = value as string
       }
     }
     return properties
@@ -87,21 +94,21 @@ class ProductForm extends window.HTMLElement {
     }
 
     if (!cartDrawer) {
-      window.location = window.routes.cart_url
+      window.location.href = window.routes.cart_url
     }
   }
 
-  onCartError({ error, action }) {
+  onCartError({ error, action }: CartErrorDetail) {
     if (!this.pending || action !== 'add') return
     this.pending = false
     this.handleErrorMessage(error)
     this.submitButton.classList.remove('loading')
-    this.submitButton.setAttribute('aria-disabled', true)
+    this.submitButton.setAttribute('aria-disabled', 'true')
   }
 
-  handleErrorMessage(errorMessage = false) {
+  handleErrorMessage(errorMessage: string | false = false) {
     this.errorMessage =
-      this.errorMessage || this.querySelector('[data-error-message]')
+      this.errorMessage || must(this, '[data-error-message]')
 
     this.errorMessage.toggleAttribute('hidden', !errorMessage)
 
