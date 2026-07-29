@@ -14,7 +14,7 @@ import { captureException } from '@/lib/sentry.js'
 
 class ProductRecommendations extends window.HTMLElement {
   connectedCallback() {
-    fetch(this.dataset.url)
+    fetch(this.dataset.url as string)
       .then((response) => response.text())
       .then((text) => {
         const html = document.createElement('div')
