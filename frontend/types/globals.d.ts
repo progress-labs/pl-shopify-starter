@@ -1,9 +1,6 @@
-export {}
+import type { CartDrawer } from '@/islands/cart-drawer'
 
-/** Minimal contract for the <cart-drawer> element, consumed by cart-api. */
-interface CartDrawerElement extends HTMLElement {
-  getSectionsToRender(): { id: string }[]
-}
+export {}
 
 declare global {
   interface Window {
@@ -20,6 +17,6 @@ declare global {
   }
 
   interface HTMLElementTagNameMap {
-    'cart-drawer': CartDrawerElement
+    'cart-drawer': CartDrawer
   }
 }
