@@ -68,11 +68,11 @@ function idle(): Promise<void> {
 
 /**
  * Eagerly resolved map of island modules produced by Vite's `import.meta.glob`.
- * Keys are paths like `/frontend/islands/product-form.js`; values are
+ * Keys are paths like `/frontend/islands/product-form.ts`; values are
  * dynamic import functions `() => Promise<Module>`.
  */
 export const islands: Record<string, () => Promise<unknown>> =
-  import.meta.glob('@/islands/*.{js,ts}')
+  import.meta.glob('@/islands/*.ts')
 
 /**
  * Bootstrap island hydration. Performs a depth-first walk of `document.body`
@@ -80,7 +80,7 @@ export const islands: Record<string, () => Promise<unknown>> =
  * any islands added later (e.g. via section rendering).
  *
  * @param islands
- *   Module map from `import.meta.glob` — keys are `/frontend/islands/<tag>.js` paths.
+ *   Module map from `import.meta.glob` — keys are `/frontend/islands/<tag>.ts` paths.
  */
 export function revive(islands: Record<string, () => Promise<unknown>>) {
   const observer = new window.MutationObserver((mutations) => {
@@ -95,9 +95,7 @@ export function revive(islands: Record<string, () => Promise<unknown>>) {
 
   async function dfs(node: Element) {
     const tagName = node.tagName.toLowerCase()
-    const loader =
-      islands[`/frontend/islands/${tagName}.ts`] ??
-      islands[`/frontend/islands/${tagName}.js`]
+    const loader = islands[`/frontend/islands/${tagName}.ts`]
     const isPotentialCustomElementName = /-/.test(tagName)
 
     if (isPotentialCustomElementName && loader) {

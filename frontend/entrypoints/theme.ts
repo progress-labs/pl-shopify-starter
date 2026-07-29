@@ -16,7 +16,9 @@ import { islands, revive } from '@/lib/revive.js'
 
 import { initDisclosureWidgets } from '@/lib/a11y'
 
-const summaries = document.querySelectorAll('[id^="Details-"] summary')
+const summaries = document.querySelectorAll<HTMLElement>(
+  '[id^="Details-"] summary'
+)
 
 revive(islands)
 initDisclosureWidgets(summaries)
