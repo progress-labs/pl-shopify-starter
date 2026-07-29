@@ -11,37 +11,50 @@
  * - `ul` — option list containing `<a data-value="...">` items
  * - `form` — submitted on option selection
  */
+import { must } from '@/lib/dom'
+
 class LocalizationForm extends window.HTMLElement {
+  elements: {
+    input: HTMLInputElement
+    button: HTMLElement
+    list: HTMLElement
+  }
+
   constructor() {
     super()
     this.elements = {
-      input: this.querySelector(
+      input: must<HTMLInputElement>(
+        this,
         'input[name="language_code"], input[name="country_code"]'
       ),
-      button: this.querySelector('button'),
-      list: this.querySelector('ul')
+      button: must(this, 'button'),
+      list: must(this, 'ul')
     }
     this.elements.button.addEventListener('click', this.toggleList.bind(this))
-    this.elements.button.addEventListener(
-      'focusout',
-      this.onButtonFocusOut.bind(this)
+    this.elements.button.addEventListener('focusout', (event) =>
+      this.onButtonFocusOut(event)
     )
-    this.elements.list.addEventListener(
-      'focusout',
-      this.onListFocusOut.bind(this)
+    this.elements.list.addEventListener('focusout', (event) =>
+      this.onListFocusOut(event)
     )
-    this.addEventListener('keyup', this.onLocalizationFormKeyUp.bind(this))
+    this.addEventListener('keyup', (event) =>
+      this.onLocalizationFormKeyUp(event)
+    )
 
     this.querySelectorAll('a').forEach((item) =>
-      item.addEventListener('click', this.onItemClick.bind(this))
+      item.addEventListener('click', (event) =>
+        this.onItemClick(event as MouseEvent)
+      )
     )
 
-    document.body.addEventListener('click', this.onBodyClick.bind(this))
+    document.body.addEventListener('click', (event) =>
+      this.onBodyClick(event)
+    )
   }
 
   hideList() {
     this.elements.button.setAttribute('aria-expanded', 'false')
-    this.elements.list.setAttribute('hidden', true)
+    this.elements.list.setAttribute('hidden', 'true')
     this.elements.button.classList.remove(
       'rounded-b',
       'md:rounded-b-none',
@@ -50,17 +63,18 @@ class LocalizationForm extends window.HTMLElement {
     this.elements.button.classList.add('rounded')
   }
 
-  onLocalizationFormKeyUp(event) {
+  onLocalizationFormKeyUp(event: KeyboardEvent) {
     if (event.code.toUpperCase() !== 'ESCAPE') return
 
     this.hideList()
     this.elements.button.focus()
   }
 
-  onItemClick(event) {
+  onItemClick(event: MouseEvent) {
     event.preventDefault()
     const form = this.querySelector('form')
-    this.elements.input.value = event.currentTarget.dataset.value
+    this.elements.input.value = (event.currentTarget as HTMLElement).dataset
+      .value as string
     if (form) form.submit()
   }
 
@@ -77,23 +91,26 @@ class LocalizationForm extends window.HTMLElement {
     )
   }
 
-  onButtonFocusOut(event) {
-    const disclosureLostFocus = this.contains(event.relatedTarget) === false
+  onButtonFocusOut(event: FocusEvent) {
+    const disclosureLostFocus =
+      this.contains(event.relatedTarget as Node) === false
 
     if (disclosureLostFocus) {
       this.hideList()
     }
   }
 
-  onListFocusOut(event) {
-    const childInFocus = event.currentTarget.contains(event.relatedTarget)
+  onListFocusOut(event: FocusEvent) {
+    const childInFocus = (event.currentTarget as HTMLElement).contains(
+      event.relatedTarget as Node
+    )
     if (!childInFocus) {
       this.hideList()
     }
   }
 
-  onBodyClick(event) {
-    const isOption = this.contains(event.target)
+  onBodyClick(event: MouseEvent) {
+    const isOption = this.contains(event.target as Node)
     const isVisible =
       this.elements.button.getAttribute('aria-expanded') === 'true'
 
