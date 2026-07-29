@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { dispatchCartEvent, onCartEvent } from './cart-events.js'
+import { dispatchCartEvent, onCartEvent } from './cart-events'
 
 describe('dispatchCartEvent', () => {
   afterEach(() => {
@@ -21,22 +21,35 @@ describe('dispatchCartEvent', () => {
     const handler = vi.fn()
     document.addEventListener('cart:added', handler)
 
-    dispatchCartEvent('added', { variantId: 123, quantity: 2 })
+    dispatchCartEvent('added', {
+      variantId: 123,
+      quantity: 2,
+      response: {},
+      sections: {}
+    })
 
     expect(handler.mock.calls[0][0].detail).toEqual({
       variantId: 123,
-      quantity: 2
+      quantity: 2,
+      response: {},
+      sections: {}
     })
     document.removeEventListener('cart:added', handler)
   })
 
-  it('defaults detail to empty object', () => {
+  it('passes error detail', () => {
     const handler = vi.fn()
     document.addEventListener('cart:error', handler)
 
-    dispatchCartEvent('error')
+    dispatchCartEvent('error', {
+      error: 'Something went wrong',
+      action: 'add'
+    })
 
-    expect(handler.mock.calls[0][0].detail).toEqual({})
+    expect(handler.mock.calls[0][0].detail).toEqual({
+      error: 'Something went wrong',
+      action: 'add'
+    })
     document.removeEventListener('cart:error', handler)
   })
 })
@@ -46,7 +59,7 @@ describe('onCartEvent', () => {
     const callback = vi.fn()
     onCartEvent('adding', callback)
 
-    dispatchCartEvent('adding', { variantId: 456 })
+    dispatchCartEvent('adding', { variantId: 456, quantity: 1 })
 
     expect(callback).toHaveBeenCalledOnce()
   })
@@ -55,21 +68,22 @@ describe('onCartEvent', () => {
     const callback = vi.fn()
     onCartEvent('updated', callback)
 
-    dispatchCartEvent('updated', { items: [1, 2, 3] })
+    dispatchCartEvent('updated', { line: 1, cart: {}, sections: {} })
 
-    expect(callback).toHaveBeenCalledWith({ items: [1, 2, 3] })
+    expect(callback).toHaveBeenCalledWith({ line: 1, cart: {}, sections: {} })
   })
 
   it('returns unsubscribe function', () => {
     const callback = vi.fn()
     const unsubscribe = onCartEvent('removed', callback)
+    const detail = { line: 1, cart: {}, sections: {} }
 
-    dispatchCartEvent('removed', {})
+    dispatchCartEvent('removed', detail)
     expect(callback).toHaveBeenCalledOnce()
 
     unsubscribe()
 
-    dispatchCartEvent('removed', {})
+    dispatchCartEvent('removed', detail)
     expect(callback).toHaveBeenCalledOnce() // still 1, not 2
   })
 })
