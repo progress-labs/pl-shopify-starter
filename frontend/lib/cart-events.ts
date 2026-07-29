@@ -46,7 +46,7 @@ export interface CartEventMap {
   add: CartAddDetail
   adding: { variantId: number | string; quantity: number }
   added: CartAddedDetail
-  updating: { line: string | number; quantity: number }
+  updating: { line: string | number; quantity: number | string }
   updated: {
     line: string | number
     cart: unknown

@@ -133,7 +133,7 @@ export async function updateCartItem({
 
   const isRemoving = parseInt(String(quantity), 10) === 0
 
-  dispatchCartEvent('updating', { line, quantity: Number(quantity) })
+  dispatchCartEvent('updating', { line, quantity })
 
   if (isRemoving) {
     dispatchCartEvent('removing', { line })
