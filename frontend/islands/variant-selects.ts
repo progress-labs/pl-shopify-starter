@@ -9,22 +9,42 @@
  *
  * Expects a <script type="application/json"> child containing the product
  * variants array serialized via {{ product.variants | json }}.
- *
- * @typedef {Object} VariantData
- * @property {number} id - Variant ID
- * @property {string} title - e.g. "Red / Small"
- * @property {number} price - Price in cents
- * @property {number|null} compare_at_price - Original price in cents
- * @property {boolean} available - In stock
- * @property {string[]} options - Option values matching product.options order
- * @property {string} sku
- * @property {string} barcode
- * @property {{url: string, aspect_ratio: number, alt: string, width: number, height: number}|null} featured_image
- * @property {boolean} requires_selling_plan - Whether a selling plan is mandatory
- * @property {Object[]} selling_plan_allocations - Available selling plan options for this variant
- * @property {Object|null} selected_selling_plan_allocation - Currently selected selling plan
  */
+import { must } from '@/lib/dom'
+
+interface VariantImage {
+  url: string
+  aspect_ratio: number
+  alt: string
+  width: number
+  height: number
+}
+
+interface VariantData {
+  id: number
+  title: string
+  price: number
+  compare_at_price: number | null
+  available: boolean
+  options: string[]
+  sku: string
+  barcode: string
+  featured_image: VariantImage | null
+  requires_selling_plan: boolean
+  selling_plan_allocations: unknown[]
+  selected_selling_plan_allocation: unknown | null
+}
+
+/** Structural type for the sibling `<product-form>` custom element. */
+interface ProductFormElement extends Element {
+  handleErrorMessage(message?: string): void
+}
+
 export default class VariantSelects extends window.HTMLElement {
+  options!: string[]
+  currentVariant?: VariantData
+  variantData?: VariantData[]
+
   constructor() {
     super()
     this.addEventListener('change', this.onVariantChange)
@@ -77,8 +97,8 @@ export default class VariantSelects extends window.HTMLElement {
       `#product-form-${this.dataset.section}, #product-form-installment-${this.dataset.section}`
     )
     productForms.forEach((productForm) => {
-      const input = productForm.querySelector('input[name="id"]')
-      input.value = this.currentVariant.id
+      const input = must<HTMLInputElement>(productForm, 'input[name="id"]')
+      input.value = String(this.currentVariant!.id)
       input.dispatchEvent(new Event('change', { bubbles: true }))
     })
   }
@@ -87,27 +107,28 @@ export default class VariantSelects extends window.HTMLElement {
     const section = this.closest('section')
     if (!section) return
 
-    const productForm = section.querySelector('product-form')
+    const productForm =
+      section.querySelector<ProductFormElement>('product-form')
     if (productForm) productForm.handleErrorMessage()
   }
 
   async renderProductInfo() {
     const sectionId = this.dataset.originalSection || this.dataset.section
-    const html = await this.fetchSectionHtml(sectionId)
+    const html = await this.fetchSectionHtml(sectionId as string)
 
-    this.updatePriceFromHtml(html, sectionId)
-    this.updateSellingPlanFromHtml(html, sectionId)
+    this.updatePriceFromHtml(html, sectionId as string)
+    this.updateSellingPlanFromHtml(html, sectionId as string)
     this.updateAddButtonState()
   }
 
-  async fetchSectionHtml(sectionId) {
-    const url = `${this.dataset.url}?variant=${this.currentVariant.id}&section_id=${sectionId}`
+  async fetchSectionHtml(sectionId: string) {
+    const url = `${this.dataset.url}?variant=${this.currentVariant!.id}&section_id=${sectionId}`
     const response = await fetch(url)
     const text = await response.text()
     return new window.DOMParser().parseFromString(text, 'text/html')
   }
 
-  updatePriceFromHtml(html, sectionId) {
+  updatePriceFromHtml(html: Document, sectionId: string) {
     const source = html.getElementById(`price-${sectionId}`)
     const destination = document.getElementById(`price-${this.dataset.section}`)
     if (source && destination) {
@@ -116,7 +137,7 @@ export default class VariantSelects extends window.HTMLElement {
     }
   }
 
-  updateSellingPlanFromHtml(html, sectionId) {
+  updateSellingPlanFromHtml(html: Document, sectionId: string) {
     const source = html.getElementById(`selling-plan-picker-${sectionId}`)
     const destination = document.getElementById(
       `selling-plan-picker-${this.dataset.section}`
@@ -128,26 +149,31 @@ export default class VariantSelects extends window.HTMLElement {
 
   updateAddButtonState() {
     this.toggleAddButton(
-      !this.currentVariant.available,
+      !this.currentVariant!.available,
       window.variantStrings.soldOut
     )
   }
 
-  toggleAddButton(disable = true, text) {
+  toggleAddButton(disable = true, text?: string, _unavailable?: boolean) {
+    // _unavailable is accepted for call-site compatibility but was already
+    // unused in the pre-conversion JS (dead parameter, preserved as-is).
+    void _unavailable
     const productForm = document.getElementById(
       `product-form-${this.dataset.section}`
     )
     if (!productForm) return
     const addButton = productForm.querySelector('[name="add"]')
-    const addButtonText = productForm.querySelector('[name="add"] > span')
+    const addButtonText = productForm.querySelector<HTMLElement>(
+      '[name="add"] > span'
+    )
     if (!addButton) return
 
     if (disable) {
       addButton.setAttribute('disabled', 'disabled')
-      if (text) addButtonText.textContent = text
+      if (text) addButtonText!.textContent = text
     } else {
       addButton.removeAttribute('disabled')
-      addButtonText.textContent = window.variantStrings.addToCart
+      addButtonText!.textContent = window.variantStrings.addToCart
     }
   }
 
@@ -155,19 +181,23 @@ export default class VariantSelects extends window.HTMLElement {
     const button = document.getElementById(
       `product-form-${this.dataset.section}`
     )
-    const addButton = button.querySelector('[name="add"]')
-    const addButtonText = button.querySelector('[name="add"] > span')
+    const addButton = button!.querySelector('[name="add"]')
+    const addButtonText = button!.querySelector<HTMLElement>(
+      '[name="add"] > span'
+    )
     const price = document.getElementById(`price-${this.dataset.section}`)
     if (!addButton) return
-    addButtonText.textContent = window.variantStrings.unavailable
+    addButtonText!.textContent = window.variantStrings.unavailable
     if (price) price.classList.add('invisible')
   }
 
-  /** @returns {VariantData[]} */
-  getVariantData() {
+  getVariantData(): VariantData[] {
     this.variantData =
       this.variantData ||
-      JSON.parse(this.querySelector('[type="application/json"]').textContent)
+      (JSON.parse(
+        must<HTMLScriptElement>(this, '[type="application/json"]')
+          .textContent as string
+      ) as VariantData[])
     return this.variantData
   }
 }
