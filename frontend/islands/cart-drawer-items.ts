@@ -8,8 +8,7 @@
 import CartItems from './cart-items'
 
 class CartDrawerItems extends CartItems {
-  /** @returns {{ id: string, section: string, selector: string }[]} */
-  getSectionsToRender() {
+  getSectionsToRender(): { id: string; section: string; selector: string }[] {
     return [
       {
         id: 'CartDrawer',
