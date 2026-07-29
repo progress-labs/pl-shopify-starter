@@ -18,13 +18,19 @@
  *   - [success] - Present after successful subscription
  */
 import { subscribe } from 'klaviyo-subscribe'
+import { must } from '@/lib/dom'
 
 class NewsletterForm extends window.HTMLElement {
+  form!: HTMLFormElement
+  emailInput!: HTMLInputElement
+  messageEl: HTMLElement | null
+  listId: string | null
+
   constructor() {
     super()
 
-    this.form = this.querySelector('form')
-    this.emailInput = this.querySelector('input[name="email"]')
+    this.form = must<HTMLFormElement>(this, 'form')
+    this.emailInput = must<HTMLInputElement>(this, 'input[name="email"]')
     this.messageEl = this.querySelector('[data-message]')
     this.listId = this.getAttribute('list-id') || window.__theme.klaviyo.listId
 
@@ -33,10 +39,10 @@ class NewsletterForm extends window.HTMLElement {
       return
     }
 
-    this.form.addEventListener('submit', this.onSubmit.bind(this))
+    this.form.addEventListener('submit', (e) => this.onSubmit(e))
   }
 
-  onSubmit(e) {
+  onSubmit(e: SubmitEvent) {
     e.preventDefault()
 
     const email = this.emailInput.value
@@ -47,7 +53,7 @@ class NewsletterForm extends window.HTMLElement {
       error: 'Error!'
     }
 
-    subscribe(this.listId, email).then((resp) => {
+    subscribe(this.listId as string, email).then((resp) => {
       this.emailInput.value = 'Submitting...'
 
       if (resp.success) {
@@ -65,7 +71,7 @@ class NewsletterForm extends window.HTMLElement {
     })
   }
 
-  showMessage(text) {
+  showMessage(text: string) {
     if (this.messageEl) {
       this.messageEl.textContent = text
       this.messageEl.removeAttribute('hidden')
