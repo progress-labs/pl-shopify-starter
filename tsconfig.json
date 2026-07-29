@@ -11,8 +11,7 @@
       "~/*": ["frontend/*"]
     },
     "strict": true,
-    "allowJs": true,
-    "checkJs": false,
+    "allowJs": false,
     "noEmit": true,
     "skipLibCheck": true,
     "isolatedModules": true,
