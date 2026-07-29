@@ -7,33 +7,40 @@
  * attribute. Applies responsive overflow locking (`lg:overflow-auto`).
  */
 import { removeTrapFocus, trapFocus } from '@/lib/a11y'
+import { must } from '@/lib/dom'
 import DetailsModal from './details-modal'
 
 class HeaderDrawer extends DetailsModal {
-  open(event) {
+  open(event: MouseEvent) {
     setTimeout(() => {
       this.detailsContainer.classList.add('menu-opening')
     })
-    this.onBodyClickEvent = this.onBodyClickEvent || this.onBodyClick.bind(this)
-    event.target.closest('details').setAttribute('open', true)
-    document.body.addEventListener('click', this.onBodyClickEvent)
+    const onBodyClickEvent =
+      this.onBodyClickEvent || ((e: MouseEvent) => this.onBodyClick(e))
+    this.onBodyClickEvent = onBodyClickEvent
+    ;(event.target as HTMLElement)
+      .closest('details')!
+      .setAttribute('open', 'true')
+    document.body.addEventListener('click', onBodyClickEvent)
     document.body.classList.add('overflow-hidden', 'lg:overflow-auto')
 
-    trapFocus(this.detailsContainer.querySelector('[tabindex="-1"]'))
+    trapFocus(must(this.detailsContainer, '[tabindex="-1"]'))
   }
 
   close(focusToggle = true) {
     removeTrapFocus(focusToggle ? this.summaryToggle : null)
-    document.body.removeEventListener('click', this.onBodyClickEvent)
+    if (this.onBodyClickEvent) {
+      document.body.removeEventListener('click', this.onBodyClickEvent)
+    }
     this.detailsContainer.classList.remove('menu-opening')
     document.body.classList.remove('overflow-hidden', 'lg:overflow-auto')
     this.closeAnimation()
   }
 
   closeAnimation() {
-    let animationStart
+    let animationStart: number | undefined
 
-    const handleAnimation = (time) => {
+    const handleAnimation = (time: number) => {
       if (animationStart === undefined) {
         animationStart = time
       }
