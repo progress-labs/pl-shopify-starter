@@ -10,9 +10,27 @@
  * Integrates with predictive search — scroll handling is paused while
  * `this.predictiveSearch.isOpen` is true.
  */
+import { must } from '@/lib/dom'
+
 class StickyHeader extends window.HTMLElement {
+  header!: HTMLElement
+  headerBounds: Partial<DOMRectReadOnly> = {}
+  currentScrollTop = 0
+  preventReveal = false
+  onScrollHandler!: () => void
+  hideHeaderOnScrollUp!: () => void
+  isScrolling?: ReturnType<typeof setTimeout>
+  /**
+   * Not set anywhere in this theme — vestigial hook from the upstream
+   * predictive-search integration this file was ported from. Always
+   * `undefined` here, so the guard below is a permanent no-op.
+   */
+  predictiveSearch?: { isOpen: boolean }
+  /** Same vestigial status as `predictiveSearch` — never assigned. */
+  preventHide?: boolean
+
   connectedCallback() {
-    this.header = document.getElementById('shopify-section-header')
+    this.header = must(document, '#shopify-section-header')
     this.headerBounds = {}
     this.currentScrollTop = 0
     this.preventReveal = false
@@ -43,12 +61,14 @@ class StickyHeader extends window.HTMLElement {
 
     if (
       scrollTop > this.currentScrollTop &&
+      this.headerBounds.bottom !== undefined &&
       scrollTop > this.headerBounds.bottom
     ) {
       if (this.preventHide) return
       window.requestAnimationFrame(this.hide.bind(this))
     } else if (
       scrollTop < this.currentScrollTop &&
+      this.headerBounds.bottom !== undefined &&
       scrollTop > this.headerBounds.bottom
     ) {
       if (!this.preventReveal) {
@@ -62,7 +82,10 @@ class StickyHeader extends window.HTMLElement {
 
         window.requestAnimationFrame(this.hide.bind(this))
       }
-    } else if (scrollTop <= this.headerBounds.top) {
+    } else if (
+      this.headerBounds.top !== undefined &&
+      scrollTop <= this.headerBounds.top
+    ) {
       window.requestAnimationFrame(this.reset.bind(this))
     }
 
