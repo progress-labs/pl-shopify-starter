@@ -1,28 +1,41 @@
-import * as cartEvents from './cart-events.js'
+import * as cartEvents from './cart-events'
 
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest'
 
-import { addToCart, updateCartItem, updateCartNote } from './cart-api.js'
+import { addToCart, updateCartItem, updateCartNote } from './cart-api'
+
+// jsdom's `window.location` setter only accepts a navigation string, so
+// tests stub it through a plain data-property view of window instead.
+function stubLocation(pathname: string): void {
+  ;(window as unknown as { location: { pathname: string } }).location = {
+    pathname
+  }
+}
 
 describe('addToCart', () => {
+  let fetchMock: Mock<typeof fetch>
+
   beforeEach(() => {
     // Mock window.routes and window.location
     // These have to mocked because they are not available in the test environment
-    window.routes = { cart_add_url: '/cart/add.js' }
-    window.location = { pathname: '/products/test' }
+    window.routes = {
+      cart_add_url: '/cart/add.js'
+    } as unknown as Window['routes']
+    stubLocation('/products/test')
     document.body.innerHTML = '' // no cart-drawer = default sections
 
     // Mock fetch
-    global.fetch = vi.fn(() =>
+    fetchMock = vi.fn(() =>
       Promise.resolve({ json: () => Promise.resolve({}) })
-    )
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
     vi.spyOn(cartEvents, 'dispatchCartEvent')
   })
 
   it('sends minimum required payload with string variantId coerced to number', async () => {
     await addToCart({ variantId: '123' })
 
-    expect(fetch).toHaveBeenCalledWith('/cart/add.js', {
+    expect(fetchMock).toHaveBeenCalledWith('/cart/add.js', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -38,13 +51,15 @@ describe('addToCart', () => {
   })
 
   it('dispatches error when no variantId provided', async () => {
-    await addToCart({})
+    // Deliberately violates the CartAddDetail contract to exercise the
+    // runtime guard for callers that bypass the type system.
+    await addToCart({} as Parameters<typeof addToCart>[0])
 
     expect(cartEvents.dispatchCartEvent).toHaveBeenCalledWith('error', {
       error: 'No variant ID provided',
       action: 'add'
     })
-    expect(fetch).not.toHaveBeenCalled()
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 
   it('dispatches `cart:adding` event before fetch', async () => {
@@ -61,9 +76,10 @@ describe('addToCart', () => {
       items: [{ id: 123 }],
       sections: { 'cart-icon-bubble': '<div>cart</div>' }
     }
-    global.fetch = vi.fn(() =>
+    fetchMock = vi.fn(() =>
       Promise.resolve({ json: () => Promise.resolve(mockResponse) })
-    )
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
 
     await addToCart({ variantId: '123', quantity: 1 })
 
@@ -76,12 +92,13 @@ describe('addToCart', () => {
   })
 
   it('dispatches error when API returns status', async () => {
-    global.fetch = vi.fn(() =>
+    fetchMock = vi.fn(() =>
       Promise.resolve({
         json: () =>
           Promise.resolve({ status: 422, description: 'Product is sold out' })
       })
-    )
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
 
     await addToCart({ variantId: '123' })
 
@@ -92,7 +109,10 @@ describe('addToCart', () => {
   })
 
   it('dispatches error when fetch throws', async () => {
-    global.fetch = vi.fn(() => Promise.reject(new Error('Network error')))
+    fetchMock = vi.fn(() =>
+      Promise.reject(new Error('Network error'))
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
 
     await addToCart({ variantId: '123' })
 
@@ -108,7 +128,7 @@ describe('addToCart', () => {
       properties: { 'Gift Message': 'Happy birthday!' }
     })
 
-    const body = JSON.parse(fetch.mock.calls[0][1].body)
+    const body = JSON.parse(fetchMock.mock.calls[0][1]!.body as string)
     expect(body.properties).toEqual({ 'Gift Message': 'Happy birthday!' })
   })
 
@@ -118,28 +138,33 @@ describe('addToCart', () => {
       sellingPlanId: '987654'
     })
 
-    const body = JSON.parse(fetch.mock.calls[0][1].body)
+    const body = JSON.parse(fetchMock.mock.calls[0][1]!.body as string)
     expect(body.selling_plan).toBe(987654)
   })
 })
 
 describe('updateCartItem', () => {
-  beforeEach(() => {
-    window.routes = { cart_change_url: '/cart/change.js' }
-    window.location = { pathname: '/cart' }
+  let fetchMock: Mock<typeof fetch>
 
-    global.fetch = vi.fn(() =>
+  beforeEach(() => {
+    window.routes = {
+      cart_change_url: '/cart/change.js'
+    } as unknown as Window['routes']
+    stubLocation('/cart')
+
+    fetchMock = vi.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({ item_count: 2, sections: {} })
       })
-    )
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
     vi.spyOn(cartEvents, 'dispatchCartEvent')
   })
 
   it('sends minimum required payload with string quantity coerced to number', async () => {
     await updateCartItem({ line: '1', quantity: '3', sections: ['cart-items'] })
 
-    expect(fetch).toHaveBeenCalledWith('/cart/change.js', {
+    expect(fetchMock).toHaveBeenCalledWith('/cart/change.js', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -155,17 +180,21 @@ describe('updateCartItem', () => {
   })
 
   it('dispatches error when no line provided', async () => {
-    await updateCartItem({ quantity: 1 })
+    // Deliberately violates the CartUpdateDetail contract to exercise the
+    // runtime guard for callers that bypass the type system.
+    await updateCartItem({
+      quantity: 1
+    } as Parameters<typeof updateCartItem>[0])
 
     expect(cartEvents.dispatchCartEvent).toHaveBeenCalledWith('error', {
       error: 'No line item index provided',
       action: 'update'
     })
-    expect(fetch).not.toHaveBeenCalled()
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 
   it('dispatches updating event before fetch', async () => {
-    await updateCartItem({ line: '1', quantity: 2 })
+    await updateCartItem({ line: '1', quantity: 2, sections: [] })
 
     expect(cartEvents.dispatchCartEvent).toHaveBeenCalledWith('updating', {
       line: '1',
@@ -174,7 +203,7 @@ describe('updateCartItem', () => {
   })
 
   it('dispatches removing event when quantity is 0', async () => {
-    await updateCartItem({ line: '1', quantity: 0 })
+    await updateCartItem({ line: '1', quantity: 0, sections: [] })
 
     expect(cartEvents.dispatchCartEvent).toHaveBeenCalledWith('removing', {
       line: '1'
@@ -183,11 +212,12 @@ describe('updateCartItem', () => {
 
   it('dispatches updated event on success', async () => {
     const mockResponse = { item_count: 2, sections: { 'cart-items': '<div>' } }
-    global.fetch = vi.fn(() =>
+    fetchMock = vi.fn(() =>
       Promise.resolve({ json: () => Promise.resolve(mockResponse) })
-    )
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
 
-    await updateCartItem({ line: '1', quantity: 2 })
+    await updateCartItem({ line: '1', quantity: 2, sections: [] })
 
     expect(cartEvents.dispatchCartEvent).toHaveBeenCalledWith('updated', {
       line: '1',
@@ -198,11 +228,12 @@ describe('updateCartItem', () => {
 
   it('dispatches removed event when quantity is 0 and succeeds', async () => {
     const mockResponse = { item_count: 1, sections: {} }
-    global.fetch = vi.fn(() =>
+    fetchMock = vi.fn(() =>
       Promise.resolve({ json: () => Promise.resolve(mockResponse) })
-    )
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
 
-    await updateCartItem({ line: '1', quantity: 0 })
+    await updateCartItem({ line: '1', quantity: 0, sections: [] })
 
     expect(cartEvents.dispatchCartEvent).toHaveBeenCalledWith('removed', {
       line: '1',
@@ -212,14 +243,15 @@ describe('updateCartItem', () => {
   })
 
   it('dispatches error when API returns status', async () => {
-    global.fetch = vi.fn(() =>
+    fetchMock = vi.fn(() =>
       Promise.resolve({
         json: () =>
           Promise.resolve({ status: 422, description: 'Quantity unavailable' })
       })
-    )
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
 
-    await updateCartItem({ line: '1', quantity: 5 })
+    await updateCartItem({ line: '1', quantity: 5, sections: [] })
 
     expect(cartEvents.dispatchCartEvent).toHaveBeenCalledWith('error', {
       error: 'Quantity unavailable',
@@ -228,9 +260,12 @@ describe('updateCartItem', () => {
   })
 
   it('dispatches error with remove action when quantity 0 fails', async () => {
-    global.fetch = vi.fn(() => Promise.reject(new Error('Network error')))
+    fetchMock = vi.fn(() =>
+      Promise.reject(new Error('Network error'))
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
 
-    await updateCartItem({ line: '1', quantity: 0 })
+    await updateCartItem({ line: '1', quantity: 0, sections: [] })
 
     expect(cartEvents.dispatchCartEvent).toHaveBeenCalledWith('error', {
       error: 'Network error',
@@ -240,40 +275,49 @@ describe('updateCartItem', () => {
 
   it('returns cart data on success', async () => {
     const mockResponse = { item_count: 2, sections: {} }
-    global.fetch = vi.fn(() =>
+    fetchMock = vi.fn(() =>
       Promise.resolve({ json: () => Promise.resolve(mockResponse) })
-    )
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
 
-    const result = await updateCartItem({ line: '1', quantity: 2 })
+    const result = await updateCartItem({ line: '1', quantity: 2, sections: [] })
 
     expect(result).toEqual(mockResponse)
   })
 
   it('returns undefined on error', async () => {
-    global.fetch = vi.fn(() => Promise.reject(new Error('Network error')))
+    fetchMock = vi.fn(() =>
+      Promise.reject(new Error('Network error'))
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
 
-    const result = await updateCartItem({ line: '1', quantity: 2 })
+    const result = await updateCartItem({ line: '1', quantity: 2, sections: [] })
 
     expect(result).toBeUndefined()
   })
 })
 
 describe('updateCartNote', () => {
-  beforeEach(() => {
-    window.routes = { cart_update_url: '/cart/update.js' }
+  let fetchMock: Mock<typeof fetch>
 
-    global.fetch = vi.fn(() =>
+  beforeEach(() => {
+    window.routes = {
+      cart_update_url: '/cart/update.js'
+    } as unknown as Window['routes']
+
+    fetchMock = vi.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({ note: 'Test note', item_count: 2 })
       })
-    )
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
     vi.spyOn(cartEvents, 'dispatchCartEvent')
   })
 
   it('sends note in request body', async () => {
     await updateCartNote({ note: 'Please gift wrap' })
 
-    expect(fetch).toHaveBeenCalledWith('/cart/update.js', {
+    expect(fetchMock).toHaveBeenCalledWith('/cart/update.js', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -285,9 +329,10 @@ describe('updateCartNote', () => {
 
   it('dispatches note-updated event on success', async () => {
     const mockCart = { note: 'Test note', item_count: 2 }
-    global.fetch = vi.fn(() =>
+    fetchMock = vi.fn(() =>
       Promise.resolve({ json: () => Promise.resolve(mockCart) })
-    )
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
 
     await updateCartNote({ note: 'Test note' })
 
@@ -298,12 +343,13 @@ describe('updateCartNote', () => {
   })
 
   it('dispatches error when API returns status', async () => {
-    global.fetch = vi.fn(() =>
+    fetchMock = vi.fn(() =>
       Promise.resolve({
         json: () =>
           Promise.resolve({ status: 422, description: 'Invalid note' })
       })
-    )
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
 
     await updateCartNote({ note: 'Bad note' })
 
@@ -314,7 +360,10 @@ describe('updateCartNote', () => {
   })
 
   it('dispatches error when fetch throws', async () => {
-    global.fetch = vi.fn(() => Promise.reject(new Error('Network error')))
+    fetchMock = vi.fn(() =>
+      Promise.reject(new Error('Network error'))
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
 
     await updateCartNote({ note: 'Test' })
 
@@ -326,9 +375,10 @@ describe('updateCartNote', () => {
 
   it('returns cart data on success', async () => {
     const mockCart = { note: 'Test', item_count: 2 }
-    global.fetch = vi.fn(() =>
+    fetchMock = vi.fn(() =>
       Promise.resolve({ json: () => Promise.resolve(mockCart) })
-    )
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
 
     const result = await updateCartNote({ note: 'Test' })
 
@@ -336,7 +386,10 @@ describe('updateCartNote', () => {
   })
 
   it('returns undefined on error', async () => {
-    global.fetch = vi.fn(() => Promise.reject(new Error('Network error')))
+    fetchMock = vi.fn(() =>
+      Promise.reject(new Error('Network error'))
+    ) as unknown as Mock<typeof fetch>
+    global.fetch = fetchMock
 
     const result = await updateCartNote({ note: 'Test' })
 
