@@ -28,7 +28,7 @@ describe('addToCart', () => {
     fetchMock = vi.fn(() =>
       Promise.resolve({ json: () => Promise.resolve({}) })
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
     vi.spyOn(cartEvents, 'dispatchCartEvent')
   })
 
@@ -79,7 +79,7 @@ describe('addToCart', () => {
     fetchMock = vi.fn(() =>
       Promise.resolve({ json: () => Promise.resolve(mockResponse) })
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
 
     await addToCart({ variantId: '123', quantity: 1 })
 
@@ -98,7 +98,7 @@ describe('addToCart', () => {
           Promise.resolve({ status: 422, description: 'Product is sold out' })
       })
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
 
     await addToCart({ variantId: '123' })
 
@@ -112,7 +112,7 @@ describe('addToCart', () => {
     fetchMock = vi.fn(() =>
       Promise.reject(new Error('Network error'))
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
 
     await addToCart({ variantId: '123' })
 
@@ -157,7 +157,7 @@ describe('updateCartItem', () => {
         json: () => Promise.resolve({ item_count: 2, sections: {} })
       })
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
     vi.spyOn(cartEvents, 'dispatchCartEvent')
   })
 
@@ -215,7 +215,7 @@ describe('updateCartItem', () => {
     fetchMock = vi.fn(() =>
       Promise.resolve({ json: () => Promise.resolve(mockResponse) })
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
 
     await updateCartItem({ line: '1', quantity: 2, sections: [] })
 
@@ -231,7 +231,7 @@ describe('updateCartItem', () => {
     fetchMock = vi.fn(() =>
       Promise.resolve({ json: () => Promise.resolve(mockResponse) })
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
 
     await updateCartItem({ line: '1', quantity: 0, sections: [] })
 
@@ -249,7 +249,7 @@ describe('updateCartItem', () => {
           Promise.resolve({ status: 422, description: 'Quantity unavailable' })
       })
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
 
     await updateCartItem({ line: '1', quantity: 5, sections: [] })
 
@@ -263,7 +263,7 @@ describe('updateCartItem', () => {
     fetchMock = vi.fn(() =>
       Promise.reject(new Error('Network error'))
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
 
     await updateCartItem({ line: '1', quantity: 0, sections: [] })
 
@@ -278,7 +278,7 @@ describe('updateCartItem', () => {
     fetchMock = vi.fn(() =>
       Promise.resolve({ json: () => Promise.resolve(mockResponse) })
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
 
     const result = await updateCartItem({ line: '1', quantity: 2, sections: [] })
 
@@ -289,7 +289,7 @@ describe('updateCartItem', () => {
     fetchMock = vi.fn(() =>
       Promise.reject(new Error('Network error'))
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
 
     const result = await updateCartItem({ line: '1', quantity: 2, sections: [] })
 
@@ -310,7 +310,7 @@ describe('updateCartNote', () => {
         json: () => Promise.resolve({ note: 'Test note', item_count: 2 })
       })
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
     vi.spyOn(cartEvents, 'dispatchCartEvent')
   })
 
@@ -332,7 +332,7 @@ describe('updateCartNote', () => {
     fetchMock = vi.fn(() =>
       Promise.resolve({ json: () => Promise.resolve(mockCart) })
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
 
     await updateCartNote({ note: 'Test note' })
 
@@ -349,7 +349,7 @@ describe('updateCartNote', () => {
           Promise.resolve({ status: 422, description: 'Invalid note' })
       })
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
 
     await updateCartNote({ note: 'Bad note' })
 
@@ -363,7 +363,7 @@ describe('updateCartNote', () => {
     fetchMock = vi.fn(() =>
       Promise.reject(new Error('Network error'))
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
 
     await updateCartNote({ note: 'Test' })
 
@@ -378,7 +378,7 @@ describe('updateCartNote', () => {
     fetchMock = vi.fn(() =>
       Promise.resolve({ json: () => Promise.resolve(mockCart) })
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
 
     const result = await updateCartNote({ note: 'Test' })
 
@@ -389,7 +389,7 @@ describe('updateCartNote', () => {
     fetchMock = vi.fn(() =>
       Promise.reject(new Error('Network error'))
     ) as unknown as Mock<typeof fetch>
-    global.fetch = fetchMock
+    globalThis.fetch = fetchMock
 
     const result = await updateCartNote({ note: 'Test' })
 
