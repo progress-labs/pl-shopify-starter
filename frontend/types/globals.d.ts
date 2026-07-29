@@ -15,6 +15,8 @@ declare global {
     }
     cartStrings: Record<string, string>
     variantStrings: Record<string, string>
+    __SENTRY_DSN__?: string
+    __SHOPIFY_DESIGN_MODE__?: boolean
   }
 
   interface HTMLElementTagNameMap {

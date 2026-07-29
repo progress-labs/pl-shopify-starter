@@ -37,14 +37,17 @@ if (isEnabled) {
   })
 
   onCartEvent('error', ({ error, action }) => {
-    Sentry.captureException(
-      error instanceof Error ? error : new Error(String(error)),
-      { tags: { cart_action: action }, extra: { action, originalError: error } },
-    )
+    Sentry.captureException(new Error(error), {
+      tags: { cart_action: action },
+      extra: { action, originalError: error },
+    })
   })
 }
 
-export function captureException(error, context) {
+export function captureException(
+  error: unknown,
+  context?: Sentry.ExclusiveEventHintOrCaptureContext
+) {
   if (!isEnabled) return
   Sentry.captureException(error, context)
 }
