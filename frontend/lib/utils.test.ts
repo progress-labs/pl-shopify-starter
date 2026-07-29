@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { debounce, fetchConfig } from './utils.js'
+import { debounce, fetchConfig } from './utils'
 
 describe('fetchConfig', () => {
   it('should return the correct fetch config', () => {
