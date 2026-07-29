@@ -13,15 +13,15 @@ import { onCartEvent } from './cart-events.js'
 
 const ANNOUNCE_DELAY_MS = 50
 
-let pendingTimer = null
+let pendingTimer: ReturnType<typeof setTimeout> | null = null
 
 /**
  * Announce a message to the cart live region.
  * Repeated calls cancel any pending announcement (last write wins).
  * No-ops if the message is falsy or the live region element is not on the page.
- * @param {string} message
+ * @param message
  */
-export function announce(message) {
+export function announce(message?: string | null) {
   if (!message) return
   const region = document.getElementById('cart-live-region-text')
   if (!region) return
