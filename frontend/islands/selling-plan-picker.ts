@@ -21,8 +21,8 @@ class SellingPlanPicker extends window.HTMLElement {
     this.addEventListener('change', this.onChange.bind(this))
   }
 
-  onChange(event) {
-    const input = event.target
+  onChange(event: Event) {
+    const input = event.target as HTMLInputElement
     if (input.name === 'purchase_option') {
       this.onPurchaseOptionChange(input.value)
     } else if (input.name.startsWith('selling_plan_group_')) {
@@ -30,11 +30,13 @@ class SellingPlanPicker extends window.HTMLElement {
     }
   }
 
-  onPurchaseOptionChange(groupId) {
+  onPurchaseOptionChange(groupId: string) {
     // Hide all plan group fieldsets
-    this.querySelectorAll('[data-plan-group]').forEach((fieldset) => {
-      fieldset.hidden = true
-    })
+    this.querySelectorAll<HTMLElement>('[data-plan-group]').forEach(
+      (fieldset) => {
+        fieldset.hidden = true
+      }
+    )
 
     if (!groupId) {
       // One-time purchase selected
@@ -43,16 +45,17 @@ class SellingPlanPicker extends window.HTMLElement {
     }
 
     // Show the selected group's fieldset if it exists (multi-plan groups)
-    const groupFieldset = this.querySelector(
+    const groupFieldset = this.querySelector<HTMLElement>(
       `[data-plan-group="${groupId}"]`
     )
     if (groupFieldset) {
       groupFieldset.hidden = false
-      const checkedPlan = groupFieldset.querySelector('input:checked')
+      const checkedPlan =
+        groupFieldset.querySelector<HTMLInputElement>('input:checked')
       this.updateHiddenInput(checkedPlan ? checkedPlan.value : '')
     } else {
       // Single plan group — use the default plan ID from the data attribute
-      const groupRadio = this.querySelector(
+      const groupRadio = this.querySelector<HTMLInputElement>(
         `input[name="purchase_option"][value="${groupId}"]`
       )
       this.updateHiddenInput(
@@ -61,9 +64,11 @@ class SellingPlanPicker extends window.HTMLElement {
     }
   }
 
-  updateHiddenInput(value) {
-    const hidden = this.querySelector('input[name="selling_plan"]')
-    if (hidden) hidden.value = value
+  updateHiddenInput(value?: string) {
+    const hidden = this.querySelector<HTMLInputElement>(
+      'input[name="selling_plan"]'
+    )
+    if (hidden) hidden.value = value as string
   }
 }
 
