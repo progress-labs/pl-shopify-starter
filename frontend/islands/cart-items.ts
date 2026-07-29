@@ -15,31 +15,65 @@ import { debounce } from '@/lib/utils'
 import { trapFocus } from '@/lib/a11y'
 import { updateCartItem } from '@/lib/cart-api'
 import { announce } from '@/lib/cart-live-region'
+import { must } from '@/lib/dom'
+
+interface CartState {
+  item_count: number
+  sections: Record<string, string>
+}
+
+interface PendingUpdate {
+  line: string
+  name?: string | null
+}
+
+/**
+ * Look up an element by one of two possible ids. The full cart page and the
+ * cart drawer render different markup for the same concept (e.g. line-item
+ * status region), so exactly one of the two ids is always present.
+ */
+function mustEither<T extends HTMLElement = HTMLElement>(
+  idA: string,
+  idB: string
+): T {
+  const el = document.getElementById(idA) ?? document.getElementById(idB)
+  if (!el) {
+    throw new Error(`mustEither(): neither "#${idA}" nor "#${idB}" found`)
+  }
+  return el as T
+}
 
 export default class CartItems extends window.HTMLElement {
+  lineItemStatusElement: HTMLElement
+  currentItemCount: number
+  debouncedOnChange: (event: Event) => void
+  pendingUpdate: PendingUpdate | null = null
+
   constructor() {
     super()
 
-    this.lineItemStatusElement =
-      document.getElementById('shopping-cart-line-item-status') ||
-      document.getElementById('CartDrawer-LineItemStatus')
+    this.lineItemStatusElement = mustEither(
+      'shopping-cart-line-item-status',
+      'CartDrawer-LineItemStatus'
+    )
 
     this.currentItemCount = Array.from(
-      this.querySelectorAll('[name="updates[]"]')
+      this.querySelectorAll<HTMLInputElement>('[name="updates[]"]')
     ).reduce((total, quantityInput) => total + parseInt(quantityInput.value), 0)
 
-    this.debouncedOnChange = debounce((event) => {
+    this.debouncedOnChange = debounce((event: Event) => {
       this.onChange(event)
     }, 300)
 
     this.addEventListener('change', this.debouncedOnChange)
   }
 
-  onChange(event) {
+  onChange(event: Event) {
+    const target = event.target as HTMLInputElement
     this.updateQuantity(
-      event.target.dataset.index,
-      event.target.value,
-      document.activeElement.getAttribute('name')
+      target.dataset.index as string,
+      target.value,
+      document.activeElement!.getAttribute('name')
     )
   }
 
@@ -48,11 +82,11 @@ export default class CartItems extends window.HTMLElement {
    * target different DOM containers (e.g. the cart drawer).
    * @returns {{ id: string, section: string, selector: string }[]}
    */
-  getSectionsToRender() {
+  getSectionsToRender(): { id: string; section: string; selector: string }[] {
     return [
       {
         id: 'main-cart-items',
-        section: document.getElementById('main-cart-items').dataset.id,
+        section: must(document, '#main-cart-items').dataset.id as string,
         selector: '.js-contents'
       },
       {
@@ -70,11 +104,15 @@ export default class CartItems extends window.HTMLElement {
 
   /**
    * Update a line item's quantity via the Cart API and re-render sections.
-   * @param {string} line - 1-based line item index
-   * @param {string|number} quantity - New quantity (0 = remove)
-   * @param {string} [name] - Input name used to restore focus after DOM swap
+   * @param line - 1-based line item index
+   * @param quantity - New quantity (0 = remove)
+   * @param name - Input name used to restore focus after DOM swap
    */
-  async updateQuantity(line, quantity, name) {
+  async updateQuantity(
+    line: string,
+    quantity: string | number,
+    name?: string | null
+  ) {
     this.enableLoading(line)
     this.pendingUpdate = { line, name }
 
@@ -84,7 +122,7 @@ export default class CartItems extends window.HTMLElement {
     const result = await updateCartItem({ line, quantity, sections })
 
     if (result) {
-      this.onCartUpdated(result)
+      this.onCartUpdated(result as CartState)
     } else {
       this.onCartError()
     }
@@ -92,9 +130,9 @@ export default class CartItems extends window.HTMLElement {
 
   /**
    * Handle successful cart update - re-render sections and manage focus
-   * @param {Object} cart - Cart state from API response
+   * @param cart - Cart state from API response
    */
-  onCartUpdated(cart) {
+  onCartUpdated(cart: CartState) {
     const { line, name } = this.pendingUpdate || {}
 
     this.classList.toggle('is-empty', cart.item_count === 0)
@@ -105,9 +143,9 @@ export default class CartItems extends window.HTMLElement {
     }
 
     this.getSectionsToRender().forEach((section) => {
+      const container = must(document, `#${section.id}`)
       const elementToReplace =
-        document.getElementById(section.id).querySelector(section.selector) ||
-        document.getElementById(section.id)
+        container.querySelector<HTMLElement>(section.selector) || container
       elementToReplace.innerHTML = this.getSectionInnerHTML(
         cart.sections[section.section],
         section.selector
@@ -119,21 +157,26 @@ export default class CartItems extends window.HTMLElement {
     const lineItem =
       document.getElementById(`CartItem-${line}`) ||
       document.getElementById(`CartDrawer-Item-${line}`)
+    const focusTarget = lineItem?.querySelector<HTMLElement>(
+      `[name="${name}"]`
+    )
 
-    if (lineItem && lineItem.querySelector(`[name="${name}"]`)) {
-      cartDrawerWrapper
-        ? trapFocus(
-            cartDrawerWrapper,
-            lineItem.querySelector(`[name="${name}"]`)
-          )
-        : lineItem.querySelector(`[name="${name}"]`).focus()
+    if (lineItem && focusTarget) {
+      if (cartDrawerWrapper) {
+        trapFocus(cartDrawerWrapper, focusTarget)
+      } else {
+        focusTarget.focus()
+      }
     } else if (cart.item_count === 0 && cartDrawerWrapper) {
       trapFocus(
-        cartDrawerWrapper.querySelector('#CartDrawer'),
-        cartDrawerWrapper.querySelector('[tabindex="-1"]')
+        must(cartDrawerWrapper, '#CartDrawer'),
+        must(cartDrawerWrapper, '[tabindex="-1"]')
       )
     } else if (document.querySelector('.cart-item') && cartDrawerWrapper) {
-      trapFocus(cartDrawerWrapper, document.querySelector('.cart-item-name'))
+      trapFocus(
+        cartDrawerWrapper,
+        document.querySelector('.cart-item-name') as HTMLElement
+      )
     }
 
     this.disableLoading()
@@ -147,9 +190,7 @@ export default class CartItems extends window.HTMLElement {
     this.querySelectorAll('.loading-overlay').forEach((overlay) =>
       overlay.classList.add('hidden')
     )
-    const errors =
-      document.getElementById('cart-errors') ||
-      document.getElementById('CartDrawer-CartErrors')
+    const errors = mustEither('cart-errors', 'CartDrawer-CartErrors')
     errors.textContent = window.cartStrings.error
     this.disableLoading()
     this.pendingUpdate = null
@@ -159,17 +200,19 @@ export default class CartItems extends window.HTMLElement {
    * Update ARIA live regions to announce quantity changes or errors.
    * If the item count hasn't changed (quantity limit hit), shows an error
    * message on the affected line item.
-   * @param {string} line - 1-based line item index
-   * @param {number} itemCount - Total item count from the updated cart
+   * @param line - 1-based line item index
+   * @param itemCount - Total item count from the updated cart
    */
-  updateLiveRegions(line, itemCount) {
+  updateLiveRegions(line: string | undefined, itemCount: number) {
     if (this.currentItemCount === itemCount) {
-      const lineItemError =
-        document.getElementById(`Line-item-error-${line}`) ||
-        document.getElementById(`CartDrawer-LineItemError-${line}`)
-      const quantityElement =
-        document.getElementById(`Quantity-${line}`) ||
-        document.getElementById(`Drawer-quantity-${line}`)
+      const lineItemError = mustEither(
+        `Line-item-error-${line}`,
+        `CartDrawer-LineItemError-${line}`
+      )
+      const quantityElement = mustEither<HTMLInputElement>(
+        `Quantity-${line}`,
+        `Drawer-quantity-${line}`
+      )
 
       const message = window.cartStrings.quantityError.replace(
         '[quantity]',
@@ -184,19 +227,18 @@ export default class CartItems extends window.HTMLElement {
     }
 
     this.currentItemCount = itemCount
-    this.lineItemStatusElement.setAttribute('aria-hidden', true)
+    this.lineItemStatusElement.setAttribute('aria-hidden', 'true')
   }
 
-  getSectionInnerHTML(html, selector) {
-    return new window.DOMParser()
-      .parseFromString(html, 'text/html')
-      .querySelector(selector).innerHTML
+  getSectionInnerHTML(html: string, selector: string) {
+    return must(
+      new window.DOMParser().parseFromString(html, 'text/html'),
+      selector
+    ).innerHTML
   }
 
-  enableLoading(line) {
-    const mainCartItems =
-      document.getElementById('main-cart-items') ||
-      document.getElementById('CartDrawer-CartItems')
+  enableLoading(line: string) {
+    const mainCartItems = mustEither('main-cart-items', 'CartDrawer-CartItems')
     mainCartItems.classList.add('loading')
 
     const cartItemElements = this.querySelectorAll(
@@ -210,19 +252,17 @@ export default class CartItems extends window.HTMLElement {
       overlay.classList.remove('hidden')
     )
 
-    document.activeElement.blur()
-    this.lineItemStatusElement.setAttribute('aria-hidden', false)
+    ;(document.activeElement as HTMLElement).blur()
+    this.lineItemStatusElement.setAttribute('aria-hidden', 'false')
   }
 
   disableLoading() {
-    const mainCartItems =
-      document.getElementById('main-cart-items') ||
-      document.getElementById('CartDrawer-CartItems')
+    const mainCartItems = mustEither('main-cart-items', 'CartDrawer-CartItems')
     mainCartItems.classList.remove('loading')
   }
 }
 
-function stripHtml(html) {
+function stripHtml(html: string) {
   const tmp = document.createElement('div')
   tmp.innerHTML = html
   return tmp.textContent || ''
