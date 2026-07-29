@@ -1,7 +1,14 @@
 import { trapFocus, removeTrapFocus } from '@/lib/a11y'
-import { onCartEvent } from '@/lib/cart-events'
+import { onCartEvent, CartAddedDetail } from '@/lib/cart-events'
+import { must } from '@/lib/dom'
 
-class CartDrawer extends window.HTMLElement {
+interface CartAddResponseSections {
+  sections?: Record<string, string | null>
+}
+
+export class CartDrawer extends window.HTMLElement {
+  activeElement?: HTMLElement
+
   constructor() {
     super()
 
@@ -9,7 +16,7 @@ class CartDrawer extends window.HTMLElement {
       'keyup',
       (evt) => evt.code === 'Escape' && this.close()
     )
-    this.querySelector('#CartDrawer-Overlay').addEventListener(
+    must(this, '#CartDrawer-Overlay').addEventListener(
       'click',
       this.close.bind(this)
     )
@@ -22,7 +29,7 @@ class CartDrawer extends window.HTMLElement {
   }
 
   setHeaderCartIconAccessibility() {
-    const cartLink = document.querySelector('#cart-icon-bubble')
+    const cartLink = must(document, '#cart-icon-bubble')
     cartLink.setAttribute('role', 'button')
     cartLink.setAttribute('aria-haspopup', 'dialog')
     cartLink.addEventListener('click', (event) => {
@@ -37,7 +44,7 @@ class CartDrawer extends window.HTMLElement {
     })
   }
 
-  open(triggeredBy) {
+  open(triggeredBy?: HTMLElement) {
     if (triggeredBy) this.setActiveElement(triggeredBy)
     // here the animation doesn't seem to always get triggered. A timeout seem to help
     setTimeout(() => {
@@ -47,8 +54,8 @@ class CartDrawer extends window.HTMLElement {
     this.addEventListener(
       'transitionend',
       () => {
-        const containerToTrapFocusOn = document.getElementById('CartDrawer')
-        const focusElement = this.querySelector('[tabindex="-1"]')
+        const containerToTrapFocusOn = must(document, '#CartDrawer')
+        const focusElement = must(this, '[tabindex="-1"]')
         trapFocus(containerToTrapFocusOn, focusElement)
       },
       { once: true }
@@ -64,34 +71,35 @@ class CartDrawer extends window.HTMLElement {
   }
 
   /**
-   * @param {import('../lib/cart-events').CartAddedDetail} detail - cart:added event detail
-   * @param {Object<string, string|null>} [detail.sections] - Section HTML keyed by ID
-   * @param {Object} [detail.response] - /cart/add.js response (sections accessed via detail.response.sections)
+   * @param detail - cart:added event detail
    */
-  renderContents(detail) {
-    const sections = detail.sections || detail.response?.sections
+  renderContents(detail: CartAddedDetail) {
+    const sections =
+      detail.sections || (detail.response as CartAddResponseSections)?.sections
     this.getSectionsToRender().forEach((section) => {
-      const sectionElement = section.selector
-        ? document.querySelector(section.selector)
-        : document.getElementById(section.id)
+      const sectionElement = must(
+        document,
+        section.selector ?? `#${section.id}`
+      )
       sectionElement.innerHTML = this.getSectionInnerHTML(
-        sections[section.id],
+        sections![section.id] as string,
         section.selector
       )
     })
 
     setTimeout(() => {
-      this.querySelector('#CartDrawer-Overlay').addEventListener(
+      must(this, '#CartDrawer-Overlay').addEventListener(
         'click',
         this.close.bind(this)
       )
     })
   }
 
-  getSectionInnerHTML(html, selector = '.shopify-section') {
-    return new window.DOMParser()
-      .parseFromString(html, 'text/html')
-      .querySelector(selector).innerHTML
+  getSectionInnerHTML(html: string, selector: string = '.shopify-section') {
+    return must(
+      new window.DOMParser().parseFromString(html, 'text/html'),
+      selector
+    ).innerHTML
   }
 
   getSectionsToRender() {
@@ -106,7 +114,7 @@ class CartDrawer extends window.HTMLElement {
     ]
   }
 
-  setActiveElement(element) {
+  setActiveElement(element: HTMLElement) {
     this.activeElement = element
   }
 }
