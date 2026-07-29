@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { announce } from './cart-live-region.js'
+import { must } from './dom'
+import { announce } from './cart-live-region'
 
 describe('announce', () => {
   beforeEach(() => {
@@ -15,7 +16,7 @@ describe('announce', () => {
 
   it('writes the message to the live region after the delay', () => {
     announce('Item added to cart')
-    const region = document.getElementById('cart-live-region-text')
+    const region = must(document, '#cart-live-region-text')
 
     expect(region.textContent).toBe('')
 
@@ -24,7 +25,7 @@ describe('announce', () => {
   })
 
   it('clears the region before writing so identical messages re-trigger', () => {
-    const region = document.getElementById('cart-live-region-text')
+    const region = must(document, '#cart-live-region-text')
     region.textContent = 'Item added to cart'
 
     announce('Item added to cart')
@@ -41,7 +42,7 @@ describe('announce', () => {
 
     vi.runAllTimers()
 
-    const region = document.getElementById('cart-live-region-text')
+    const region = must(document, '#cart-live-region-text')
     expect(region.textContent).toBe('Second message')
   })
 
@@ -52,7 +53,7 @@ describe('announce', () => {
   })
 
   it('no-ops when message is falsy', () => {
-    const region = document.getElementById('cart-live-region-text')
+    const region = must(document, '#cart-live-region-text')
     region.textContent = 'previous'
 
     announce(undefined)
@@ -65,8 +66,8 @@ describe('announce', () => {
   })
 })
 
-import { dispatchCartEvent } from './cart-events.js'
-import { initCartAnnouncements } from './cart-live-region.js'
+import { dispatchCartEvent } from './cart-events'
+import { initCartAnnouncements } from './cart-live-region'
 
 describe('initCartAnnouncements', () => {
   beforeEach(() => {
@@ -85,29 +86,34 @@ describe('initCartAnnouncements', () => {
   afterEach(() => {
     vi.useRealTimers()
     document.body.innerHTML = ''
-    delete window.cartStrings
+    window.cartStrings = {}
   })
 
   it('announces "added" string on cart:added', () => {
-    dispatchCartEvent('added', { variantId: 1 })
+    dispatchCartEvent('added', {
+      variantId: 1,
+      quantity: 1,
+      response: null,
+      sections: {}
+    })
     vi.runAllTimers()
-    expect(document.getElementById('cart-live-region-text').textContent).toBe(
+    expect(must(document, '#cart-live-region-text').textContent).toBe(
       'Item added to cart'
     )
   })
 
   it('announces "removed" string on cart:removed', () => {
-    dispatchCartEvent('removed', { line: '1' })
+    dispatchCartEvent('removed', { line: '1', cart: null, sections: {} })
     vi.runAllTimers()
-    expect(document.getElementById('cart-live-region-text').textContent).toBe(
+    expect(must(document, '#cart-live-region-text').textContent).toBe(
       'Item removed from cart'
     )
   })
 
   it('announces "updated" string on cart:updated', () => {
-    dispatchCartEvent('updated', { line: '1' })
+    dispatchCartEvent('updated', { line: '1', cart: null, sections: {} })
     vi.runAllTimers()
-    expect(document.getElementById('cart-live-region-text').textContent).toBe(
+    expect(must(document, '#cart-live-region-text').textContent).toBe(
       'Cart updated'
     )
   })
@@ -115,15 +121,15 @@ describe('initCartAnnouncements', () => {
   it('announces error detail on cart:error', () => {
     dispatchCartEvent('error', { error: 'Out of stock', action: 'add' })
     vi.runAllTimers()
-    expect(document.getElementById('cart-live-region-text').textContent).toBe(
+    expect(must(document, '#cart-live-region-text').textContent).toBe(
       'Out of stock'
     )
   })
 
   it('falls back to default error string when error detail is missing', () => {
-    dispatchCartEvent('error', { action: 'add' })
+    dispatchCartEvent('error', { error: '', action: 'add' })
     vi.runAllTimers()
-    expect(document.getElementById('cart-live-region-text').textContent).toBe(
+    expect(must(document, '#cart-live-region-text').textContent).toBe(
       'Cart error'
     )
   })
