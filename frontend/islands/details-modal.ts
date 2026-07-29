@@ -65,9 +65,11 @@ export default class DetailsModal extends window.HTMLElement {
 
   /**
    * Open the modal, trap focus, and lock body scroll.
-   * @param {MouseEvent} event - Originating click event (used to find the `<details>`)
+   * @param event - Originating click event (used to find the `<details>`).
+   *   Only `target` is read, so callers may pass a real click event or a
+   *   synthetic `{ target }` (see {@link PasswordModal}'s auto-open).
    */
-  open(event: MouseEvent) {
+  open(event: Pick<MouseEvent, 'target'>) {
     const onBodyClickEvent =
       this.onBodyClickEvent || ((e: MouseEvent) => this.onBodyClick(e))
     this.onBodyClickEvent = onBodyClickEvent
