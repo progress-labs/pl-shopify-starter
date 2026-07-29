@@ -14,30 +14,32 @@
 
 /**
  * Resolves when the given media query matches.
- * @param {Object} options
- * @param {string} options.query - CSS media query string
- * @returns {Promise<boolean>}
+ * @param options
+ * @param options.query - CSS media query string
  */
-function media({ query }) {
+function media({ query }: { query: string }): Promise<boolean> {
   const mediaQuery = window.matchMedia(query)
   return new Promise(function (resolve) {
     if (mediaQuery.matches) {
       resolve(true)
     } else {
-      mediaQuery.addEventListener('change', resolve, { once: true })
+      mediaQuery.addEventListener('change', () => resolve(true), {
+        once: true
+      })
     }
   })
 }
 
 /**
  * Resolves when the element enters the viewport.
- * @param {Object} options
- * @param {HTMLElement} options.element - Element to observe
- * @returns {Promise<boolean>}
+ * @param options
+ * @param options.element - Element to observe
  */
-function visible({ element }) {
+function visible({ element }: { element: Element }): Promise<boolean> {
   return new Promise(function (resolve) {
-    const observer = new window.IntersectionObserver(async function (entries) {
+    const observer = new window.IntersectionObserver(async function (
+      entries
+    ) {
       for (const entry of entries) {
         if (entry.isIntersecting) {
           observer.disconnect()
@@ -53,12 +55,11 @@ function visible({ element }) {
 /**
  * Resolves when the main thread is idle. Falls back to a 200ms timeout
  * if `requestIdleCallback` is unavailable.
- * @returns {Promise<void>}
  */
-function idle() {
+function idle(): Promise<void> {
   return new Promise(function (resolve) {
     if ('requestIdleCallback' in window) {
-      window.requestIdleCallback(resolve)
+      window.requestIdleCallback(() => resolve())
     } else {
       setTimeout(resolve, 200)
     }
@@ -69,30 +70,30 @@ function idle() {
  * Eagerly resolved map of island modules produced by Vite's `import.meta.glob`.
  * Keys are paths like `/frontend/islands/product-form.js`; values are
  * dynamic import functions `() => Promise<Module>`.
- * @type {Record<string, () => Promise<Record<string, any>>>}
  */
-export const islands = import.meta.glob('@/islands/*.{js,ts}')
+export const islands: Record<string, () => Promise<unknown>> =
+  import.meta.glob('@/islands/*.{js,ts}')
 
 /**
  * Bootstrap island hydration. Performs a depth-first walk of `document.body`
  * to hydrate existing islands, then installs a `MutationObserver` to hydrate
  * any islands added later (e.g. via section rendering).
  *
- * @param {Record<string, () => Promise<Record<string, any>>>} islands
+ * @param islands
  *   Module map from `import.meta.glob` — keys are `/frontend/islands/<tag>.js` paths.
  */
-export function revive(islands) {
+export function revive(islands: Record<string, () => Promise<unknown>>) {
   const observer = new window.MutationObserver((mutations) => {
     for (let i = 0; i < mutations.length; i++) {
       const { addedNodes } = mutations[i]
       for (let j = 0; j < addedNodes.length; j++) {
         const node = addedNodes[j]
-        if (node.nodeType === 1) dfs(node)
+        if (node.nodeType === 1) dfs(node as Element)
       }
     }
   })
 
-  async function dfs(node) {
+  async function dfs(node: Element) {
     const tagName = node.tagName.toLowerCase()
     const loader =
       islands[`/frontend/islands/${tagName}.ts`] ??
