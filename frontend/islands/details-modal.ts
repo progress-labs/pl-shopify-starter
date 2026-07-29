@@ -6,21 +6,27 @@
  * Base class for {@link HeaderDrawer} and {@link PasswordModal}.
  */
 import { removeTrapFocus, trapFocus } from '@/lib/a11y'
+import { must } from '@/lib/dom'
 
 export default class DetailsModal extends window.HTMLElement {
+  detailsContainer: HTMLDetailsElement
+  summaryToggle: HTMLElement
+  onBodyClickEvent?: (event: MouseEvent) => void
+
   constructor() {
     super()
-    this.detailsContainer = this.querySelector('details')
-    this.summaryToggle = this.querySelector('summary')
+    this.detailsContainer = must<HTMLDetailsElement>(this, 'details')
+    this.summaryToggle = must(this, 'summary')
 
     this.detailsContainer.addEventListener(
       'keyup',
       (event) => event.code.toUpperCase() === 'ESCAPE' && this.close()
     )
-    this.summaryToggle.addEventListener('click', this.onSummaryClick.bind(this))
-    this.querySelector('button[type="button"]').addEventListener(
-      'click',
-      this.close.bind(this)
+    this.summaryToggle.addEventListener('click', (event) =>
+      this.onSummaryClick(event)
+    )
+    must(this, 'button[type="button"]').addEventListener('click', () =>
+      this.close()
     )
 
     this.summaryToggle.setAttribute('role', 'button')
@@ -35,21 +41,24 @@ export default class DetailsModal extends window.HTMLElement {
    * so open/close can be managed with focus trapping.
    * @param {MouseEvent} event
    */
-  onSummaryClick(event) {
+  onSummaryClick(event: MouseEvent) {
     event.preventDefault()
-    event.target.closest('details').hasAttribute('open')
-      ? this.close()
-      : this.open(event)
+    const details = (event.target as HTMLElement).closest('details')!
+    if (details.hasAttribute('open')) {
+      this.close()
+    } else {
+      this.open(event)
+    }
   }
 
   /**
    * Close when clicking outside the modal or on `.modal-overlay`.
    * @param {MouseEvent} event
    */
-  onBodyClick(event) {
+  onBodyClick(event: MouseEvent) {
     if (
-      !this.contains(event.target) ||
-      event.target.classList.contains('modal-overlay')
+      !this.contains(event.target as Node) ||
+      (event.target as HTMLElement).classList.contains('modal-overlay')
     )
       this.close(false)
   }
@@ -58,15 +67,19 @@ export default class DetailsModal extends window.HTMLElement {
    * Open the modal, trap focus, and lock body scroll.
    * @param {MouseEvent} event - Originating click event (used to find the `<details>`)
    */
-  open(event) {
-    this.onBodyClickEvent = this.onBodyClickEvent || this.onBodyClick.bind(this)
-    event.target.closest('details').setAttribute('open', true)
-    document.body.addEventListener('click', this.onBodyClickEvent)
+  open(event: MouseEvent) {
+    const onBodyClickEvent =
+      this.onBodyClickEvent || ((e: MouseEvent) => this.onBodyClick(e))
+    this.onBodyClickEvent = onBodyClickEvent
+    ;(event.target as HTMLElement)
+      .closest('details')!
+      .setAttribute('open', 'true')
+    document.body.addEventListener('click', onBodyClickEvent)
     document.body.classList.add('overflow-hidden')
 
     trapFocus(
-      this.detailsContainer.querySelector('[tabindex="-1"]'),
-      this.detailsContainer.querySelector('input:not([type="hidden"])')
+      must(this.detailsContainer, '[tabindex="-1"]'),
+      must(this.detailsContainer, 'input:not([type="hidden"])')
     )
   }
 
@@ -77,7 +90,9 @@ export default class DetailsModal extends window.HTMLElement {
   close(focusToggle = true) {
     removeTrapFocus(focusToggle ? this.summaryToggle : null)
     this.detailsContainer.removeAttribute('open')
-    document.body.removeEventListener('click', this.onBodyClickEvent)
+    if (this.onBodyClickEvent) {
+      document.body.removeEventListener('click', this.onBodyClickEvent)
+    }
     document.body.classList.remove('overflow-hidden')
   }
 }
