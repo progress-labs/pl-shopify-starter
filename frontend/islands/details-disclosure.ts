@@ -5,12 +5,18 @@
  * Caches CSS animations (via `Element.getAnimations()`) on first toggle and
  * replays/cancels them on subsequent open/close cycles.
  */
+import { must } from '@/lib/dom'
+
 export default class DetailsDisclosure extends window.HTMLElement {
+  mainDetailsToggle: HTMLDetailsElement
+  content: HTMLElement
+  animations?: Animation[]
+
   constructor() {
     super()
-    this.mainDetailsToggle = this.querySelector('details')
-    this.content =
-      this.mainDetailsToggle.querySelector('summary').nextElementSibling
+    this.mainDetailsToggle = must<HTMLDetailsElement>(this, 'details')
+    this.content = must(this.mainDetailsToggle, 'summary')
+      .nextElementSibling as HTMLElement
 
     this.mainDetailsToggle.addEventListener(
       'focusout',
@@ -38,9 +44,10 @@ export default class DetailsDisclosure extends window.HTMLElement {
   /** Close the disclosure and update `aria-expanded` on the summary. */
   close() {
     this.mainDetailsToggle.removeAttribute('open')
-    this.mainDetailsToggle
-      .querySelector('summary')
-      .setAttribute('aria-expanded', false)
+    must(this.mainDetailsToggle, 'summary').setAttribute(
+      'aria-expanded',
+      'false'
+    )
   }
 }
 
