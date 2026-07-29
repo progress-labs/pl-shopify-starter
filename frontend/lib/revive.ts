@@ -69,10 +69,12 @@ function idle(): Promise<void> {
 /**
  * Eagerly resolved map of island modules produced by Vite's `import.meta.glob`.
  * Keys are paths like `/frontend/islands/product-form.ts`; values are
- * dynamic import functions `() => Promise<Module>`.
+ * dynamic import functions `() => Promise<Module>`. `*.test.ts` files are
+ * excluded so regression tests aren't bundled and shipped to production.
  */
-export const islands: Record<string, () => Promise<unknown>> =
-  import.meta.glob('@/islands/*.ts')
+export const islands: Record<string, () => Promise<unknown>> = import.meta.glob(
+  ['@/islands/*.ts', '!@/islands/*.test.ts']
+)
 
 /**
  * Bootstrap island hydration. Performs a depth-first walk of `document.body`
