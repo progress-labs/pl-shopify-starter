@@ -14,6 +14,12 @@ declare global {
     variantStrings: Record<string, string>
     __SENTRY_DSN__?: string
     __SHOPIFY_DESIGN_MODE__?: boolean
+    /** Rendered by snippets/theme-global-object.liquid */
+    __theme: {
+      klaviyo: {
+        listId: string | null
+      }
+    }
   }
 
   interface HTMLElementTagNameMap {
