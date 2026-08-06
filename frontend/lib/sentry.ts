@@ -1,9 +1,15 @@
 /**
- * Sentry Error Tracking
+ * @file Sentry initialization — loaded lazily from the theme entrypoint.
  *
- * Initializes Sentry when a DSN is configured in Theme Settings > Developer tools.
- * Session Replay is production-only. Cart errors are captured automatically via
- * the onCartEvent('error') listener.
+ * This module (and the Sentry SDK it imports) is code-split into its own
+ * chunk because its only import path is the dynamic import in
+ * entrypoints/theme.ts, gated on a configured DSN (Theme Settings >
+ * Developer tools). Never import it statically from islands or libs — use
+ * `captureException` from lib/error-tracking instead, which buffers until
+ * this module is ready.
+ *
+ * Session Replay is production-only. Cart errors are captured automatically
+ * via the onCartEvent('error') listener.
  *
  * To test from the browser console:
  *
@@ -19,12 +25,14 @@
 import * as Sentry from '@sentry/browser'
 import { replayIntegration } from '@sentry/browser'
 import { onCartEvent } from '@/lib/cart-events'
+import { setReporter } from '@/lib/error-tracking'
 
-const dsn = window.__SENTRY_DSN__
-const isEnabled = Boolean(dsn)
-const isProd = import.meta.env.MODE === 'production'
+export function initSentry(): void {
+  const dsn = window.__SENTRY_DSN__
+  if (!dsn) return
 
-if (isEnabled) {
+  const isProd = import.meta.env.MODE === 'production'
+
   Sentry.init({
     dsn,
     environment: import.meta.env.MODE,
@@ -36,18 +44,17 @@ if (isEnabled) {
     }
   })
 
-  onCartEvent('error', ({ error, action }) => {
-    Sentry.captureException(new Error(error), {
-      tags: { cart_action: action },
-      extra: { action, originalError: error }
-    })
-  })
-}
+  setReporter((error, context) => Sentry.captureException(error, context))
 
-export function captureException(
-  error: unknown,
-  context?: Sentry.ExclusiveEventHintOrCaptureContext
-) {
-  if (!isEnabled) return
-  Sentry.captureException(error, context)
+  onCartEvent('error', ({ error, action }) => {
+    if (error instanceof Error) {
+      Sentry.captureException(error, { tags: { cart_action: action } })
+    } else {
+      Sentry.captureMessage(String(error), {
+        level: 'error',
+        tags: { cart_action: action },
+        fingerprint: ['cart', action, String(error)]
+      })
+    }
+  })
 }

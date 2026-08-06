@@ -22,3 +22,17 @@ const summaries = document.querySelectorAll<HTMLElement>(
 
 revive(islands)
 initDisclosureWidgets(summaries)
+
+// Sentry loads as its own deferred chunk so the SDK stays off the critical
+// path. captureException calls made before it resolves are buffered by
+// lib/error-tracking.
+if (window.__SENTRY_DSN__) {
+  const bootSentry = () => {
+    void import('@/lib/sentry.js').then((m) => m.initSentry())
+  }
+  if (typeof window.requestIdleCallback === 'function') {
+    window.requestIdleCallback(bootSentry, { timeout: 5000 })
+  } else {
+    setTimeout(bootSentry, 2000)
+  }
+}

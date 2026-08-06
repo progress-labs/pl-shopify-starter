@@ -97,6 +97,20 @@ export default class DetailsModal extends window.HTMLElement {
     }
     document.body.classList.remove('overflow-hidden')
   }
+
+  /**
+   * If the modal is removed while open (section re-render, theme editor),
+   * release everything it holds on `document.body` — otherwise the page is
+   * left permanently scroll-locked with a leaked click listener.
+   */
+  disconnectedCallback() {
+    if (!this.isOpen()) return
+    if (this.onBodyClickEvent) {
+      document.body.removeEventListener('click', this.onBodyClickEvent)
+    }
+    document.body.classList.remove('overflow-hidden')
+    removeTrapFocus()
+  }
 }
 
 window.customElements.define('details-modal', DetailsModal)

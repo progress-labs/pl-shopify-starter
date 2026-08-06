@@ -8,40 +8,74 @@ interface CartAddResponseSections {
 
 export class CartDrawer extends window.HTMLElement {
   activeElement?: HTMLElement
+  #cleanup?: () => void
 
-  constructor() {
-    super()
+  connectedCallback() {
+    const controller = new AbortController()
+    const { signal } = controller
 
     this.addEventListener(
       'keyup',
-      (evt) => evt.code === 'Escape' && this.close()
+      (evt) => evt.code === 'Escape' && this.close(),
+      { signal }
     )
-    must(this, '#CartDrawer-Overlay').addEventListener(
+    // Delegated so it survives renderContents() replacing the drawer's
+    // innerHTML (the overlay lives inside #CartDrawer).
+    this.addEventListener(
       'click',
-      this.close.bind(this)
+      (evt) => {
+        if ((evt.target as Element).closest('#CartDrawer-Overlay')) this.close()
+      },
+      { signal }
     )
-    this.setHeaderCartIconAccessibility()
+    this.setHeaderCartIconAccessibility(signal)
 
-    onCartEvent('added', (detail) => {
+    const offAdded = onCartEvent('added', (detail) => {
       this.renderContents(detail)
       this.open()
     })
+
+    // The whole drawer can be replaced by a section re-render; without
+    // cleanup the detached instance stays subscribed to cart:added and the
+    // surviving #cart-icon-bubble accumulates one more click handler per
+    // replacement.
+    this.#cleanup = () => {
+      controller.abort()
+      offAdded()
+    }
   }
 
-  setHeaderCartIconAccessibility() {
-    const cartLink = must(document, '#cart-icon-bubble')
+  disconnectedCallback() {
+    this.#cleanup?.()
+    this.#cleanup = undefined
+  }
+
+  setHeaderCartIconAccessibility(signal: AbortSignal) {
+    // The icon lives in the header section — optional, not an invariant of
+    // this island's own markup.
+    const cartLink = document.getElementById('cart-icon-bubble')
+    if (!cartLink) return
+
     cartLink.setAttribute('role', 'button')
     cartLink.setAttribute('aria-haspopup', 'dialog')
-    cartLink.addEventListener('click', (event) => {
-      event.preventDefault()
-      this.open(cartLink)
-    })
-    cartLink.addEventListener('keydown', (event) => {
-      if (event.code.toUpperCase() === 'SPACE') {
+    cartLink.addEventListener(
+      'click',
+      (event) => {
         event.preventDefault()
         this.open(cartLink)
-      }
-    })
+      },
+      { signal }
+    )
+    cartLink.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.code.toUpperCase() === 'SPACE') {
+          event.preventDefault()
+          this.open(cartLink)
+        }
+      },
+      { signal }
+    )
   }
 
   open(triggeredBy?: HTMLElement) {
@@ -84,13 +118,6 @@ export class CartDrawer extends window.HTMLElement {
       sectionElement.innerHTML = this.getSectionInnerHTML(
         sections![section.id] as string,
         section.selector
-      )
-    })
-
-    setTimeout(() => {
-      must(this, '#CartDrawer-Overlay').addEventListener(
-        'click',
-        this.close.bind(this)
       )
     })
   }

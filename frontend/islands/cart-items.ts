@@ -27,22 +27,6 @@ interface PendingUpdate {
   name?: string | null
 }
 
-/**
- * Look up an element by one of two possible ids. The full cart page and the
- * cart drawer render different markup for the same concept (e.g. line-item
- * status region), so exactly one of the two ids is always present.
- */
-function mustEither<T extends HTMLElement = HTMLElement>(
-  idA: string,
-  idB: string
-): T {
-  const el = document.getElementById(idA) ?? document.getElementById(idB)
-  if (!el) {
-    throw new Error(`mustEither(): neither "#${idA}" nor "#${idB}" found`)
-  }
-  return el as T
-}
-
 export default class CartItems extends window.HTMLElement {
   lineItemStatusElement: HTMLElement
   currentItemCount: number
@@ -52,10 +36,11 @@ export default class CartItems extends window.HTMLElement {
   constructor() {
     super()
 
-    this.lineItemStatusElement = mustEither(
-      'shopping-cart-line-item-status',
-      'CartDrawer-LineItemStatus'
-    )
+    // Element ids come from prototype methods (not fields) so subclass
+    // overrides are already in effect here in the base constructor. The
+    // cart page and drawer can coexist on /cart — resolving ids per
+    // variant keeps each instance bound to its own markup.
+    this.lineItemStatusElement = must(document, `#${this.statusElementId()}`)
 
     this.currentItemCount = Array.from(
       this.querySelectorAll<HTMLInputElement>('[name="updates[]"]')
@@ -66,6 +51,31 @@ export default class CartItems extends window.HTMLElement {
     }, 300)
 
     this.addEventListener('change', this.debouncedOnChange)
+  }
+
+  /** Overridden by CartDrawerItems — ids differ per context. */
+  statusElementId(): string {
+    return 'shopping-cart-line-item-status'
+  }
+
+  itemsContainerId(): string {
+    return 'main-cart-items'
+  }
+
+  errorsElementId(): string {
+    return 'cart-errors'
+  }
+
+  itemElementId(line: string | undefined): string {
+    return `CartItem-${line}`
+  }
+
+  lineItemErrorId(line: string | undefined): string {
+    return `Line-item-error-${line}`
+  }
+
+  quantityInputId(line: string | undefined): string {
+    return `Quantity-${line}`
   }
 
   onChange(event: Event) {
@@ -154,9 +164,7 @@ export default class CartItems extends window.HTMLElement {
 
     this.updateLiveRegions(line, cart.item_count)
 
-    const lineItem =
-      document.getElementById(`CartItem-${line}`) ||
-      document.getElementById(`CartDrawer-Item-${line}`)
+    const lineItem = document.getElementById(this.itemElementId(line))
     const focusTarget = lineItem?.querySelector<HTMLElement>(`[name="${name}"]`)
 
     if (lineItem && focusTarget) {
@@ -182,14 +190,16 @@ export default class CartItems extends window.HTMLElement {
   }
 
   /**
-   * Handle cart error - show error message and reset loading state
+   * Handle cart error - show error message and reset loading state.
+   * Lookups are non-throwing: an error handler that itself throws leaves
+   * the cart stuck in its loading state with no message shown.
    */
   onCartError() {
     this.querySelectorAll('.loading-overlay').forEach((overlay) =>
       overlay.classList.add('hidden')
     )
-    const errors = mustEither('cart-errors', 'CartDrawer-CartErrors')
-    errors.textContent = window.cartStrings.error
+    const errors = document.getElementById(this.errorsElementId())
+    if (errors) errors.textContent = window.cartStrings.error
     this.disableLoading()
     this.pendingUpdate = null
   }
@@ -203,25 +213,23 @@ export default class CartItems extends window.HTMLElement {
    */
   updateLiveRegions(line: string | undefined, itemCount: number) {
     if (this.currentItemCount === itemCount) {
-      const lineItemError = mustEither(
-        `Line-item-error-${line}`,
-        `CartDrawer-LineItemError-${line}`
-      )
-      const quantityElement = mustEither<HTMLInputElement>(
-        `Quantity-${line}`,
-        `Drawer-quantity-${line}`
-      )
+      const lineItemError = document.getElementById(this.lineItemErrorId(line))
+      const quantityElement = document.getElementById(
+        this.quantityInputId(line)
+      ) as HTMLInputElement | null
 
-      const message = window.cartStrings.quantityError.replace(
-        '[quantity]',
-        quantityElement.value
-      )
-      lineItemError.innerHTML = message
+      if (lineItemError && quantityElement) {
+        const message = window.cartStrings.quantityError.replace(
+          '[quantity]',
+          quantityElement.value
+        )
+        lineItemError.innerHTML = message
 
-      // Override the generic cart:updated announcement scheduled by
-      // initCartAnnouncements with the more specific quantity-limit message.
-      // announce() cancels any pending announcement, so this wins.
-      announce(stripHtml(message))
+        // Override the generic cart:updated announcement scheduled by
+        // initCartAnnouncements with the more specific quantity-limit
+        // message. announce() cancels any pending announcement, so this wins.
+        announce(stripHtml(message))
+      }
     }
 
     this.currentItemCount = itemCount
@@ -236,27 +244,19 @@ export default class CartItems extends window.HTMLElement {
   }
 
   enableLoading(line: string) {
-    const mainCartItems = mustEither('main-cart-items', 'CartDrawer-CartItems')
-    mainCartItems.classList.add('loading')
+    document.getElementById(this.itemsContainerId())?.classList.add('loading')
 
-    const cartItemElements = this.querySelectorAll(
-      `#CartItem-${line} .loading-overlay`
-    )
-    const cartDrawerItemElements = this.querySelectorAll(
-      `#CartDrawer-Item-${line} .loading-overlay`
-    )
-
-    ;[...cartItemElements, ...cartDrawerItemElements].forEach((overlay) =>
-      overlay.classList.remove('hidden')
-    )
-
-    ;(document.activeElement as HTMLElement).blur()
+    this.querySelectorAll(
+      `#${this.itemElementId(line)} .loading-overlay`
+    ).forEach((overlay) => overlay.classList.remove('hidden'))
+    ;(document.activeElement as HTMLElement | null)?.blur()
     this.lineItemStatusElement.setAttribute('aria-hidden', 'false')
   }
 
   disableLoading() {
-    const mainCartItems = mustEither('main-cart-items', 'CartDrawer-CartItems')
-    mainCartItems.classList.remove('loading')
+    document
+      .getElementById(this.itemsContainerId())
+      ?.classList.remove('loading')
   }
 }
 

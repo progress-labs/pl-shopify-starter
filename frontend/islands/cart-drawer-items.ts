@@ -8,6 +8,30 @@
 import CartItems from './cart-items'
 
 class CartDrawerItems extends CartItems {
+  statusElementId(): string {
+    return 'CartDrawer-LineItemStatus'
+  }
+
+  itemsContainerId(): string {
+    return 'CartDrawer-CartItems'
+  }
+
+  errorsElementId(): string {
+    return 'CartDrawer-CartErrors'
+  }
+
+  itemElementId(line: string | undefined): string {
+    return `CartDrawer-Item-${line}`
+  }
+
+  lineItemErrorId(line: string | undefined): string {
+    return `CartDrawer-LineItemError-${line}`
+  }
+
+  quantityInputId(line: string | undefined): string {
+    return `Drawer-quantity-${line}`
+  }
+
   getSectionsToRender(): { id: string; section: string; selector: string }[] {
     return [
       {

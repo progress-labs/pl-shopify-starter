@@ -1,4 +1,8 @@
-{%- render 'price', product: block.settings.product, shopify_attributes: block.shopify_attributes -%}
+{%- render 'price',
+  product: block.settings.product,
+  use_variant: block.settings.use_variant,
+  shopify_attributes: block.shopify_attributes
+-%}
 
 {% schema %}
 {
@@ -8,6 +12,13 @@
       "type": "product",
       "id": "product",
       "label": "Product"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_variant",
+      "label": "Show selected variant price",
+      "default": false,
+      "info": "Enable on product pages so the price follows the variant picker. Leave off for product cards, which show the product's price range."
     }
   ]
 }

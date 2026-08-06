@@ -36,10 +36,16 @@ export interface CartAddedDetail {
 }
 
 export interface CartErrorDetail {
-  /** Error message */
-  error: string
+  /** The original error — an Error for exceptions (stack preserved for
+   *  Sentry), or a message string for API-reported failures */
+  error: string | Error
   /** Which action failed */
   action: 'add' | 'update' | 'remove' | 'note-update'
+}
+
+/** Normalize a CartErrorDetail error for user-facing display. */
+export function errorMessage(error: string | Error): string {
+  return typeof error === 'string' ? error : error.message
 }
 
 export interface CartEventMap {

@@ -38,15 +38,41 @@ interface CartUpdateDetail {
 }
 
 /**
- *
- * @question - Why do we only render the cart-icon-bubble section?
+ * Sections the add-to-cart response should re-render. With a drawer present,
+ * ask it; without one the shopper is redirected to /cart after adding, so
+ * only the icon bubble needs refreshing.
  */
 function getSectionsToRender(): string[] {
   const cartDrawer = document.querySelector('cart-drawer')
   if (cartDrawer) {
-    return cartDrawer.getSectionsToRender().map((section) => section.id)
+    // The drawer island is a separate lazy chunk — the element can exist in
+    // the DOM before its class has been upgraded. Fall back to the same ids
+    // the upgraded class returns rather than calling a missing method.
+    if (typeof cartDrawer.getSectionsToRender === 'function') {
+      return cartDrawer.getSectionsToRender().map((section) => section.id)
+    }
+    return ['cart-drawer', 'cart-icon-bubble']
   }
   return ['cart-icon-bubble']
+}
+
+/**
+ * One in-flight request per logical cart operation. Shopify's cart endpoints
+ * are not safely concurrent, and without cancellation the *older* of two
+ * overlapping responses can win the section render. Starting a new request
+ * for the same key aborts the previous one.
+ */
+const inFlight = new Map<string, AbortController>()
+
+function acquireSignal(key: string): AbortSignal {
+  inFlight.get(key)?.abort()
+  const controller = new AbortController()
+  inFlight.set(key, controller)
+  return controller.signal
+}
+
+function isAbortError(e: unknown): boolean {
+  return e instanceof DOMException && e.name === 'AbortError'
 }
 
 export async function addToCart({
@@ -86,8 +112,20 @@ export async function addToCart({
   try {
     const response = await fetch(window.routes.cart_add_url, {
       ...fetchConfig(),
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
+      signal: acquireSignal('add')
     })
+
+    if (
+      !response.ok &&
+      !response.headers.get('content-type')?.includes('json')
+    ) {
+      dispatchCartEvent('error', {
+        error: window.cartStrings.error,
+        action: 'add'
+      })
+      return
+    }
 
     const data = await response.json()
 
@@ -107,8 +145,9 @@ export async function addToCart({
       sections: data.sections
     })
   } catch (e) {
+    if (isAbortError(e)) return
     dispatchCartEvent('error', {
-      error: e instanceof Error ? e.message : String(e),
+      error: e instanceof Error ? e : String(e),
       action: 'add'
     })
   }
@@ -149,8 +188,20 @@ export async function updateCartItem({
   try {
     const response = await fetch(window.routes.cart_change_url, {
       ...fetchConfig(),
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
+      signal: acquireSignal(`change:${line}`)
     })
+
+    if (
+      !response.ok &&
+      !response.headers.get('content-type')?.includes('json')
+    ) {
+      dispatchCartEvent('error', {
+        error: window.cartStrings.error,
+        action: isRemoving ? 'remove' : 'update'
+      })
+      return
+    }
 
     const data = await response.json()
 
@@ -178,8 +229,9 @@ export async function updateCartItem({
 
     return data
   } catch (e) {
+    if (isAbortError(e)) return
     dispatchCartEvent('error', {
-      error: e instanceof Error ? e.message : String(e),
+      error: e instanceof Error ? e : String(e),
       action: isRemoving ? 'remove' : 'update'
     })
   }
@@ -197,8 +249,20 @@ export async function updateCartNote({
   try {
     const response = await fetch(window.routes.cart_update_url, {
       ...fetchConfig(),
-      body: JSON.stringify({ note })
+      body: JSON.stringify({ note }),
+      signal: acquireSignal('note')
     })
+
+    if (
+      !response.ok &&
+      !response.headers.get('content-type')?.includes('json')
+    ) {
+      dispatchCartEvent('error', {
+        error: window.cartStrings.error,
+        action: 'note-update'
+      })
+      return
+    }
 
     const cart = await response.json()
 
@@ -213,8 +277,9 @@ export async function updateCartNote({
     dispatchCartEvent('note-updated', { note, cart })
     return cart
   } catch (e) {
+    if (isAbortError(e)) return
     dispatchCartEvent('error', {
-      error: e instanceof Error ? e.message : String(e),
+      error: e instanceof Error ? e : String(e),
       action: 'note-update'
     })
   }

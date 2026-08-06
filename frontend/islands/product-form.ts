@@ -22,7 +22,7 @@
  * Events consumed: cart:added, cart:error
  * Events dispatched: cart:add
  */
-import { dispatchCartEvent, onCartEvent } from '@/lib/cart-events'
+import { dispatchCartEvent, errorMessage, onCartEvent } from '@/lib/cart-events'
 import { must } from '@/lib/dom'
 import type { CartErrorDetail } from '@/lib/cart-events'
 
@@ -31,20 +31,36 @@ class ProductForm extends window.HTMLElement {
   submitButton!: HTMLButtonElement
   pending = false
   errorMessage?: HTMLElement
+  #cleanup?: () => void
 
-  constructor() {
-    super()
-
+  connectedCallback() {
     this.form = must(this, 'form')
     must<HTMLInputElement>(this.form, '[name="id"]').disabled = false
-    this.form.addEventListener('submit', this.onSubmitHandler.bind(this))
     this.submitButton = must(this, '[type="submit"]')
 
     if (document.querySelector('cart-drawer'))
       this.submitButton.setAttribute('aria-haspopup', 'dialog')
 
-    onCartEvent('added', this.onCartAdded.bind(this))
-    onCartEvent('error', this.onCartError.bind(this))
+    const controller = new AbortController()
+    this.form.addEventListener('submit', this.onSubmitHandler.bind(this), {
+      signal: controller.signal
+    })
+    const unsubscribes = [
+      onCartEvent('added', this.onCartAdded.bind(this)),
+      onCartEvent('error', this.onCartError.bind(this))
+    ]
+
+    // Section re-renders replace this element; without cleanup every stale
+    // instance stays subscribed to the document-level cart events.
+    this.#cleanup = () => {
+      controller.abort()
+      unsubscribes.forEach((unsubscribe) => unsubscribe())
+    }
+  }
+
+  disconnectedCallback() {
+    this.#cleanup?.()
+    this.#cleanup = undefined
   }
 
   onSubmitHandler(evt: SubmitEvent) {
@@ -102,9 +118,12 @@ class ProductForm extends window.HTMLElement {
   onCartError({ error, action }: CartErrorDetail) {
     if (!this.pending || action !== 'add') return
     this.pending = false
-    this.handleErrorMessage(error)
+    this.handleErrorMessage(errorMessage(error))
     this.submitButton.classList.remove('loading')
-    this.submitButton.setAttribute('aria-disabled', 'true')
+    // Re-enable the button — the error message is the feedback. Leaving
+    // aria-disabled set would permanently block retries after one transient
+    // failure (onSubmitHandler early-returns on it).
+    this.submitButton.removeAttribute('aria-disabled')
   }
 
   handleErrorMessage(errorMessage: string | false = false) {

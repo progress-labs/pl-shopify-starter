@@ -1,4 +1,4 @@
-import { captureException } from '@/lib/sentry.js'
+import { captureException } from '@/lib/error-tracking'
 
 /**
  * @file `<product-recommendations>` — fetches and renders product recommendations.
@@ -12,9 +12,16 @@ import { captureException } from '@/lib/sentry.js'
  */
 
 class ProductRecommendations extends window.HTMLElement {
+  #controller?: AbortController
+
   connectedCallback() {
-    fetch(this.dataset.url as string)
-      .then((response) => response.text())
+    this.#controller = new AbortController()
+
+    fetch(this.dataset.url as string, { signal: this.#controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+        return response.text()
+      })
       .then((text) => {
         const html = document.createElement('div')
         html.innerHTML = text
@@ -25,12 +32,17 @@ class ProductRecommendations extends window.HTMLElement {
         }
       })
       .catch((e) => {
+        if (e instanceof DOMException && e.name === 'AbortError') return
         captureException(e, {
           tags: { component: 'product-recommendations' },
           extra: { url: this.dataset.url }
         })
         console.error(e)
       })
+  }
+
+  disconnectedCallback() {
+    this.#controller?.abort()
   }
 }
 

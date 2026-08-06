@@ -24,7 +24,8 @@
             "price": {
               "type": "price",
               "settings": {
-                "product": "{{ closest.product }}"
+                "product": "{{ closest.product }}",
+                "use_variant": true
               }
             },
             "variant_picker": {
