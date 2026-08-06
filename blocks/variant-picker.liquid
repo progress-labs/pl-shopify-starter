@@ -3,6 +3,20 @@
   assign product_form_id = 'product-form-' | append: section.id
 -%}
 
+{%- comment -%}
+  Only the fields read by variant-selects.ts / variant-radios.ts are
+  serialized (id, available, options) — `product.variants | json` ships the
+  entire variant object per variant, which is 100s of KB on large products.
+{%- endcomment -%}
+{%- capture variant_json -%}
+  [
+    {%- for variant in product.variants -%}
+      {"id":{{ variant.id }},"available":{{ variant.available }},"options":{{ variant.options | json }}}
+      {%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+{%- endcapture -%}
+
 {%- unless product.has_only_default_variant -%}
   {%- if block.settings.picker_type == 'button' -%}
     <variant-radios
@@ -39,7 +53,7 @@
         </fieldset>
       {%- endfor -%}
       <script type="application/json">
-        {{ product.variants | json }}
+        {{ variant_json }}
       </script>
     </variant-radios>
   {%- else -%}
@@ -84,7 +98,7 @@
       {%- endfor -%}
 
       <script type="application/json">
-        {{ product.variants | json }}
+        {{ variant_json }}
       </script>
     </variant-selects>
   {%- endif -%}

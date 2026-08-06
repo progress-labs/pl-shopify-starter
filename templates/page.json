@@ -16,14 +16,9 @@
         "page-content": {
           "type": "page-content",
           "static": true,
-          "settings": {
-            "heading": "{{ closest.page.title }}",
-            "heading_level": "h1",
-            "heading_size": "lg"
-          }
+          "settings": {}
         }
-      },
-      "block_order": []
+      }
     }
   },
   "order": ["main"]

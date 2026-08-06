@@ -9,7 +9,7 @@
     <span class="sr-only">{{- article.title -}}</span>
   </a>
   <div class="aspect-[3/2] overflow-hidden rounded bg-primary/5 ">
-    {%- content_for 'block', type: 'image', id: 'image' -%}
+    {%- content_for 'block', type: 'image', id: 'image', sizes: '50vw' -%}
   </div>
   {%- content_for 'block', type: 'heading', id: 'heading', wrapper_class: 'mt-4' -%}
   {%- content_for 'block', type: 'details', id: 'details', wrapper_class: 'mt-1' -%}

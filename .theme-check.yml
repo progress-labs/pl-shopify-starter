@@ -2,3 +2,8 @@ MatchingTranslations:
   enabled: false
 TemplateLength:
   enabled: false
+# This theme passes custom arguments (lazy_load, sizes, wrapper_class, ...) to
+# static blocks via {% content_for 'block' %}, which the runtime supports but
+# this rule still rejects.
+ValidContentForArguments:
+  enabled: false

@@ -1,5 +1,7 @@
 {% doc %}
   Renders a collection card
+
+  @param {string} [sizes] - forwarded to the image block; set from grid contexts
 {% enddoc %}
 
 {%- liquid
@@ -12,7 +14,7 @@
   </a>
   <div class="grid gap-4">
     <div class="aspect-[3/2] overflow-hidden rounded bg-primary/5">
-      {%- content_for 'block', type: 'image', id: 'image' -%}
+      {%- content_for 'block', type: 'image', id: 'image', sizes: sizes -%}
     </div>
     {%- content_for 'block', type: 'heading', id: 'heading' -%}
   </div>

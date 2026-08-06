@@ -1,2 +1,3 @@
+{% # Section Rendering API shim — fetched by frontend/islands/cart-items.ts to re-render the subtotal after cart updates. Not merchant-facing; do not delete. Markup must match the subtotal row in snippets/cart-summary.liquid. %}
 <h2 class="text-copy">{{ 'sections.cart.subtotal' | t }}</h2>
 <p class="text-copy">{{ cart.total_price | money_with_currency }}</p>

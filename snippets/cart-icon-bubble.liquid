@@ -1,9 +1,7 @@
-{% comment %}
-  Renders cart icon bubble
-
-  Usage:
-  {% render 'cart-icon-bubble' %}
-{% endcomment %}
+{% doc %}
+  Renders the header cart icon with an item-count bubble.
+  Re-rendered via the Section Rendering API shim in sections/cart-icon-bubble.liquid.
+{% enddoc %}
 
 {% render 'icon-bag' %}
 <span class="sr-only">{{ 'templates.cart.cart' | t }}</span>
