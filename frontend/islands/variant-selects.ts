@@ -138,9 +138,24 @@ export default class VariantSelects extends window.HTMLElement {
     return new window.DOMParser().parseFromString(text, 'text/html')
   }
 
+  /**
+   * The price element carries no unique id (the Price block is shared with
+   * product cards, where a per-section id would duplicate across the grid),
+   * so both lookups scope a [data-product-price] hook to the section's
+   * #ProductInfo container.
+   */
+  priceElement(root: Document | typeof document, sectionId: string) {
+    return root.querySelector<HTMLElement>(
+      `#ProductInfo-${sectionId} [data-product-price]`
+    )
+  }
+
   updatePriceFromHtml(html: Document, sectionId: string) {
-    const source = html.getElementById(`price-${sectionId}`)
-    const destination = document.getElementById(`price-${this.dataset.section}`)
+    const source = this.priceElement(html, sectionId)
+    const destination = this.priceElement(
+      document,
+      this.dataset.section as string
+    )
     if (source && destination) {
       destination.innerHTML = source.innerHTML
       destination.classList.remove('invisible')
@@ -191,7 +206,7 @@ export default class VariantSelects extends window.HTMLElement {
     const addButtonText = productForm?.querySelector<HTMLElement>(
       '[name="add"] > span'
     )
-    const price = document.getElementById(`price-${this.dataset.section}`)
+    const price = this.priceElement(document, this.dataset.section as string)
     if (addButtonText) {
       addButtonText.textContent = window.variantStrings.unavailable
     }
