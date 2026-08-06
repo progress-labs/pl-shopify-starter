@@ -28,6 +28,44 @@ const IDLE_TIMEOUT_MS = 1500
  *  shopper. */
 const VISIBLE_ROOT_MARGIN = '200px 0px'
 
+interface NetworkInformationLike {
+  saveData?: boolean
+  effectiveType?: string
+}
+
+/** Skip speculative module fetches for shoppers on constrained connections. */
+function allowPrefetch(): boolean {
+  const connection = (navigator as { connection?: NetworkInformationLike })
+    .connection
+  if (!connection) return true
+  if (connection.saveData) return false
+  return !/2g/.test(connection.effectiveType ?? '')
+}
+
+/**
+ * Start an island's module fetch as soon as the shopper shows intent
+ * (hover/focus/touch), without waiting for its directive to fire. The
+ * module registry dedupes, so the later "real" hydration import is free.
+ */
+function prefetchOnIntent(node: Element, loader: () => Promise<unknown>) {
+  if (!allowPrefetch()) return
+
+  const controller = new AbortController()
+  const start = () => {
+    controller.abort()
+    void loader().catch(() => {
+      // Ignored — the hydrate path retries and reports real failures.
+    })
+  }
+
+  for (const event of ['pointerover', 'focusin', 'touchstart']) {
+    node.addEventListener(event, start, {
+      passive: true,
+      signal: controller.signal
+    })
+  }
+}
+
 /**
  * Resolves when the given media query matches.
  * @param options
@@ -121,6 +159,12 @@ export function revive(islands: Record<string, () => Promise<unknown>>) {
   const scheduled = new WeakSet<Element>()
 
   async function hydrate(node: Element, loader: () => Promise<unknown>) {
+    const deferred =
+      node.hasAttribute('client:visible') ||
+      node.hasAttribute('client:media') ||
+      node.hasAttribute('client:idle')
+    if (deferred) prefetchOnIntent(node, loader)
+
     if (node.hasAttribute('client:visible')) {
       await visible({ element: node })
     }

@@ -1,6 +1,7 @@
 import { trapFocus, removeTrapFocus } from '@/lib/a11y'
 import { onCartEvent, CartAddedDetail } from '@/lib/cart-events'
 import { must } from '@/lib/dom'
+import { withViewTransition } from '@/lib/view-transition'
 
 interface CartAddResponseSections {
   sections?: Record<string, string | null>
@@ -110,15 +111,17 @@ export class CartDrawer extends window.HTMLElement {
   renderContents(detail: CartAddedDetail) {
     const sections =
       detail.sections || (detail.response as CartAddResponseSections)?.sections
-    this.getSectionsToRender().forEach((section) => {
-      const sectionElement = must(
-        document,
-        section.selector ?? `#${section.id}`
-      )
-      sectionElement.innerHTML = this.getSectionInnerHTML(
-        sections![section.id] as string,
-        section.selector
-      )
+    withViewTransition(() => {
+      this.getSectionsToRender().forEach((section) => {
+        const sectionElement = must(
+          document,
+          section.selector ?? `#${section.id}`
+        )
+        sectionElement.innerHTML = this.getSectionInnerHTML(
+          sections![section.id] as string,
+          section.selector
+        )
+      })
     })
   }
 

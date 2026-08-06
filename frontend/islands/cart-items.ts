@@ -16,6 +16,7 @@ import { trapFocus } from '@/lib/a11y'
 import { updateCartItem } from '@/lib/cart-api'
 import { announce } from '@/lib/cart-live-region'
 import { must } from '@/lib/dom'
+import { withViewTransition } from '@/lib/view-transition'
 
 interface CartState {
   item_count: number
@@ -145,48 +146,57 @@ export default class CartItems extends window.HTMLElement {
   onCartUpdated(cart: CartState) {
     const { line, name } = this.pendingUpdate || {}
 
-    this.classList.toggle('is-empty', cart.item_count === 0)
     const cartDrawerWrapper = document.querySelector('cart-drawer')
 
-    if (cartDrawerWrapper) {
-      cartDrawerWrapper.classList.toggle('is-empty', cart.item_count === 0)
-    }
+    // Everything below runs inside the transition callback: the browser
+    // snapshots before/after it, and the focus-restore lookups depend on
+    // the freshly swapped DOM (the callback runs async under a real
+    // transition; without support it runs synchronously).
+    withViewTransition(() => {
+      this.classList.toggle('is-empty', cart.item_count === 0)
 
-    this.getSectionsToRender().forEach((section) => {
-      const container = must(document, `#${section.id}`)
-      const elementToReplace =
-        container.querySelector<HTMLElement>(section.selector) || container
-      elementToReplace.innerHTML = this.getSectionInnerHTML(
-        cart.sections[section.section],
-        section.selector
-      )
-    })
-
-    this.updateLiveRegions(line, cart.item_count)
-
-    const lineItem = document.getElementById(this.itemElementId(line))
-    const focusTarget = lineItem?.querySelector<HTMLElement>(`[name="${name}"]`)
-
-    if (lineItem && focusTarget) {
       if (cartDrawerWrapper) {
-        trapFocus(cartDrawerWrapper, focusTarget)
-      } else {
-        focusTarget.focus()
+        cartDrawerWrapper.classList.toggle('is-empty', cart.item_count === 0)
       }
-    } else if (cart.item_count === 0 && cartDrawerWrapper) {
-      trapFocus(
-        must(cartDrawerWrapper, '#CartDrawer'),
-        must(cartDrawerWrapper, '[tabindex="-1"]')
-      )
-    } else if (document.querySelector('.cart-item') && cartDrawerWrapper) {
-      trapFocus(
-        cartDrawerWrapper,
-        document.querySelector('.cart-item-name') as HTMLElement
-      )
-    }
 
-    this.disableLoading()
-    this.pendingUpdate = null
+      this.getSectionsToRender().forEach((section) => {
+        const container = must(document, `#${section.id}`)
+        const elementToReplace =
+          container.querySelector<HTMLElement>(section.selector) || container
+        elementToReplace.innerHTML = this.getSectionInnerHTML(
+          cart.sections[section.section],
+          section.selector
+        )
+      })
+
+      this.updateLiveRegions(line, cart.item_count)
+
+      const lineItem = document.getElementById(this.itemElementId(line))
+      const focusTarget = lineItem?.querySelector<HTMLElement>(
+        `[name="${name}"]`
+      )
+
+      if (lineItem && focusTarget) {
+        if (cartDrawerWrapper) {
+          trapFocus(cartDrawerWrapper, focusTarget)
+        } else {
+          focusTarget.focus()
+        }
+      } else if (cart.item_count === 0 && cartDrawerWrapper) {
+        trapFocus(
+          must(cartDrawerWrapper, '#CartDrawer'),
+          must(cartDrawerWrapper, '[tabindex="-1"]')
+        )
+      } else if (document.querySelector('.cart-item') && cartDrawerWrapper) {
+        trapFocus(
+          cartDrawerWrapper,
+          document.querySelector('.cart-item-name') as HTMLElement
+        )
+      }
+
+      this.disableLoading()
+      this.pendingUpdate = null
+    })
   }
 
   /**
