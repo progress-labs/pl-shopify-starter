@@ -2,37 +2,12 @@
   "sections": {
     "image_banner": {
       "type": "image-banner",
-      "blocks": {
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Image banner",
-            "heading_size": "xl",
-            "heading_level": "h2"
-          }
-        },
-        "text": {
-          "type": "text",
-          "settings": {
-            "text": "<p><strong>Give customers details about the banner image(s) or content on the template.</strong></p>",
-            "text_size": "lg"
-          }
-        },
-        "button": {
-          "type": "button",
-          "settings": {
-            "button_label": "Shop all →",
-            "button_variant": "link",
-            "button_size": "lg",
-            "button_link": "shopify://collections/all"
-          }
-        }
-      },
-      "block_order": ["heading", "text", "button"],
       "settings": {
-        "full_page_height_enable": true,
-        "lazy_load_enable": false,
-        "preload_first_image_enable": true
+        "heading": "Image banner",
+        "description": "Give customers details about the banner image(s) or content on the template.",
+        "button_label": "Shop all →",
+        "button_link": "shopify://collections/all",
+        "button_style": "text"
       }
     },
     "featured_collection": {
