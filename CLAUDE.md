@@ -6,12 +6,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 npm install                        # Install dependencies
-npm run dev -- --store <store-name>    # Run Shopify CLI + Vite dev servers in parallel
-npm run build                      # Bundle assets with Vite
-npm run deploy                     # Build and push theme to Shopify
+npm run dev                        # Run Shopify CLI + Vite dev servers in parallel
+npm run build                      # Typecheck, test, and bundle assets with Vite
+npm run deploy                     # Lint, build, and push theme to Shopify (development env, --nodelete)
 npm run lint                       # ESLint check
 npm run format                     # Prettier auto-format
+npm run typecheck                  # TypeScript check
+npm test                           # Vitest watch mode
 ```
+
+The store is configured in `shopify.theme.toml` under `[environments.development]` (see `example.shopify.theme.toml` when setting up a new store). Both `dev` and `deploy` use the `development` environment.
 
 ## Architecture
 

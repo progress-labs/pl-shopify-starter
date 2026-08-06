@@ -16,6 +16,10 @@ export default defineConfig({
   plugins: [shopifyClean(), shopify(shopifyConfig), tailwindcss()],
   build: {
     emptyOutDir: false,
+    // Warn if any chunk grows past 250 kB raw. Set just above the lazily
+    // loaded Sentry SDK chunk (~220 kB, never on the critical path) so the
+    // warning stays meaningful — every other chunk in this theme is < 15 kB.
+    chunkSizeWarningLimit: 250,
     // 'hidden' emits .map files without the sourceMappingURL comment, so
     // they're available for Sentry upload but not discoverable by visitors.
     // Maps are excluded from theme push (.shopifyignore) and git (.gitignore).

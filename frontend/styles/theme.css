@@ -30,7 +30,10 @@
   --font-weight-body-weight-bold: var(--font-body-weight-bold);
   --font-weight-heading-weight: var(--font-heading-weight);
 
-  --shadow-border: inset 0px 0px 0px 1px rgb(var(--color-primary) / 0.08);
+  /* color-mix instead of rgb(var()) — the tokens hold complete colors
+     (hex from theme settings via theme.liquid), not bare channel triplets */
+  --shadow-border: inset 0px 0px 0px 1px
+    color-mix(in srgb, var(--color-primary) 8%, transparent);
   --shadow-dark-header: inset 0px -1px 0px 0px rgba(21, 21, 21, 0.4);
   --shadow-light-header: inset 0px -1px 0px 0px rgba(21, 21, 21, 0.05);
 }

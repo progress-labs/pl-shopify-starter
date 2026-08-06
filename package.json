@@ -1,12 +1,12 @@
 {
-  "name": "hygrogen-theme",
+  "name": "pl-shopify-starter",
   "private": true,
   "type": "module",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite & shopify theme dev -s progresslabs-functions",
+    "dev": "concurrently --kill-others --names vite,shopify \"vite\" \"shopify theme dev -e development\"",
     "build": "npm run typecheck && vitest run && vite build",
-    "deploy": "npm run typecheck && vitest run && npm run build && shopify theme push",
+    "deploy": "npm run lint && npm run build && shopify theme push -e development --nodelete",
     "lint": "eslint .",
     "format": "prettier --write --cache .",
     "format-check": "prettier --check .",
@@ -20,6 +20,7 @@
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.3",
+    "concurrently": "^10.0.4",
     "eslint": "^10.8.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.9.0",
