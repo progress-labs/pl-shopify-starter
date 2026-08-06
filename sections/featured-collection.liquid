@@ -6,8 +6,8 @@
     {%- for product in section.settings.collection.products limit: section.settings.products_to_show -%}
       {%- liquid
         assign lazy_load = true
-        if section.index == 0 and forloop.index.first
-          assign lazy_load = true
+        if section.index0 == 0 and forloop.first
+          assign lazy_load = false
         endif
       -%}
       {%- content_for 'block',

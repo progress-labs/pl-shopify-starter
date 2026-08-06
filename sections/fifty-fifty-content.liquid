@@ -24,7 +24,7 @@
     style="background-color: {{ section.settings.background_color }};"
   {% endif %}
 >
-  {%- comment -%} Media (video or image) {%- endcomment -%}
+  {% # Media (video or image) %}
   <div class="aspect-[4/5] overflow-hidden lg:aspect-auto {% if section.settings.image_position == 'right' %}lg:order-2{% endif %}">
     {%- if section.settings.video != blank -%}
       {%- if section.settings.video_controls -%}
@@ -95,14 +95,13 @@
           sizes: '(min-width: 1024px) 50vw, 100vw',
           widths: '375, 550, 750, 1100, 1500, 1780, 2000',
           alt: section.settings.image.alt
-        | escape
       }}
     {%- else -%}
       {{ 'lifestyle-2' | placeholder_svg_tag: 'w-full h-full object-cover fill-primary/20' }}
     {%- endif -%}
   </div>
 
-  {%- comment -%} Content {%- endcomment -%}
+  {% # Content %}
   <div class="flex items-center justify-center px-6 py-12 md:px-8 lg:px-12 lg:py-16">
     <div class="flex max-w-md flex-col gap-3 *:data-[slot=button]:mt-5">
       {%- content_for 'blocks' -%}

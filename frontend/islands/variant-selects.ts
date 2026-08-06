@@ -7,32 +7,16 @@
  *   - data-original-section {string}  - Original section ID (for theme editor)
  *   - data-update-url {string}        - "false" to skip URL updates
  *
- * Expects a <script type="application/json"> child containing the product
- * variants array serialized via {{ product.variants | json }}.
+ * Expects a <script type="application/json"> child containing a trimmed
+ * variants array emitted by blocks/variant-picker.liquid — only the fields
+ * this island reads are serialized.
  */
 import { must } from '@/lib/dom'
 
-interface VariantImage {
-  url: string
-  aspect_ratio: number
-  alt: string
-  width: number
-  height: number
-}
-
 interface VariantData {
   id: number
-  title: string
-  price: number
-  compare_at_price: number | null
   available: boolean
   options: string[]
-  sku: string
-  barcode: string
-  featured_image: VariantImage | null
-  requires_selling_plan: boolean
-  selling_plan_allocations: unknown[]
-  selected_selling_plan_allocation: unknown | null
 }
 
 /** Structural type for the sibling `<product-form>` custom element. */

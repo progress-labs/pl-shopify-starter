@@ -51,7 +51,7 @@
     style="background-color: {{ section.settings.background_color }}; color: {{ section.settings.text_color }};"
   {% endif %}
 >
-  {%- comment -%} Left column: heading, description, image, primary CTA {%- endcomment -%}
+  {% # Left column: heading, description, image, primary CTA %}
   <div>
     <div class="md:sticky md:top-24">
       {%- if section.settings.heading != blank -%}
@@ -118,7 +118,6 @@
               sizes: '(min-width: 768px) 50vw, 100vw',
               widths: '375, 550, 750, 1100, 1200',
               alt: section.settings.image.alt
-            | escape
           }}
         {%- endif -%}
 
@@ -143,14 +142,24 @@
     </div>
   </div>
 
-  {%- comment -%} Right column: review cards + secondary CTA {%- endcomment -%}
+  {% # Right column: review cards + secondary CTA %}
   <div class="grid content-center gap-8 md:gap-16">
+    {% # Star symbol defined once; each rating references it via <use> instead of inlining the path per star %}
+    <svg hidden aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="icon-star-{{ section.id }}" viewBox="0 0 24 24">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </symbol>
+    </svg>
     {%- for block in section.blocks -%}
       <div {{ block.shopify_attributes }} class="grid gap-2">
         <div class="flex gap-1">
-          {%- assign rating_whole = block.settings.rating | default: 5 | floor -%}
+          {%- assign rating_whole = block.settings.rating | floor -%}
           {%- for i in (1..rating_whole) -%}
-            <span class="size-4 text-amber-400">{%- render 'icon-star' -%}</span>
+            <span class="size-4 text-amber-400">
+              <svg class="icon" fill="currentColor" aria-hidden="true">
+                <use href="#icon-star-{{ section.id }}"/>
+              </svg>
+            </span>
           {%- endfor -%}
         </div>
         {%- if block.settings.title != blank -%}
@@ -171,7 +180,7 @@
       </div>
     {%- endfor -%}
 
-    {%- comment -%} Desktop: secondary button only {%- endcomment -%}
+    {% # Desktop: secondary button only %}
     {%- if section.settings.secondary_button_label != blank -%}
       <div class="hidden md:block">
         <a
@@ -185,7 +194,7 @@
       </div>
     {%- endif -%}
 
-    {%- comment -%} Mobile: both buttons stacked full-width {%- endcomment -%}
+    {% # Mobile: both buttons stacked full-width %}
     <div class="grid gap-4 md:hidden">
       {%- if section.settings.secondary_button_label != blank -%}
         <div>

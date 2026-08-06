@@ -93,7 +93,7 @@
   id="MediaBillboard-{{ section.id }}"
   class="relative flex min-h-svh overflow-hidden px-4 py-20 md:px-16 md:py-24 {{ items_y }} {{ items_x }}"
 >
-  {%- comment -%} Background media {%- endcomment -%}
+  {% # Background media %}
   {%- if section.settings.video != blank -%}
     <video-player client:visible class="group absolute inset-0 z-0" data-state="playing" data-muted="true">
       <video
@@ -104,7 +104,7 @@
         loop
         playsinline
         {% if section.settings.image != blank %}
-          poster="{{ section.settings.image | image_url: width: 3840 }}"
+          poster="{{ section.settings.image | image_url: width: 1920 }}"
         {% endif %}
       >
         {%- for source in section.settings.video.sources -%}
@@ -148,7 +148,6 @@
           sizes: '100vw',
           widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
           alt: section.settings.image.alt
-        | escape
       }}
     </div>
   {%- else -%}
@@ -157,12 +156,12 @@
     </div>
   {%- endif -%}
 
-  {%- comment -%} Overlay {%- endcomment -%}
+  {% # Overlay %}
   {%- if section.settings.overlay_enable -%}
     <div class="ib-overlay pointer-events-none absolute inset-0 z-5"></div>
   {%- endif -%}
 
-  {%- comment -%} Content {%- endcomment -%}
+  {% # Content %}
   <div class="z-10 max-w-xl {{ text_align }}">
     {%- if section.settings.eyebrow != blank -%}
       <p class="mb-4 text-sm font-semibold tracking-widest uppercase md:mb-10 md:text-base">

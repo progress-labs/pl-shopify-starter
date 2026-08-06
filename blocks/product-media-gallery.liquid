@@ -41,7 +41,7 @@
     <div class="aspect-square w-mobileGallery snap-center overflow-hidden rounded bg-contrast/10 md:w-full {{ media_wrapper_class }}">
       {{
         media.preview_image
-        | image_url: width: 1445
+        | image_url: width: 2890
         | image_tag:
           loading: loading,
           preload: forloop.first,
@@ -49,9 +49,8 @@
           height: media.preview_image.height,
           class: 'w-full h-full aspect-[inherit] object-cover object-center',
           sizes: sizes,
-          widths: '550, 1100, 1445, 1680, 2048, 22200, 2890, 4096',
+          widths: '550, 1100, 1445, 1680, 2048, 2200, 2890',
           alt: media.preview_image.alt
-        | escape
       }}
     </div>
   {%- endfor -%}
@@ -59,7 +58,7 @@
 
 {% schema %}
 {
-  "name": "Produc media",
+  "name": "Product media",
   "tag": null
 }
 {% endschema %}

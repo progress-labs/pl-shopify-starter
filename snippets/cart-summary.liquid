@@ -1,0 +1,50 @@
+{% doc %}
+  Renders the cart subtotal, cart-level discounts, and the taxes/shipping
+  note. Shared by the cart drawer (snippets/cart-drawer.liquid) and the cart
+  page (blocks/cart-products.liquid). Checkout buttons stay in the callers —
+  they genuinely differ per context.
+
+  @param {string} [subtotal_id] - id for the subtotal row (cart page uses "cart-subtotal")
+  @param {boolean} [role_status] - add role="status" to the subtotal row (drawer)
+{% enddoc %}
+
+<div class="grid gap-2">
+  <div
+    {% if subtotal_id %}
+      id="{{ subtotal_id }}"
+    {% endif %}
+    class="flex items-center justify-between font-body-weight-bold"
+    {% if role_status %}
+      role="status"
+    {% endif %}
+  >
+    <h2 class="text-copy">{{ 'sections.cart.subtotal' | t }}</h2>
+    <p class="text-copy">{{ cart.total_price | money_with_currency }}</p>
+  </div>
+
+  <div class="empty:hidden">
+    {%- if cart.cart_level_discount_applications.size > 0 -%}
+      <ul role="list" aria-label="{{ 'customer.order.discount' | t }}">
+        {%- for discount in cart.cart_level_discount_applications -%}
+          <li class="flex items-center gap-2 text-primary/50">
+            {%- render 'icon-discount' -%}
+            {{ discount.title }}
+            (-{{ discount.total_allocated_amount | money }})
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+<p class="text-copy">
+  {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
+    {{ 'sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
+  {%- elsif cart.taxes_included -%}
+    {{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}
+  {%- elsif shop.shipping_policy.body != blank -%}
+    {{ 'sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
+  {%- else -%}
+    {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
+  {%- endif -%}
+</p>

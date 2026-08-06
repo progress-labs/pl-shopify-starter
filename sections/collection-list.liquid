@@ -5,9 +5,13 @@
     class="grid grid-flow-row grid-cols-1 gap-2 gap-y-6 sm:grid-cols-[repeat(var(--columns-desktop),minmax(0,1fr))] md:gap-4 lg:gap-6"
     style="--columns-desktop: {{ section.settings.columns_desktop }};"
   >
-    {%- for collection in section.settings.collection_list -%}
-      {%- content_for 'block', type: 'collection-card', id: 'collection-card', closest.collection: collection -%}
-    {%- endfor -%}
+    {%- liquid
+      assign column_vw = 100 | divided_by: section.settings.columns_desktop
+      assign card_sizes = '(min-width: 640px) ' | append: column_vw | append: 'vw, 100vw'
+      for collection in section.settings.collection_list limit: section.settings.collections_to_show
+        content_for 'block', type: 'collection-card', id: 'collection-card', closest.collection: collection, sizes: card_sizes
+      endfor
+    -%}
   </div>
 </div>
 
@@ -29,6 +33,15 @@
       "step": 1,
       "default": 3,
       "label": "Number of columns on desktop"
+    },
+    {
+      "type": "range",
+      "id": "collections_to_show",
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 12,
+      "label": "Maximum collections to show"
     }
   ],
   "presets": [

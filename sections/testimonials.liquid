@@ -34,7 +34,7 @@
   {% endif %}
 >
   <div class="mx-auto flex max-w-[1280px] flex-col gap-8 md:gap-12">
-    {%- comment -%} Header {%- endcomment -%}
+    {% # Header %}
     <div class="flex flex-col gap-2 md:items-center md:gap-3">
       {%- if section.settings.heading != blank -%}
         <h2 class="font-heading text-[32px] leading-[1.2] tracking-[0.06em] text-[#221F1B] uppercase md:text-center md:text-[40px] md:leading-none">
@@ -48,20 +48,30 @@
       {%- endif -%}
     </div>
 
-    {%- comment -%} Cards {%- endcomment -%}
+    {% # Cards %}
     {%- if section.blocks.size > 0 -%}
+      {% # Star symbol defined once; each rating references it via <use> instead of inlining the path per star %}
+      <svg hidden aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <symbol id="icon-star-{{ section.id }}" viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </symbol>
+      </svg>
       <div class="flex flex-col gap-10 lg:flex-row">
         {%- for block in section.blocks -%}
           <div
             {{ block.shopify_attributes }}
             class="relative flex flex-1 flex-col gap-4 rounded-xl bg-white p-6 pb-10 md:gap-6 md:p-8 md:pb-12"
           >
-            {%- comment -%} Star Rating {%- endcomment -%}
+            {% # Star Rating %}
             <div class="flex items-center gap-1.5">
               <div class="flex items-center gap-0.5 text-[#F37421]">
                 {%- assign rating_whole = block.settings.rating | floor -%}
                 {%- for i in (1..rating_whole) -%}
-                  <span class="size-4 md:size-[18px]">{%- render 'icon-star' -%}</span>
+                  <span class="size-4 md:size-[18px]">
+                    <svg class="icon" fill="currentColor" aria-hidden="true">
+                      <use href="#icon-star-{{ section.id }}"/>
+                    </svg>
+                  </span>
                 {%- endfor -%}
               </div>
               <span class="text-sm leading-[1.35] font-medium tracking-[0.01em] text-[#534C42] md:text-base">
@@ -69,7 +79,7 @@
               </span>
             </div>
 
-            {%- comment -%} Quote & Attribution {%- endcomment -%}
+            {% # Quote & Attribution %}
             <div class="flex flex-1 flex-col gap-3 md:gap-4">
               {%- if block.settings.quote != blank -%}
                 <p class="font-heading text-xl leading-[1.2] tracking-[0.06em] text-[#221F1B] uppercase">
@@ -83,7 +93,7 @@
               {%- endif -%}
             </div>
 
-            {%- comment -%} Badge {%- endcomment -%}
+            {% # Badge %}
             {%- if block.settings.badge_label != blank -%}
               <a
                 {% if block.settings.badge_product != blank %}
@@ -139,11 +149,13 @@
       "name": "Testimonial card",
       "settings": [
         {
-          "type": "text",
+          "type": "range",
           "id": "rating",
           "label": "Rating",
-          "default": "5.0",
-          "info": "Star rating value (e.g. 5.0)"
+          "min": 1,
+          "max": 5,
+          "step": 0.5,
+          "default": 5
         },
         {
           "type": "textarea",
@@ -192,7 +204,7 @@
         {
           "type": "testimonial_card",
           "settings": {
-            "rating": "5.0",
+            "rating": 5,
             "quote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed.",
             "attribution": "— Attribution",
             "badge_label": "Morning Energy",
@@ -203,7 +215,7 @@
         {
           "type": "testimonial_card",
           "settings": {
-            "rating": "5.0",
+            "rating": 5,
             "quote": "Ut enim ad minim veniam, quis nostrud ullamco laboris nisi ut aliquip.",
             "attribution": "— Attribution",
             "badge_label": "Mid-Day Boost",
@@ -214,7 +226,7 @@
         {
           "type": "testimonial_card",
           "settings": {
-            "rating": "5.0",
+            "rating": 5,
             "quote": "Duis aute irure dolor in reprehenderit in voluptate velit esse.",
             "attribution": "— Attribution",
             "badge_label": "P.M. Relax",
