@@ -80,3 +80,28 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+
+/* Skip layout/paint for main-content sections until they near the viewport.
+   Scoped to main so the (sticky) header, footer, and cart drawer are
+   untouched; :first-child keeps the LCP section rendered eagerly.
+   contain-intrinsic-size reserves an estimated height for unrendered
+   sections ('auto' remembers the real height once rendered) so scrollbars
+   don't jump. */
+main .shopify-section:not(:first-child) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+
+/* Vestibular-safety baseline: collapse animation to imperceptible durations
+   for users who ask for reduced motion. JS-driven transitions (View
+   Transitions, drawer timing) check the same media query. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

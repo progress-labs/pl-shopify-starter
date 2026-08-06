@@ -72,12 +72,59 @@
     {%- liquid
       render 'vite-tag' with 'theme.css', preload_stylesheet: true
       render 'vite-tag' with 'theme.ts'
+
+      # Warm the module fetches for islands that gate revenue on this page —
+      # without these hints every island chunk waits for its hydration
+      # directive before the browser even starts downloading it.
+      if request.page_type == 'product'
+        render 'island-preload', island: 'product-form'
+        render 'island-preload', island: 'variant-radios'
+      endif
+      if settings.cart_type == 'drawer'
+        render 'island-preload', island: 'cart-drawer'
+        render 'island-preload', island: 'cart-drawer-items'
+      endif
     -%}
 
     {{ content_for_header }}
 
     <script>
       document.documentElement.className = document.documentElement.className.replace('no-js', 'js')
+    </script>
+
+    {% comment %}
+      Prerender product pages on link intent (hover/pointerdown) and
+      prefetch collection pages — collection-to-product is the dominant
+      navigation. "moderate" eagerness bounds the bandwidth cost to links
+      the shopper signals interest in. Unsupported browsers ignore the
+      block. Never speculate on cart/checkout/account (state-changing pages).
+    {% endcomment %}
+    <script type="speculationrules">
+      {
+        "prerender": [
+          {
+            "where": {
+              "and": [
+                {
+                  "or": [{ "href_matches": "/products/*" }, { "href_matches": "/*/products/*" }]
+                },
+                { "not": { "href_matches": "/cart*" } },
+                { "not": { "href_matches": "/checkout*" } },
+                { "not": { "href_matches": "/account*" } }
+              ]
+            },
+            "eagerness": "moderate"
+          }
+        ],
+        "prefetch": [
+          {
+            "where": {
+              "or": [{ "href_matches": "/collections/*" }, { "href_matches": "/*/collections/*" }]
+            },
+            "eagerness": "moderate"
+          }
+        ]
+      }
     </script>
   </head>
 
