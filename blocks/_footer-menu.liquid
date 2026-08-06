@@ -1,7 +1,7 @@
 <section class="pt-10 first-of-type:-mt-10 md:pt-0 first-of-type:md:mt-0" {{ block.shopify_attributes }}>
   <details id="Details-{{ block.id }}" class="md:hidden">
     <summary>
-      <h3 class="font-heading text-lead font-heading-weight flex max-w-prose justify-between overflow-hidden whitespace-pre-wrap">
+      <h3 class="flex max-w-prose justify-between overflow-hidden font-heading text-lead font-heading-weight whitespace-pre-wrap">
         <span class="flex-shrink">{{- block.settings.heading | escape -}}</span>
         {%- render 'icon-caret' -%}
       </h3>
@@ -17,7 +17,7 @@
     </div>
   </details>
   <div class="hidden gap-4 md:grid">
-    <h3 class="font-heading text-lead font-heading-weight max-w-prose whitespace-pre-wrap">
+    <h3 class="max-w-prose font-heading text-lead font-heading-weight whitespace-pre-wrap">
       {{- block.settings.heading | escape -}}
     </h3>
     <div>

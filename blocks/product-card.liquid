@@ -30,7 +30,7 @@
       <span class="sr-only">{{ card_product.title }}</span>
     </a>
     <div class="grid snap-start gap-6 {% if wrapper_class != blank %} {{ wrapper_class }}{% endif %}">
-      <div class="bg-primary/5 aspect-[4/5] overflow-hidden rounded">
+      <div class="aspect-[4/5] overflow-hidden rounded bg-primary/5">
         {%- content_for 'block', type: 'image', id: 'image', lazy_load: lazy_load -%}
       </div>
       <div class="grid gap-1">
@@ -42,14 +42,14 @@
 {%- else -%}
   <div class="relative">
     <div class="grid w-80 snap-start gap-6">
-      <div class="bg-primary/5 aspect-[4/5] overflow-hidden rounded"></div>
+      <div class="aspect-[4/5] overflow-hidden rounded bg-primary/5"></div>
       <div class="grid gap-1">
         <h3 class="text-copy">
           <a role="link" aria-disabled="true">
             {{ 'onboarding.product_title' | t }}
           </a>
         </h3>
-        <div class="text-copy relative z-0 flex gap-4">
+        <div class="relative z-0 flex gap-4 text-copy">
           <span>{{ 1999 | money_without_trailing_zeros }}</span>
         </div>
       </div>

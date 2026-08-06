@@ -54,7 +54,9 @@
 
     {%- if section.settings.button_label != blank -%}
       <a
-        {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
+        {% if section.settings.button_link != blank %}
+          href="{{ section.settings.button_link }}"
+        {% endif %}
         class="mt-1 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-neutral-900 transition hover:bg-white/90"
       >
         {{- section.settings.button_label | escape -}}

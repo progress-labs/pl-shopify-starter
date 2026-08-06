@@ -27,7 +27,7 @@
     style="background-color: {{ section.settings.background_color }};"
   {% endif %}
 >
-  <newsletter-form client:visible class="grid mx-auto w-full max-w-2xl gap-6">
+  <newsletter-form client:visible class="mx-auto grid w-full max-w-2xl gap-6">
     <form class="grid gap-6">
       <div class="grid gap-3">
         {%- if section.settings.heading != blank -%}
@@ -43,7 +43,7 @@
       </div>
 
       {%- capture input_field -%}
-        <div class="border-b border-current py-3 px-0.5 w-full">
+        <div class="w-full border-b border-current px-0.5 py-3">
           <input
             type="email"
             name="email"
@@ -78,7 +78,7 @@
           </div>
         </div>
       {%- else -%}
-        <div class="grid gap-6 justify-items-center">
+        <div class="grid justify-items-center gap-6">
           {{ input_field }}
           {{ submit_button }}
         </div>

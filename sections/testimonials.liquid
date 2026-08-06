@@ -28,7 +28,7 @@
 
 <div
   id="Testimonials-{{ section.id }}"
-  class="py-12 px-4 md:py-20 md:px-0"
+  class="px-4 py-12 md:px-0 md:py-20"
   {% if section.settings.background_color != blank %}
     style="background-color: {{ section.settings.background_color }};"
   {% endif %}
@@ -37,7 +37,7 @@
     {%- comment -%} Header {%- endcomment -%}
     <div class="flex flex-col gap-2 md:items-center md:gap-3">
       {%- if section.settings.heading != blank -%}
-        <h2 class="font-heading text-[32px] uppercase leading-[1.2] tracking-[0.06em] text-[#221F1B] md:text-center md:text-[40px] md:leading-none">
+        <h2 class="font-heading text-[32px] leading-[1.2] tracking-[0.06em] text-[#221F1B] uppercase md:text-center md:text-[40px] md:leading-none">
           {{- section.settings.heading | escape -}}
         </h2>
       {%- endif -%}
@@ -64,7 +64,7 @@
                   <span class="size-4 md:size-[18px]">{%- render 'icon-star' -%}</span>
                 {%- endfor -%}
               </div>
-              <span class="text-sm font-medium leading-[1.35] tracking-[0.01em] text-[#534C42] md:text-base">
+              <span class="text-sm leading-[1.35] font-medium tracking-[0.01em] text-[#534C42] md:text-base">
                 {{- block.settings.rating -}}
               </span>
             </div>
@@ -72,12 +72,12 @@
             {%- comment -%} Quote & Attribution {%- endcomment -%}
             <div class="flex flex-1 flex-col gap-3 md:gap-4">
               {%- if block.settings.quote != blank -%}
-                <p class="font-heading text-xl uppercase leading-[1.2] tracking-[0.06em] text-[#221F1B]">
+                <p class="font-heading text-xl leading-[1.2] tracking-[0.06em] text-[#221F1B] uppercase">
                   {{- block.settings.quote | escape -}}
                 </p>
               {%- endif -%}
               {%- if block.settings.attribution != blank -%}
-                <p class="text-sm font-medium leading-[1.35] text-[#534C42] md:text-base">
+                <p class="text-sm leading-[1.35] font-medium text-[#534C42] md:text-base">
                   {{- block.settings.attribution | escape -}}
                 </p>
               {%- endif -%}
@@ -94,7 +94,7 @@
                   style="background-color: {{ block.settings.badge_color }};"
                 {% endif %}
               >
-                <span class="text-sm font-semibold leading-[18px] md:text-base md:leading-[22px] {% if block.settings.badge_text_dark %}text-[#221F1B]{% else %}text-white{% endif %}">
+                <span class="text-sm leading-[18px] font-semibold md:text-base md:leading-[22px] {% if block.settings.badge_text_dark %}text-[#221F1B]{% else %}text-white{% endif %}">
                   {{- block.settings.badge_label | escape -}}
                 </span>
                 <span class="size-6 {% if block.settings.badge_text_dark %}text-[#221F1B]{% else %}text-white{% endif %}">

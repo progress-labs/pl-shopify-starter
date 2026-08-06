@@ -19,23 +19,23 @@
       </summary>
       <div
         id="menu-drawer"
-        class="bg-contrast fixed inset-0 z-20 h-screen max-w-lg overflow-y-auto [.js_&]:-translate-x-full [.js_&]:transition [.js_&]:duration-300 [.js_.menu-opening_&]:translate-x-0"
+        class="fixed inset-0 z-20 h-screen max-w-lg overflow-y-auto bg-contrast [.js_&]:-translate-x-full [.js_&]:transition [.js_&]:duration-300 [.js_.menu-opening_&]:translate-x-0"
         role="dialog"
         aria-modal="true"
         aria-label="{{ 'sections.header.menu' | t }}"
         tabindex="-1"
       >
-        <div class="h-nav flex items-center justify-between px-6 sm:px-8 md:px-12">
-          <h2 class="text-lead font-body-weight-bold max-w-prose">{{ 'sections.header.menu' | t }}</h2>
+        <div class="flex h-nav items-center justify-between px-6 sm:px-8 md:px-12">
+          <h2 class="max-w-prose text-lead font-body-weight-bold">{{ 'sections.header.menu' | t }}</h2>
           <button
             type="button"
-            class="text-primary hover:text-primary/50 -m-4 p-4 transition [.no-js_details[open]_&]:hidden"
+            class="-m-4 p-4 text-primary transition hover:text-primary/50 [.no-js_details[open]_&]:hidden"
             aria-label="{{ 'accessibility.close' | t }}"
           >
             {%- render 'icon-close' -%}
           </button>
         </div>
-        <nav class="text-copy after:h-nav grid gap-4 px-6 py-6 after:block after:content-[''] sm:gap-6 sm:px-12 sm:py-8">
+        <nav class="grid gap-4 px-6 py-6 text-copy after:block after:h-nav after:content-[''] sm:gap-6 sm:px-12 sm:py-8">
           {%- for link in block.settings.menu.links -%}
             <a
               href="{{ link.url }}"

@@ -59,7 +59,8 @@ class ProductForm extends window.HTMLElement {
     const formData = new window.FormData(this.form)
     const variantId = formData.get('id') as string
     const quantityValue = formData.get('quantity')
-    const quantity = (quantityValue ? parseInt(String(quantityValue)) : NaN) || 1
+    const quantity =
+      (quantityValue ? parseInt(String(quantityValue)) : NaN) || 1
     const properties = this.getLineItemProperties(formData)
     const sellingPlanId = formData.get('selling_plan') as string | null
 
@@ -107,8 +108,7 @@ class ProductForm extends window.HTMLElement {
   }
 
   handleErrorMessage(errorMessage: string | false = false) {
-    this.errorMessage =
-      this.errorMessage || must(this, '[data-error-message]')
+    this.errorMessage = this.errorMessage || must(this, '[data-error-message]')
 
     this.errorMessage.toggleAttribute('hidden', !errorMessage)
 

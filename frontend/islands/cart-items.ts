@@ -157,9 +157,7 @@ export default class CartItems extends window.HTMLElement {
     const lineItem =
       document.getElementById(`CartItem-${line}`) ||
       document.getElementById(`CartDrawer-Item-${line}`)
-    const focusTarget = lineItem?.querySelector<HTMLElement>(
-      `[name="${name}"]`
-    )
+    const focusTarget = lineItem?.querySelector<HTMLElement>(`[name="${name}"]`)
 
     if (lineItem && focusTarget) {
       if (cartDrawerWrapper) {

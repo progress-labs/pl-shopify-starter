@@ -4,7 +4,7 @@
 
 <footer
   role="contentinfo"
-  class="{{ container_class }} bg-contrast text-primary min-h-[25rem] w-full grid-cols-1 border-b px-6 py-8 md:grid md:grid-flow-row md:grid-cols-2 md:items-start md:gap-8 md:px-8 lg:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] lg:gap-12 lg:px-12"
+  class="{{ container_class }} min-h-[25rem] w-full grid-cols-1 border-b bg-contrast px-6 py-8 text-primary md:grid md:grid-flow-row md:grid-cols-2 md:items-start md:gap-8 md:px-8 lg:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] lg:gap-12 lg:px-12"
 >
   {%- content_for 'blocks' -%}
   {%- content_for 'block', type: '_footer-country-selector', id: 'footer-country-selector' -%}

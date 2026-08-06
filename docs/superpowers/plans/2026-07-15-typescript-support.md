@@ -29,14 +29,17 @@
 ### Task 0.1: Add TypeScript toolchain dependencies
 
 **Files:**
+
 - Modify: `package.json`
 
 - [ ] **Step 1: Install dev dependencies**
 
 Run:
+
 ```bash
 npm install -D typescript@^5.9 typescript-eslint@^8
 ```
+
 Expected: `package.json` gains `typescript` and `typescript-eslint` under `devDependencies`; `package-lock.json` updates.
 
 - [ ] **Step 2: Verify the compiler is available**
@@ -54,11 +57,13 @@ git commit -m "chore: add typescript and typescript-eslint deps"
 ### Task 0.2: Add tsconfig and the typecheck script
 
 **Files:**
+
 - Create: `tsconfig.json`
 - Delete: `jsconfig.json`
 - Modify: `package.json` (scripts)
 
 **Interfaces:**
+
 - Produces: `npm run typecheck` → `tsc --noEmit`, exit 0 when clean.
 
 - [ ] **Step 1: Create `tsconfig.json`**
@@ -90,6 +95,7 @@ git commit -m "chore: add typescript and typescript-eslint deps"
 ```
 
 Notes for the implementer:
+
 - `moduleResolution: bundler` lets `import '@/lib/revive.js'` resolve to `revive.ts` automatically once renamed — so import specifiers with `.js` do NOT need editing when their target becomes `.ts`.
 - `skipLibCheck` silences `@sentry/browser` type noise that is not ours to fix.
 - `checkJs: false` means the 81 existing JS errors stay dormant until each file is renamed.
@@ -102,6 +108,7 @@ Expected: `jsconfig.json` removed (its `paths` now live in `tsconfig.json`).
 - [ ] **Step 3: Add the `typecheck` script**
 
 In `package.json` `scripts`, add:
+
 ```json
 "typecheck": "tsc --noEmit"
 ```
@@ -121,9 +128,11 @@ git commit -m "build: add tsconfig and typecheck script"
 ### Task 0.3: Add ambient global and custom-element types
 
 **Files:**
+
 - Create: `frontend/types/globals.d.ts`
 
 **Interfaces:**
+
 - Produces: typed `window.routes`, `window.cartStrings`, `window.variantStrings`; `document.querySelector('cart-drawer')` returns `CartDrawerElement` (minimal interface — the concrete class replaces it in Batch 2).
 
 - [ ] **Step 1: Create `frontend/types/globals.d.ts`**
@@ -169,10 +178,12 @@ git commit -m "types: add ambient window and custom-element declarations"
 ### Task 0.4: Add the `must()` query helper
 
 **Files:**
+
 - Create: `frontend/lib/dom.ts`
 - Test: `frontend/lib/dom.test.ts`
 
 **Interfaces:**
+
 - Produces:
   - `must<K extends keyof HTMLElementTagNameMap>(root: ParentNode, sel: K): HTMLElementTagNameMap[K]`
   - `must<T extends HTMLElement = HTMLElement>(root: ParentNode, sel: string): T`
@@ -181,6 +192,7 @@ git commit -m "types: add ambient window and custom-element declarations"
 - [ ] **Step 1: Write the failing test**
 
 `frontend/lib/dom.test.ts`:
+
 ```ts
 import { describe, it, expect, afterEach } from 'vitest'
 import { must } from './dom'
@@ -251,18 +263,23 @@ git commit -m "feat: add must() required-element query helper"
 ### Task 0.5: Dual-extension island glob (in place, no rename)
 
 **Files:**
+
 - Modify: `frontend/lib/revive.js:74` and `frontend/lib/revive.js:95-115`
 
 **Interfaces:**
+
 - Produces: island loader resolves `.ts` first, then `.js`, so converted and unconverted islands coexist.
 
 - [ ] **Step 1: Change the glob**
 
 `frontend/lib/revive.js:74`, replace:
+
 ```js
 export const islands = import.meta.glob('@/islands/*.js')
 ```
+
 with:
+
 ```js
 export const islands = import.meta.glob('@/islands/*.{js,ts}')
 ```
@@ -270,57 +287,61 @@ export const islands = import.meta.glob('@/islands/*.{js,ts}')
 - [ ] **Step 2: Change the lookup to try both extensions**
 
 In `dfs`, replace the block at `frontend/lib/revive.js:96-115`:
+
 ```js
-    const tagName = node.tagName.toLowerCase()
-    const potentialJsPath = `/frontend/islands/${tagName}.js`
-    const isPotentialCustomElementName = /-/.test(tagName)
+const tagName = node.tagName.toLowerCase()
+const potentialJsPath = `/frontend/islands/${tagName}.js`
+const isPotentialCustomElementName = /-/.test(tagName)
 
-    if (isPotentialCustomElementName && islands[potentialJsPath]) {
-      if (node.hasAttribute('client:visible')) {
-        await visible({ element: node })
-      }
+if (isPotentialCustomElementName && islands[potentialJsPath]) {
+  if (node.hasAttribute('client:visible')) {
+    await visible({ element: node })
+  }
 
-      const clientMedia = node.getAttribute('client:media')
-      if (clientMedia) {
-        await media({ query: clientMedia })
-      }
+  const clientMedia = node.getAttribute('client:media')
+  if (clientMedia) {
+    await media({ query: clientMedia })
+  }
 
-      if (node.hasAttribute('client:idle')) {
-        await idle()
-      }
+  if (node.hasAttribute('client:idle')) {
+    await idle()
+  }
 
-      islands[potentialJsPath]()
-    }
+  islands[potentialJsPath]()
+}
 ```
+
 with:
+
 ```js
-    const tagName = node.tagName.toLowerCase()
-    const loader =
-      islands[`/frontend/islands/${tagName}.ts`] ??
-      islands[`/frontend/islands/${tagName}.js`]
-    const isPotentialCustomElementName = /-/.test(tagName)
+const tagName = node.tagName.toLowerCase()
+const loader =
+  islands[`/frontend/islands/${tagName}.ts`] ??
+  islands[`/frontend/islands/${tagName}.js`]
+const isPotentialCustomElementName = /-/.test(tagName)
 
-    if (isPotentialCustomElementName && loader) {
-      if (node.hasAttribute('client:visible')) {
-        await visible({ element: node })
-      }
+if (isPotentialCustomElementName && loader) {
+  if (node.hasAttribute('client:visible')) {
+    await visible({ element: node })
+  }
 
-      const clientMedia = node.getAttribute('client:media')
-      if (clientMedia) {
-        await media({ query: clientMedia })
-      }
+  const clientMedia = node.getAttribute('client:media')
+  if (clientMedia) {
+    await media({ query: clientMedia })
+  }
 
-      if (node.hasAttribute('client:idle')) {
-        await idle()
-      }
+  if (node.hasAttribute('client:idle')) {
+    await idle()
+  }
 
-      loader()
-    }
+  loader()
+}
 ```
 
 - [ ] **Step 3: QA — the site still hydrates**
 
 Run: `npm run dev -- --store <store>` (or `npm run dev` if a store slug is configured). In the browser:
+
 - Open a product page. Confirm the Add-to-cart button works and the cart drawer opens (proves `product-form`, `cart-drawer` still hydrate via the `.js` fallback).
 - Open DevTools console. Expected: no `must()` errors, no "undefined is not a function".
 
@@ -337,26 +358,32 @@ git commit -m "feat: dual-extension island glob for staged TS migration"
 ### Task 0.6: Enforce typecheck in build/deploy and lint TS
 
 **Files:**
+
 - Modify: `package.json` (scripts)
 - Modify: `eslint.config.js`
 
 - [ ] **Step 1: Gate build and deploy on typecheck**
 
 In `package.json` `scripts`, replace:
+
 ```json
 "build": "vitest run && vite build",
 "deploy": "vitest run && npm run build && shopify theme push",
 ```
+
 with:
+
 ```json
 "build": "npm run typecheck && vitest run && vite build",
 "deploy": "npm run typecheck && vitest run && npm run build && shopify theme push",
 ```
+
 (`build` runs `typecheck` directly; `deploy` calls `build`, so the check runs once per path — the explicit one in `deploy` guards the `shopify theme push` even if `build` is later reordered. Keeping both is intentional and cheap.)
 
 - [ ] **Step 2: Add typescript-eslint to the flat config**
 
 `eslint.config.js`, replace the file with:
+
 ```js
 import js from '@eslint/js'
 import globals from 'globals'
@@ -405,6 +432,7 @@ git commit -m "build: gate build/deploy on tsc, lint TypeScript"
 Convert in dependency order: `utils` → `dom` (done) → `cart-events` → `cart-api` → `cart-live-region` → `a11y` → `sentry` → `revive` → `cart-init`.
 
 **Per-file conversion recipe (apply to each file below):**
+
 1. `git mv frontend/lib/<name>.js frontend/lib/<name>.ts` (and the `.test.js` → `.test.ts` if present).
 2. Run `npx tsc --noEmit` and read the errors for that file only.
 3. Fix each error using the tools already built: `must()` for required elements, the ambient `window` types, `e instanceof Error` for catch blocks, explicit annotations where inference is too narrow. Do NOT add `any` or `// @ts-ignore` — if stuck, note it and move on to ask.
@@ -417,10 +445,12 @@ The two tasks below are the files with non-mechanical type design and are writte
 ### Task 1.1: Convert `cart-events` to a typed event bus
 
 **Files:**
+
 - Rename: `frontend/lib/cart-events.js` → `.ts`
 - Rename: `frontend/lib/cart-events.test.js` → `.ts`
 
 **Interfaces:**
+
 - Produces: `CartEventMap` (event name → detail type), and generic
   `dispatchCartEvent<K extends keyof CartEventMap>(name: K, detail: CartEventMap[K]): void`,
   `onCartEvent<K extends keyof CartEventMap>(name: K, cb: (detail: CartEventMap[K]) => void): () => void`.
@@ -435,6 +465,7 @@ git mv frontend/lib/cart-events.test.js frontend/lib/cart-events.test.ts
 - [ ] **Step 2: Replace the JSDoc typedefs with real types and generic signatures**
 
 Convert the `@typedef` blocks to exported `interface`s and add a `CartEventMap`. Replace the two function bodies' signatures:
+
 ```ts
 export interface CartAddDetail {
   variantId: number | string
@@ -460,9 +491,17 @@ export interface CartEventMap {
   adding: { variantId: number | string; quantity: number }
   added: CartAddedDetail
   updating: { line: string | number; quantity: number }
-  updated: { line: string | number; cart: unknown; sections: Record<string, string | null> }
+  updated: {
+    line: string | number
+    cart: unknown
+    sections: Record<string, string | null>
+  }
   removing: { line: string | number }
-  removed: { line: string | number; cart: unknown; sections: Record<string, string | null> }
+  removed: {
+    line: string | number
+    cart: unknown
+    sections: Record<string, string | null>
+  }
   'note-updated': { note: string; cart: unknown }
   error: CartErrorDetail
 }
@@ -508,10 +547,12 @@ git commit -m "refactor: convert cart-events to a typed event bus"
 ### Task 1.2: Convert `cart-api` (catch narrowing + body annotation)
 
 **Files:**
+
 - Rename: `frontend/lib/cart-api.js` → `.ts`
 - Rename: `frontend/lib/cart-api.test.js` → `.ts`
 
 **Interfaces:**
+
 - Consumes: `CartEventMap`, `CartAddDetail` from `cart-events`; `fetchConfig` from `utils`; `CartDrawerElement` (ambient) via `document.querySelector('cart-drawer')`.
 - Produces: `addToCart`, `updateCartItem`, `updateCartNote` with typed params.
 
@@ -525,6 +566,7 @@ git mv frontend/lib/cart-api.test.js frontend/lib/cart-api.test.ts
 - [ ] **Step 2: Annotate the request body so conditional assignment type-checks**
 
 The `const body = {...}` in `addToCart` is inferred too narrowly, so `body.properties = ...` and `body.selling_plan = ...` are rejected. Give it an explicit type:
+
 ```ts
 interface CartAddRequestBody {
   id: number
@@ -546,6 +588,7 @@ const body: CartAddRequestBody = {
 - [ ] **Step 3: Narrow catch variables**
 
 `strict` makes `catch (e)` give `e: unknown`. In each of the three `catch` blocks, replace `error: e.message` with a narrowed read:
+
 ```ts
 } catch (e) {
   dispatchCartEvent('error', {
@@ -617,6 +660,7 @@ Task 3.x below (product-form) is written out in full because it fixes a known li
 ### Task 3.x: Convert `product-form` AND fix the double-submit bug
 
 **Files:**
+
 - Rename: `frontend/islands/product-form.js` → `.ts`
 - Create: `frontend/islands/product-form.test.ts`
 
@@ -625,6 +669,7 @@ Task 3.x below (product-form) is written out in full because it fixes a known li
 - [ ] **Step 1: Write the failing regression test (behavior, pre-conversion)**
 
 `frontend/islands/product-form.test.ts`:
+
 ```ts
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { onCartEvent } from '@/lib/cart-events'
@@ -645,7 +690,12 @@ function mountForm() {
 
 describe('product-form double-submit guard', () => {
   beforeEach(() => {
-    window.routes = { cart_add_url: '', cart_change_url: '', cart_update_url: '', cart_url: '' }
+    window.routes = {
+      cart_add_url: '',
+      cart_change_url: '',
+      cart_update_url: '',
+      cart_url: ''
+    }
   })
   afterEach(() => {
     document.body.innerHTML = ''
@@ -674,13 +724,17 @@ Expected: FAIL — `expected 1, received 2` (the broken guard lets both through)
 ```bash
 git mv frontend/islands/product-form.js frontend/islands/product-form.ts
 ```
+
 At line 46 (now in `.ts`), replace:
+
 ```ts
-    if (this.submitButton.getAttribute('aria-disabled') === true) return
+if (this.submitButton.getAttribute('aria-disabled') === true) return
 ```
+
 with:
+
 ```ts
-    if (this.submitButton.getAttribute('aria-disabled') === 'true') return
+if (this.submitButton.getAttribute('aria-disabled') === 'true') return
 ```
 
 - [ ] **Step 4: Resolve the strict-mode errors from the rename**
@@ -718,6 +772,7 @@ guard never fired and a double-click added to cart twice. Compare ==='true'."
 ### Task 5.1: Narrow the glob and rename the entrypoint
 
 **Files:**
+
 - Modify: `frontend/lib/revive.ts` (glob + lookup)
 - Rename: `frontend/entrypoints/theme.js` → `theme.ts`
 - Modify: `layout/theme.liquid:70`, `layout/password.liquid:56`, `templates/gift_card.liquid:65`
@@ -725,12 +780,15 @@ guard never fired and a double-click added to cart twice. Compare ==='true'."
 - [ ] **Step 1: Narrow the glob to `.ts` only**
 
 In `revive.ts`, change the glob back to single-extension and restore the single-path lookup:
+
 ```ts
 export const islands = import.meta.glob('@/islands/*.ts')
 ```
+
 and
+
 ```ts
-    const loader = islands[`/frontend/islands/${tagName}.ts`]
+const loader = islands[`/frontend/islands/${tagName}.ts`]
 ```
 
 - [ ] **Step 2: Rename the entrypoint**
@@ -762,6 +820,7 @@ git commit -m "refactor: narrow island glob to .ts, rename entrypoint"
 ### Task 5.2: Disallow JS
 
 **Files:**
+
 - Modify: `tsconfig.json`
 
 - [ ] **Step 1: Turn off `allowJs`**

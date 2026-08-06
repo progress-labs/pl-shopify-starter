@@ -55,12 +55,12 @@
   <div>
     <div class="md:sticky md:top-24">
       {%- if section.settings.heading != blank -%}
-        <h2 class="font-heading text-3xl leading-tight md:text-7xl md:leading-none mb-4">
+        <h2 class="mb-4 font-heading text-3xl leading-tight md:text-7xl md:leading-none">
           {{- section.settings.heading | escape -}}
         </h2>
       {%- endif -%}
       {%- if section.settings.description != blank -%}
-        <p class="text-sm leading-snug md:text-base md:leading-relaxed mb-8">
+        <p class="mb-8 text-sm leading-snug md:text-base md:leading-relaxed">
           {{- section.settings.description | escape -}}
         </p>
       {%- endif -%}
@@ -82,11 +82,11 @@
                 <source src="{{ source.url }}" type="{{ source.mime_type }}">
               {%- endfor -%}
             </video>
-            <div class="absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-3 bg-black/40 backdrop-blur-sm">
+            <div class="absolute inset-x-0 bottom-0 flex items-center justify-between bg-black/40 px-4 py-3 backdrop-blur-sm">
               <button
                 type="button"
                 data-play
-                class="text-white cursor-pointer opacity-85 hover:opacity-100 transition-opacity"
+                class="cursor-pointer text-white opacity-85 transition-opacity hover:opacity-100"
                 aria-label="Play / Pause"
               >
                 <span class="block group-data-[state=playing]:hidden">{%- render 'icon-play' -%}</span>
@@ -95,7 +95,7 @@
               <button
                 type="button"
                 data-mute
-                class="text-white cursor-pointer opacity-85 hover:opacity-100 transition-opacity"
+                class="cursor-pointer text-white opacity-85 transition-opacity hover:opacity-100"
                 aria-label="Mute / Unmute"
               >
                 <span class="block group-data-[muted=true]:hidden">{%- render 'icon-volume' -%}</span>
@@ -122,25 +122,29 @@
           }}
         {%- endif -%}
 
-      {%- if section.settings.primary_button_label != blank -%}
-        <div class="hidden md:block mt-8">
-          <a
-            {% if section.settings.primary_button_link != blank %}href="{{ section.settings.primary_button_link }}"{% endif %}
-            class="inline-flex items-center justify-center rounded-full px-6 py-3 text-base transition hover:opacity-90"
-            {% if section.settings.primary_button_color != blank and section.settings.primary_button_text_color != blank %}
-              style="background-color: {{ section.settings.primary_button_color }}; color: {{ section.settings.primary_button_text_color }};"
-            {% endif %}
-          >
-            {{- section.settings.primary_button_label | escape -}}
-          </a>
-        </div>
-      {%- endif -%}
+        {%- if section.settings.primary_button_label != blank -%}
+          <div class="mt-8 hidden md:block">
+            <a
+              {% if section.settings.primary_button_link != blank %}
+                href="{{ section.settings.primary_button_link }}"
+              {% endif %}
+              class="inline-flex items-center justify-center rounded-full px-6 py-3 text-base transition hover:opacity-90"
+              {% if section.settings.primary_button_color != blank
+                and section.settings.primary_button_text_color != blank
+              %}
+                style="background-color: {{ section.settings.primary_button_color }}; color: {{ section.settings.primary_button_text_color }};"
+              {% endif %}
+            >
+              {{- section.settings.primary_button_label | escape -}}
+            </a>
+          </div>
+        {%- endif -%}
       </div>
     </div>
   </div>
 
   {%- comment -%} Right column: review cards + secondary CTA {%- endcomment -%}
-  <div class="grid gap-8 md:gap-16 content-center">
+  <div class="grid content-center gap-8 md:gap-16">
     {%- for block in section.blocks -%}
       <div {{ block.shopify_attributes }} class="grid gap-2">
         <div class="flex gap-1">
@@ -171,7 +175,9 @@
     {%- if section.settings.secondary_button_label != blank -%}
       <div class="hidden md:block">
         <a
-          {% if section.settings.secondary_button_link != blank %}href="{{ section.settings.secondary_button_link }}"{% endif %}
+          {% if section.settings.secondary_button_link != blank %}
+            href="{{ section.settings.secondary_button_link }}"
+          {% endif %}
           class="inline-flex items-center justify-center rounded-full border border-current px-6 py-3 text-base transition hover:opacity-90"
         >
           {{- section.settings.secondary_button_label | escape -}}
@@ -184,7 +190,9 @@
       {%- if section.settings.secondary_button_label != blank -%}
         <div>
           <a
-            {% if section.settings.secondary_button_link != blank %}href="{{ section.settings.secondary_button_link }}"{% endif %}
+            {% if section.settings.secondary_button_link != blank %}
+              href="{{ section.settings.secondary_button_link }}"
+            {% endif %}
             class="flex w-full items-center justify-center rounded-full border border-current px-6 py-3 text-base transition hover:opacity-90"
           >
             {{- section.settings.secondary_button_label | escape -}}
@@ -194,9 +202,13 @@
       {%- if section.settings.primary_button_label != blank -%}
         <div>
           <a
-            {% if section.settings.primary_button_link != blank %}href="{{ section.settings.primary_button_link }}"{% endif %}
+            {% if section.settings.primary_button_link != blank %}
+              href="{{ section.settings.primary_button_link }}"
+            {% endif %}
             class="flex w-full items-center justify-center rounded-full px-6 py-3 text-base transition hover:opacity-90"
-            {% if section.settings.primary_button_color != blank and section.settings.primary_button_text_color != blank %}
+            {% if section.settings.primary_button_color != blank
+              and section.settings.primary_button_text_color != blank
+            %}
               style="background-color: {{ section.settings.primary_button_color }}; color: {{ section.settings.primary_button_text_color }};"
             {% endif %}
           >

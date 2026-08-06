@@ -16,10 +16,10 @@ contracts, and establishing TS as the house convention.
 Rather than estimate migration cost, we ran `tsc` against the existing JS at two strictness
 tiers. Measured against `origin/main` @ `0c3a703` (28 source files + 4 test files):
 
-| Tier | Source errors | Test errors |
-| --- | --- | --- |
-| `strict: true` | 295 | 52 |
-| No `strictNullChecks` / `noImplicitAny` | 81 | 37 |
+| Tier                                    | Source errors | Test errors |
+| --------------------------------------- | ------------- | ----------- |
+| `strict: true`                          | 295           | 52          |
+| No `strictNullChecks` / `noImplicitAny` | 81            | 37          |
 
 The ~214-error gap is almost entirely the null family (`TS2531`/`TS2532`/`TS18047`/`TS2533`
 = 138 errors), overwhelmingly from `querySelector` returning `T | null`. **That gap is the
@@ -47,7 +47,7 @@ Beyond that: one robustness issue (`parseInt(formData.get('quantity'))` — `get
 `string | File | null`, and `parseInt` on a `File` yields `NaN`), and ~9 sloppy-but-harmless
 coercions like `setAttribute('aria-hidden', true)` where the DOM stringifies correctly.
 
-So the bug-catching payoff on *existing* code is modest. The real return is on code not yet
+So the bug-catching payoff on _existing_ code is modest. The real return is on code not yet
 written, and on the typed event/island contracts from Phase 1. We should be honest about
 that rather than justify the project on a bug count.
 
@@ -73,7 +73,7 @@ Alternatives rejected:
 ### Transitional compatibility — deliberate and time-boxed
 
 We do **not** need backwards compatibility with existing modules as a permanent goal. But
-batching requires `.js` and `.ts` to coexist *during the migration window*. That is
+batching requires `.js` and `.ts` to coexist _during the migration window_. That is
 transitional scaffolding with an explicit removal step (Phase 5), not a compat layer. If
 Phase 5 is skipped, the scaffolding silently becomes permanent — which is exactly the
 outcome we are trying to avoid.
@@ -113,9 +113,12 @@ nothing renamed.
   ```ts
   export const islands = import.meta.glob('@/islands/*.{js,ts}')
 
-  const mod = islands[`/frontend/islands/${tagName}.ts`]
-           ?? islands[`/frontend/islands/${tagName}.js`]
-  if (isPotentialCustomElementName && mod) { /* … */ }
+  const mod =
+    islands[`/frontend/islands/${tagName}.ts`] ??
+    islands[`/frontend/islands/${tagName}.js`]
+  if (isPotentialCustomElementName && mod) {
+    /* … */
+  }
   ```
 
 - **`frontend/types/globals.d.ts`** — ambient declarations for `window.routes`,
@@ -126,13 +129,20 @@ nothing renamed.
 - **`frontend/lib/dom.ts`** — the helper absorbing the 138 null errors:
 
   ```ts
-  function must<K extends keyof HTMLElementTagNameMap>(root: ParentNode, sel: K): HTMLElementTagNameMap[K]
-  function must<T extends HTMLElement = HTMLElement>(root: ParentNode, sel: string): T
+  function must<K extends keyof HTMLElementTagNameMap>(
+    root: ParentNode,
+    sel: K
+  ): HTMLElementTagNameMap[K]
+  function must<T extends HTMLElement = HTMLElement>(
+    root: ParentNode,
+    sel: string
+  ): T
   ```
 
   Throws when the element is missing. Converts ~138 type errors into mechanical call-site
   swaps **and** upgrades a silent `undefined`-method crash into a loud failure at hydration
   when a section setting removes an element. The null work becomes a feature, not a toll.
+
 - **Enforcement** — `"typecheck": "tsc --noEmit"`, wired into `build` and `deploy` beside the
   existing `vitest run`. Vite/esbuild strips types **without checking them**, so without this
   a type error ships green and "we have TypeScript" is decoration.
@@ -143,7 +153,7 @@ nothing renamed.
 **Batch 1 — `lib/` (8 source + 4 tests). Must go first.** Islands import from it; converting
 it first means every later batch inherits real types instead of `any`. It also carries the
 highest-value work: giving `dispatchCartEvent`/`onCartEvent` a `CartEventMap` turns the
-string-keyed event bus into a checked contract — the thing most likely to catch a *future*
+string-keyed event bus into a checked contract — the thing most likely to catch a _future_
 bug.
 
 Files: `utils`, `a11y`, `cart-events`, `cart-api`, `cart-init`, `cart-live-region`, `revive`,
@@ -197,9 +207,9 @@ Surfaced now so it isn't discovered mid-batch. All of it lands in Batch 1:
 
 ## Risks
 
-| Risk | Mitigation |
-| --- | --- |
-| Extension mismatch silently kills all hydration | Dual glob in Phase 0; QA each batch by loading a page per island |
-| Type error ships green | `tsc --noEmit` blocking `build` + `deploy` (Phase 0) |
-| Phase 5 never happens; dual-extension state becomes permanent | Phase 5 tracked as its own PR, not a cleanup afterthought |
-| `must()` throws in production where JS silently no-op'd | Intentional — but Batch 2+ QA must exercise sections with optional settings disabled |
+| Risk                                                          | Mitigation                                                                           |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Extension mismatch silently kills all hydration               | Dual glob in Phase 0; QA each batch by loading a page per island                     |
+| Type error ships green                                        | `tsc --noEmit` blocking `build` + `deploy` (Phase 0)                                 |
+| Phase 5 never happens; dual-extension state becomes permanent | Phase 5 tracked as its own PR, not a cleanup afterthought                            |
+| `must()` throws in production where JS silently no-op'd       | Intentional — but Batch 2+ QA must exercise sections with optional settings disabled |

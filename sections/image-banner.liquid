@@ -115,7 +115,7 @@
         <button
           type="button"
           data-play
-          class="text-white cursor-pointer opacity-85 hover:opacity-100 transition-opacity"
+          class="cursor-pointer text-white opacity-85 transition-opacity hover:opacity-100"
           aria-label="Play / Pause"
         >
           <span class="block group-data-[state=playing]:hidden">{%- render 'icon-play' -%}</span>
@@ -124,7 +124,7 @@
         <button
           type="button"
           data-mute
-          class="text-white cursor-pointer opacity-85 hover:opacity-100 transition-opacity"
+          class="cursor-pointer text-white opacity-85 transition-opacity hover:opacity-100"
           aria-label="Mute / Unmute"
         >
           <span class="block group-data-[muted=true]:hidden">{%- render 'icon-volume' -%}</span>
@@ -165,19 +165,19 @@
   {%- comment -%} Content {%- endcomment -%}
   <div class="z-10 max-w-xl {{ text_align }}">
     {%- if section.settings.eyebrow != blank -%}
-      <p class="mb-4 text-sm font-semibold uppercase tracking-widest md:mb-10 md:text-base">
+      <p class="mb-4 text-sm font-semibold tracking-widest uppercase md:mb-10 md:text-base">
         {{- section.settings.eyebrow | escape -}}
       </p>
     {%- endif -%}
 
     {%- if section.settings.heading != blank -%}
-      <h2 class="font-heading text-5xl leading-none mb-2 md:text-7xl md:mb-2">
+      <h2 class="mb-2 font-heading text-5xl leading-none md:mb-2 md:text-7xl">
         {{- section.settings.heading | escape -}}
       </h2>
     {%- endif -%}
 
     {%- if section.settings.description != blank -%}
-      <p class="text-base leading-relaxed mb-8">
+      <p class="mb-8 text-base leading-relaxed">
         {{- section.settings.description | escape -}}
       </p>
     {%- endif -%}
@@ -186,7 +186,9 @@
       {%- if section.settings.button_style == 'button' -%}
         <div>
           <a
-            {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
+            {% if section.settings.button_link != blank %}
+              href="{{ section.settings.button_link }}"
+            {% endif %}
             class="ib-btn inline-flex cursor-pointer items-center justify-center rounded-full px-6 py-3 text-base transition hover:opacity-90"
           >
             {{- section.settings.button_label | escape -}}
@@ -195,7 +197,9 @@
       {%- else -%}
         <div>
           <a
-            {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
+            {% if section.settings.button_link != blank %}
+              href="{{ section.settings.button_link }}"
+            {% endif %}
             class="inline-block cursor-pointer border-b border-current pb-0.5 text-base leading-relaxed"
           >
             {{- section.settings.button_label | escape -}}

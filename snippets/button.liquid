@@ -18,7 +18,7 @@
 
 {%- if content != blank -%}
   <{{ button_tag }}
-    class="button data-[size=lg]:text-lead bg-primary text-contrast flex items-center gap-2 data-[variant=link]:bg-transparent data-[variant=link]:p-0 data-[variant=link]:text-inherit"
+    class="button flex items-center gap-2 bg-primary text-contrast data-[size=lg]:text-lead data-[variant=link]:bg-transparent data-[variant=link]:p-0 data-[variant=link]:text-inherit"
     data-slot="button"
     {% if size != blank -%}
       data-size="{{ size }}"

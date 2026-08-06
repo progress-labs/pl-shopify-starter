@@ -58,9 +58,7 @@ class SellingPlanPicker extends window.HTMLElement {
       const groupRadio = this.querySelector<HTMLInputElement>(
         `input[name="purchase_option"][value="${groupId}"]`
       )
-      this.updateHiddenInput(
-        groupRadio ? groupRadio.dataset.defaultPlan : ''
-      )
+      this.updateHiddenInput(groupRadio ? groupRadio.dataset.defaultPlan : '')
     }
   }
 

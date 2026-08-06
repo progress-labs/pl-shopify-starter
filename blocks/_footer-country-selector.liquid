@@ -6,7 +6,7 @@
   {%- if block.settings.heading != blank -%}
     <h3
       id="CountryListLabel"
-      class="font-heading text-lead font-heading-weight max-w-prose whitespace-pre-wrap"
+      class="max-w-prose font-heading text-lead font-heading-weight whitespace-pre-wrap"
     >
       {{- block.settings.heading | escape -}}
     </h3>
@@ -32,7 +32,7 @@
               </option>
             {%- endfor -%}
           </select>
-          <span class="absolute right-4 top-1/2 -translate-y-1/2">
+          <span class="absolute top-1/2 right-4 -translate-y-1/2">
             {% render 'icon-caret' %}
           </span>
         </div>
@@ -55,13 +55,13 @@
         <ul
           id="CountryList"
           role="list"
-          class="border-t-contrast/30 bg-contrast absolute bottom-12 z-10 max-h-48 w-full overflow-y-auto rounded-t border border-white px-2 py-2 sm:bottom-auto md:rounded-b md:rounded-t-none md:border-b md:border-t-0"
+          class="absolute bottom-12 z-10 max-h-48 w-full overflow-y-auto rounded-t border border-white border-t-contrast/30 bg-contrast px-2 py-2 sm:bottom-auto md:rounded-t-none md:rounded-b md:border-t-0 md:border-b"
           hidden
         >
           {% for country in localization.available_countries %}
             <li tabindex="-1">
               <a
-                class="bg-contrast text-primary flex w-full cursor-pointer items-center justify-start rounded p-2 text-left"
+                class="flex w-full cursor-pointer items-center justify-start rounded bg-contrast p-2 text-left text-primary"
                 href="#"
                 {% if country.iso_code == localization.country.iso_code %}
                   aria-current="true"

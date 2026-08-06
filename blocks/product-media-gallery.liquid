@@ -38,7 +38,7 @@
         assign loading = 'eager'
       endif
     -%}
-    <div class="w-mobileGallery bg-contrast/10 aspect-square snap-center overflow-hidden rounded md:w-full {{ media_wrapper_class }}">
+    <div class="aspect-square w-mobileGallery snap-center overflow-hidden rounded bg-contrast/10 md:w-full {{ media_wrapper_class }}">
       {{
         media.preview_image
         | image_url: width: 1445
