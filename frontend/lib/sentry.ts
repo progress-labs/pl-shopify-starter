@@ -32,14 +32,14 @@ if (isEnabled) {
     replaysSessionSampleRate: isProd ? 0.1 : 0,
     replaysOnErrorSampleRate: isProd ? 1.0 : 0,
     initialScope: {
-      tags: { shopify_design_mode: window.__SHOPIFY_DESIGN_MODE__ ?? false },
-    },
+      tags: { shopify_design_mode: window.__SHOPIFY_DESIGN_MODE__ ?? false }
+    }
   })
 
   onCartEvent('error', ({ error, action }) => {
     Sentry.captureException(new Error(error), {
       tags: { cart_action: action },
-      extra: { action, originalError: error },
+      extra: { action, originalError: error }
     })
   })
 }

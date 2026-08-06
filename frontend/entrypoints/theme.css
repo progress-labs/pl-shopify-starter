@@ -1,11 +1,11 @@
 @import 'tailwindcss' source(none);
 
-@source "../../sections";
-@source "../../snippets";
-@source "../../blocks";
-@source "../../templates";
-@source "../../layout";
-@source "../";
+@source '../../sections';
+@source '../../snippets';
+@source '../../blocks';
+@source '../../templates';
+@source '../../layout';
+@source '../';
 @import '../styles/theme.css';
 @import '../styles/base.css' layer(base);
 @import '../styles/components.css' layer(components);

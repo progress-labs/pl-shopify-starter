@@ -37,9 +37,7 @@ function media({ query }: { query: string }): Promise<boolean> {
  */
 function visible({ element }: { element: Element }): Promise<boolean> {
   return new Promise(function (resolve) {
-    const observer = new window.IntersectionObserver(async function (
-      entries
-    ) {
+    const observer = new window.IntersectionObserver(async function (entries) {
       for (const entry of entries) {
         if (entry.isIntersecting) {
           observer.disconnect()

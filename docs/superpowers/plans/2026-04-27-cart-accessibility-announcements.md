@@ -350,22 +350,21 @@ EOF
 Replace the existing `window.cartStrings = { ... }` block at `layout/theme.liquid:110-113`:
 
 ```liquid
-      window.cartStrings = {
-        error: `{{ 'sections.cart.cart_error' | t }}`,
-        quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`
-      }
+window.cartStrings = { error: `{{ 'sections.cart.cart_error' | t }}`,
+quantityError: `
+{{- 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' -}}
+` }
 ```
 
 …with:
 
 ```liquid
-      window.cartStrings = {
-        error: `{{ 'sections.cart.cart_error' | t }}`,
-        quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
-        added: `{{ 'accessibility.cart_announcements.added' | t }}`,
-        removed: `{{ 'accessibility.cart_announcements.removed' | t }}`,
-        updated: `{{ 'accessibility.cart_announcements.updated' | t }}`
-      }
+window.cartStrings = { error: `{{ 'sections.cart.cart_error' | t }}`,
+quantityError: `
+{{- 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' -}}
+`, added: `{{ 'accessibility.cart_announcements.added' | t }}`, removed: `
+{{- 'accessibility.cart_announcements.removed' | t -}}
+`, updated: `{{ 'accessibility.cart_announcements.updated' | t }}` }
 ```
 
 - [ ] **Step 2: Mirror the change in `snippets/theme-global-object.liquid`**
@@ -373,22 +372,19 @@ Replace the existing `window.cartStrings = { ... }` block at `layout/theme.liqui
 Replace the existing `cartStrings` block at `snippets/theme-global-object.liquid:11-14`:
 
 ```liquid
-    cartStrings: {
-      error: `{{ 'sections.cart.cart_error' | t }}`,
-      quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`
-    },
+cartStrings: { error: `{{ 'sections.cart.cart_error' | t }}`, quantityError: `
+{{- 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' -}}
+` },
 ```
 
 …with:
 
 ```liquid
-    cartStrings: {
-      error: `{{ 'sections.cart.cart_error' | t }}`,
-      quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
-      added: `{{ 'accessibility.cart_announcements.added' | t }}`,
-      removed: `{{ 'accessibility.cart_announcements.removed' | t }}`,
-      updated: `{{ 'accessibility.cart_announcements.updated' | t }}`
-    },
+cartStrings: { error: `{{ 'sections.cart.cart_error' | t }}`, quantityError: `
+{{- 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' -}}
+`, added: `{{ 'accessibility.cart_announcements.added' | t }}`, removed: `
+{{- 'accessibility.cart_announcements.removed' | t -}}
+`, updated: `{{ 'accessibility.cart_announcements.updated' | t }}` },
 ```
 
 > **Note:** `snippets/theme-global-object.liquid` already has an unrelated syntax bug on line 6 (`routes =` instead of `routes:`). Do **not** fix it as part of this task — staying scoped is more important than the cleanup. Flag it in the PR description for a follow-up.
@@ -427,24 +423,28 @@ EOF
 Find the `<ul hidden>` block at `layout/theme.liquid:99-101`:
 
 ```liquid
-    <ul hidden>
-      <li id="a11y-new-window-message">{{ 'accessibility.link_messages.new_window' | t }}</li>
-    </ul>
+<ul hidden>
+  <li id='a11y-new-window-message'>
+    {{ 'accessibility.link_messages.new_window' | t }}
+  </li>
+</ul>
 ```
 
 Add the live region `<p>` immediately after it (before the `<script>` tag at line 103):
 
 ```liquid
-    <ul hidden>
-      <li id="a11y-new-window-message">{{ 'accessibility.link_messages.new_window' | t }}</li>
-    </ul>
+<ul hidden>
+  <li id='a11y-new-window-message'>
+    {{ 'accessibility.link_messages.new_window' | t }}
+  </li>
+</ul>
 
-    <p
-      class="sr-only"
-      id="cart-live-region-text"
-      aria-live="polite"
-      role="status"
-    ></p>
+<p
+  class='sr-only'
+  id='cart-live-region-text'
+  aria-live='polite'
+  role='status'
+></p>
 ```
 
 - [ ] **Step 2: Remove the live region from `blocks/cart-products.liquid`**
@@ -452,7 +452,12 @@ Add the live region `<p>` immediately after it (before the `<script>` tag at lin
 At `blocks/cart-products.liquid:251`, delete this line:
 
 ```liquid
-    <p class="sr-only" id="cart-live-region-text" aria-live="polite" role="status"></p>
+<p
+  class='sr-only'
+  id='cart-live-region-text'
+  aria-live='polite'
+  role='status'
+></p>
 ```
 
 Leave the `<p id="shopping-cart-line-item-status">` line below it untouched — it's a separate live region for loading state.

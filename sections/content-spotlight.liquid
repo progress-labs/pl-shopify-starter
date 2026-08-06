@@ -68,11 +68,11 @@
               <source src="{{ source.url }}" type="{{ source.mime_type }}">
             {%- endfor -%}
           </video>
-          <div class="absolute inset-x-0 bottom-0 flex items-center justify-between px-4 py-3 bg-black/40 backdrop-blur-sm">
+          <div class="absolute inset-x-0 bottom-0 flex items-center justify-between bg-black/40 px-4 py-3 backdrop-blur-sm">
             <button
               type="button"
               data-play
-              class="text-white cursor-pointer opacity-85 hover:opacity-100 transition-opacity"
+              class="cursor-pointer text-white opacity-85 transition-opacity hover:opacity-100"
               aria-label="Play / Pause"
             >
               <span class="block group-data-[state=playing]:hidden">{%- render 'icon-play' -%}</span>
@@ -81,7 +81,7 @@
             <button
               type="button"
               data-mute
-              class="text-white cursor-pointer opacity-85 hover:opacity-100 transition-opacity"
+              class="cursor-pointer text-white opacity-85 transition-opacity hover:opacity-100"
               aria-label="Mute / Unmute"
             >
               <span class="block group-data-[muted=true]:hidden">{%- render 'icon-volume' -%}</span>
@@ -115,7 +115,7 @@
   {%- capture text_block -%}
     <div class="grid gap-6 {% if section.settings.full_bleed_image %}px-4 md:px-16{% endif %}">
     {%- if section.settings.eyebrow != blank -%}
-      <p class="text-sm font-semibold uppercase tracking-[0.12em]">
+      <p class="text-sm font-semibold tracking-[0.12em] uppercase">
         {{- section.settings.eyebrow | escape -}}
       </p>
     {%- endif -%}
@@ -137,7 +137,7 @@
       </div>
 
       {%- if section.settings.button_label != blank -%}
-        <div class="md:col-start-11 md:col-span-2">
+        <div class="md:col-span-2 md:col-start-11">
           <a
             {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% endif %}
             class="inline-flex w-fit items-center justify-center rounded-full px-6 py-3 text-base font-normal transition hover:opacity-90"

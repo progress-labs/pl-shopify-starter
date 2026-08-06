@@ -47,9 +47,7 @@ class LocalizationForm extends window.HTMLElement {
       )
     )
 
-    document.body.addEventListener('click', (event) =>
-      this.onBodyClick(event)
-    )
+    document.body.addEventListener('click', (event) => this.onBodyClick(event))
   }
 
   hideList() {

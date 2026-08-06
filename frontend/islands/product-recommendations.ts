@@ -1,6 +1,5 @@
 import { captureException } from '@/lib/sentry.js'
 
-
 /**
  * @file `<product-recommendations>` — fetches and renders product recommendations.
  *
@@ -28,7 +27,7 @@ class ProductRecommendations extends window.HTMLElement {
       .catch((e) => {
         captureException(e, {
           tags: { component: 'product-recommendations' },
-          extra: { url: this.dataset.url },
+          extra: { url: this.dataset.url }
         })
         console.error(e)
       })

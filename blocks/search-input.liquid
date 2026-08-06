@@ -2,7 +2,7 @@
   action="{{ routes.search_url }}"
   method="get"
   role="search"
-  class="text-heading relative flex w-full"
+  class="relative flex w-full text-heading"
   {{ block.shopify_attributes }}
 >
   <input type="hidden" name="type" value="product">
@@ -11,7 +11,7 @@
     name="q"
     value="{{ search.terms | escape }}"
     placeholder="{{ 'general.search.search' | t }}"
-    class="border-primary/10 text-heading focus:border-primary/90 w-full border-x-0 border-b-2 border-t-0 bg-transparent px-0 py-2 transition focus:ring-0"
+    class="w-full border-x-0 border-t-0 border-b-2 border-primary/10 bg-transparent px-0 py-2 text-heading transition focus:border-primary/90 focus:ring-0"
   >
   <input name="options[prefix]" type="hidden" value="last">
   <button type="submit" class="absolute right-0 py-2">

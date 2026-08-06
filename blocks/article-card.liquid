@@ -8,7 +8,7 @@
   <a class="absolute inset-0 overflow-hidden" href="{{ article.url }}">
     <span class="sr-only">{{- article.title -}}</span>
   </a>
-  <div class="bg-primary/5 aspect-[3/2] overflow-hidden rounded ">
+  <div class="aspect-[3/2] overflow-hidden rounded bg-primary/5 ">
     {%- content_for 'block', type: 'image', id: 'image' -%}
   </div>
   {%- content_for 'block', type: 'heading', id: 'heading', wrapper_class: 'mt-4' -%}

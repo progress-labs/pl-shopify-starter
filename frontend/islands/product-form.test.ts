@@ -17,7 +17,12 @@ function mountForm() {
 
 describe('product-form double-submit guard', () => {
   beforeEach(() => {
-    window.routes = { cart_add_url: '', cart_change_url: '', cart_update_url: '', cart_url: '' }
+    window.routes = {
+      cart_add_url: '',
+      cart_change_url: '',
+      cart_update_url: '',
+      cart_url: ''
+    }
   })
   afterEach(() => {
     document.body.innerHTML = ''

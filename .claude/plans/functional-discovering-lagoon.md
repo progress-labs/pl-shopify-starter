@@ -70,7 +70,7 @@ const isEnabled = Boolean(dsn)
 if (isEnabled) {
   Sentry.init({
     dsn,
-    environment: import.meta.env.MODE,  // 'development' or 'production' from Vite
+    environment: import.meta.env.MODE, // 'development' or 'production' from Vite
     integrations: [replayIntegration()],
     // Capture 10% of sessions, 100% of sessions with errors
     replaysSessionSampleRate: 0.1,
@@ -108,7 +108,7 @@ Key design decisions:
 Add Sentry import as the **first line** (before `vite/modulepreload-polyfill`):
 
 ```js
-import '@/lib/sentry.js'    // ← new
+import '@/lib/sentry.js' // ← new
 import 'vite/modulepreload-polyfill'
 // ... rest unchanged
 ```
@@ -126,7 +126,7 @@ captureException(e, {
   tags: { component: 'product-recommendations' },
   extra: { url: this.dataset.url }
 })
-console.error(e)  // keep for dev visibility
+console.error(e) // keep for dev visibility
 ```
 
 ### Files NOT modified

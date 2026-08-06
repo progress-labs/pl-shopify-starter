@@ -280,7 +280,11 @@ describe('updateCartItem', () => {
     ) as unknown as Mock<typeof fetch>
     globalThis.fetch = fetchMock
 
-    const result = await updateCartItem({ line: '1', quantity: 2, sections: [] })
+    const result = await updateCartItem({
+      line: '1',
+      quantity: 2,
+      sections: []
+    })
 
     expect(result).toEqual(mockResponse)
   })
@@ -291,7 +295,11 @@ describe('updateCartItem', () => {
     ) as unknown as Mock<typeof fetch>
     globalThis.fetch = fetchMock
 
-    const result = await updateCartItem({ line: '1', quantity: 2, sections: [] })
+    const result = await updateCartItem({
+      line: '1',
+      quantity: 2,
+      sections: []
+    })
 
     expect(result).toBeUndefined()
   })
