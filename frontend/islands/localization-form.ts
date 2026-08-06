@@ -20,6 +20,8 @@ class LocalizationForm extends window.HTMLElement {
     list: HTMLElement
   }
 
+  #controller?: AbortController
+
   constructor() {
     super()
     this.elements = {
@@ -30,24 +32,50 @@ class LocalizationForm extends window.HTMLElement {
       button: must(this, 'button'),
       list: must(this, 'ul')
     }
-    this.elements.button.addEventListener('click', this.toggleList.bind(this))
-    this.elements.button.addEventListener('focusout', (event) =>
-      this.onButtonFocusOut(event)
+  }
+
+  connectedCallback() {
+    this.#controller = new AbortController()
+    const { signal } = this.#controller
+
+    this.elements.button.addEventListener('click', this.toggleList.bind(this), {
+      signal
+    })
+    this.elements.button.addEventListener(
+      'focusout',
+      (event) => this.onButtonFocusOut(event),
+      { signal }
     )
-    this.elements.list.addEventListener('focusout', (event) =>
-      this.onListFocusOut(event)
+    this.elements.list.addEventListener(
+      'focusout',
+      (event) => this.onListFocusOut(event),
+      { signal }
     )
-    this.addEventListener('keyup', (event) =>
-      this.onLocalizationFormKeyUp(event)
+    this.addEventListener(
+      'keyup',
+      (event) => this.onLocalizationFormKeyUp(event),
+      { signal }
     )
 
     this.querySelectorAll('a').forEach((item) =>
-      item.addEventListener('click', (event) =>
-        this.onItemClick(event as MouseEvent)
+      item.addEventListener(
+        'click',
+        (event) => this.onItemClick(event as MouseEvent),
+        { signal }
       )
     )
 
-    document.body.addEventListener('click', (event) => this.onBodyClick(event))
+    // document.body outlives this element — without the signal each section
+    // re-render leaks another body-wide click handler.
+    document.body.addEventListener(
+      'click',
+      (event) => this.onBodyClick(event),
+      { signal }
+    )
+  }
+
+  disconnectedCallback() {
+    this.#controller?.abort()
   }
 
   hideList() {

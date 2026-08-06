@@ -26,7 +26,11 @@ describe('addToCart', () => {
 
     // Mock fetch
     fetchMock = vi.fn(() =>
-      Promise.resolve({ json: () => Promise.resolve({}) })
+      Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: () => Promise.resolve({})
+      })
     ) as unknown as Mock<typeof fetch>
     globalThis.fetch = fetchMock
     vi.spyOn(cartEvents, 'dispatchCartEvent')
@@ -46,7 +50,8 @@ describe('addToCart', () => {
         quantity: 1,
         sections: ['cart-icon-bubble'],
         sections_url: '/products/test'
-      })
+      }),
+      signal: expect.any(AbortSignal)
     })
   })
 
@@ -77,7 +82,11 @@ describe('addToCart', () => {
       sections: { 'cart-icon-bubble': '<div>cart</div>' }
     }
     fetchMock = vi.fn(() =>
-      Promise.resolve({ json: () => Promise.resolve(mockResponse) })
+      Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: () => Promise.resolve(mockResponse)
+      })
     ) as unknown as Mock<typeof fetch>
     globalThis.fetch = fetchMock
 
@@ -94,6 +103,8 @@ describe('addToCart', () => {
   it('dispatches error when API returns status', async () => {
     fetchMock = vi.fn(() =>
       Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
         json: () =>
           Promise.resolve({ status: 422, description: 'Product is sold out' })
       })
@@ -117,7 +128,7 @@ describe('addToCart', () => {
     await addToCart({ variantId: '123' })
 
     expect(cartEvents.dispatchCartEvent).toHaveBeenCalledWith('error', {
-      error: 'Network error',
+      error: new Error('Network error'),
       action: 'add'
     })
   })
@@ -175,7 +186,8 @@ describe('updateCartItem', () => {
         quantity: 3,
         sections: ['cart-items'],
         sections_url: '/cart'
-      })
+      }),
+      signal: expect.any(AbortSignal)
     })
   })
 
@@ -213,7 +225,11 @@ describe('updateCartItem', () => {
   it('dispatches updated event on success', async () => {
     const mockResponse = { item_count: 2, sections: { 'cart-items': '<div>' } }
     fetchMock = vi.fn(() =>
-      Promise.resolve({ json: () => Promise.resolve(mockResponse) })
+      Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: () => Promise.resolve(mockResponse)
+      })
     ) as unknown as Mock<typeof fetch>
     globalThis.fetch = fetchMock
 
@@ -229,7 +245,11 @@ describe('updateCartItem', () => {
   it('dispatches removed event when quantity is 0 and succeeds', async () => {
     const mockResponse = { item_count: 1, sections: {} }
     fetchMock = vi.fn(() =>
-      Promise.resolve({ json: () => Promise.resolve(mockResponse) })
+      Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: () => Promise.resolve(mockResponse)
+      })
     ) as unknown as Mock<typeof fetch>
     globalThis.fetch = fetchMock
 
@@ -245,6 +265,8 @@ describe('updateCartItem', () => {
   it('dispatches error when API returns status', async () => {
     fetchMock = vi.fn(() =>
       Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
         json: () =>
           Promise.resolve({ status: 422, description: 'Quantity unavailable' })
       })
@@ -268,7 +290,7 @@ describe('updateCartItem', () => {
     await updateCartItem({ line: '1', quantity: 0, sections: [] })
 
     expect(cartEvents.dispatchCartEvent).toHaveBeenCalledWith('error', {
-      error: 'Network error',
+      error: new Error('Network error'),
       action: 'remove'
     })
   })
@@ -276,7 +298,11 @@ describe('updateCartItem', () => {
   it('returns cart data on success', async () => {
     const mockResponse = { item_count: 2, sections: {} }
     fetchMock = vi.fn(() =>
-      Promise.resolve({ json: () => Promise.resolve(mockResponse) })
+      Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: () => Promise.resolve(mockResponse)
+      })
     ) as unknown as Mock<typeof fetch>
     globalThis.fetch = fetchMock
 
@@ -331,14 +357,19 @@ describe('updateCartNote', () => {
         'Content-Type': 'application/json',
         Accept: 'application/json'
       },
-      body: JSON.stringify({ note: 'Please gift wrap' })
+      body: JSON.stringify({ note: 'Please gift wrap' }),
+      signal: expect.any(AbortSignal)
     })
   })
 
   it('dispatches note-updated event on success', async () => {
     const mockCart = { note: 'Test note', item_count: 2 }
     fetchMock = vi.fn(() =>
-      Promise.resolve({ json: () => Promise.resolve(mockCart) })
+      Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: () => Promise.resolve(mockCart)
+      })
     ) as unknown as Mock<typeof fetch>
     globalThis.fetch = fetchMock
 
@@ -353,6 +384,8 @@ describe('updateCartNote', () => {
   it('dispatches error when API returns status', async () => {
     fetchMock = vi.fn(() =>
       Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
         json: () =>
           Promise.resolve({ status: 422, description: 'Invalid note' })
       })
@@ -376,7 +409,7 @@ describe('updateCartNote', () => {
     await updateCartNote({ note: 'Test' })
 
     expect(cartEvents.dispatchCartEvent).toHaveBeenCalledWith('error', {
-      error: 'Network error',
+      error: new Error('Network error'),
       action: 'note-update'
     })
   })
@@ -384,7 +417,11 @@ describe('updateCartNote', () => {
   it('returns cart data on success', async () => {
     const mockCart = { note: 'Test', item_count: 2 }
     fetchMock = vi.fn(() =>
-      Promise.resolve({ json: () => Promise.resolve(mockCart) })
+      Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: () => Promise.resolve(mockCart)
+      })
     ) as unknown as Mock<typeof fetch>
     globalThis.fetch = fetchMock
 

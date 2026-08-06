@@ -9,7 +9,7 @@
  * announcement, so we always blank the region first, then write the new
  * message in a microtask so the DOM mutation is observed as a true change.
  */
-import { onCartEvent } from './cart-events.js'
+import { errorMessage, onCartEvent } from './cart-events.js'
 
 const ANNOUNCE_DELAY_MS = 50
 
@@ -52,6 +52,6 @@ export function initCartAnnouncements() {
     announce(window.cartStrings?.updated)
   })
   onCartEvent('error', ({ error }) => {
-    announce(error || window.cartStrings?.error)
+    announce(errorMessage(error) || window.cartStrings?.error)
   })
 }

@@ -16,6 +16,10 @@ export default defineConfig({
   plugins: [shopifyClean(), shopify(shopifyConfig), tailwindcss()],
   build: {
     emptyOutDir: false,
+    // 'hidden' emits .map files without the sourceMappingURL comment, so
+    // they're available for Sentry upload but not discoverable by visitors.
+    // Maps are excluded from theme push (.shopifyignore) and git (.gitignore).
+    sourcemap: 'hidden',
     rollupOptions: {
       output: {
         entryFileNames: '[name].[hash].min.js',

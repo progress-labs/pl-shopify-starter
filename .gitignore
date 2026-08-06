@@ -38,3 +38,6 @@ dist-ssr
 
 # Example Shopify Theme TOML file
 shopify.theme.toml
+
+# Hidden sourcemaps (Sentry upload only — never pushed or committed)
+assets/*.map

@@ -6,9 +6,6 @@
  * - **hide** — scrolling down past the header: translates it off-screen
  * - **reveal** — scrolling up past the header: makes it sticky and visible
  * - **reset** — scrolled back to the top: removes all sticky/transform classes
- *
- * Integrates with predictive search — scroll handling is paused while
- * `this.predictiveSearch.isOpen` is true.
  */
 import { must } from '@/lib/dom'
 
@@ -17,17 +14,8 @@ class StickyHeader extends window.HTMLElement {
   headerBounds: Partial<DOMRectReadOnly> = {}
   currentScrollTop = 0
   preventReveal = false
-  onScrollHandler!: () => void
-  hideHeaderOnScrollUp!: () => void
   isScrolling?: ReturnType<typeof setTimeout>
-  /**
-   * Not set anywhere in this theme — vestigial hook from the upstream
-   * predictive-search integration this file was ported from. Always
-   * `undefined` here, so the guard below is a permanent no-op.
-   */
-  predictiveSearch?: { isOpen: boolean }
-  /** Same vestigial status as `predictiveSearch` — never assigned. */
-  preventHide?: boolean
+  #controller?: AbortController
 
   connectedCallback() {
     this.header = must(document, '#shopify-section-header')
@@ -35,14 +23,21 @@ class StickyHeader extends window.HTMLElement {
     this.currentScrollTop = 0
     this.preventReveal = false
 
-    this.onScrollHandler = this.onScroll.bind(this)
-    this.hideHeaderOnScrollUp = () => {
-      this.preventReveal = true
-    }
-
-    window.addEventListener('scroll', this.onScrollHandler, false)
+    // passive: the handler never calls preventDefault, and a blocking scroll
+    // listener stalls compositing. The signal removes it on disconnect —
+    // previously every theme-editor re-render stacked another handler.
+    this.#controller = new AbortController()
+    window.addEventListener('scroll', this.onScroll.bind(this), {
+      passive: true,
+      signal: this.#controller.signal
+    })
 
     this.createObserver()
+  }
+
+  disconnectedCallback() {
+    this.#controller?.abort()
+    window.clearTimeout(this.isScrolling)
   }
 
   createObserver() {
@@ -55,16 +50,13 @@ class StickyHeader extends window.HTMLElement {
   }
 
   onScroll() {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-
-    if (this.predictiveSearch && this.predictiveSearch.isOpen) return
+    const scrollTop = window.scrollY
 
     if (
       scrollTop > this.currentScrollTop &&
       this.headerBounds.bottom !== undefined &&
       scrollTop > this.headerBounds.bottom
     ) {
-      if (this.preventHide) return
       window.requestAnimationFrame(this.hide.bind(this))
     } else if (
       scrollTop < this.currentScrollTop &&

@@ -12,6 +12,7 @@
  * this island reads are serialized.
  */
 import { must } from '@/lib/dom'
+import { captureException } from '@/lib/error-tracking'
 
 interface VariantData {
   id: number
@@ -28,6 +29,8 @@ export default class VariantSelects extends window.HTMLElement {
   options!: string[]
   currentVariant?: VariantData
   variantData?: VariantData[]
+  #fetchController?: AbortController
+  #sectionCache = new Map<number, Document>()
 
   constructor() {
     super()
@@ -37,16 +40,15 @@ export default class VariantSelects extends window.HTMLElement {
   onVariantChange() {
     this.updateOptions()
     this.updateMasterId()
-    this.toggleAddButton(true, '', false)
+    this.toggleAddButton(true, '')
     this.removeErrorMessage()
 
     if (!this.currentVariant) {
-      this.toggleAddButton(true, '', true)
       this.setUnavailable()
     } else {
       this.updateURL()
       this.updateVariantInput()
-      this.renderProductInfo()
+      void this.renderProductInfo()
     }
   }
 
@@ -58,13 +60,9 @@ export default class VariantSelects extends window.HTMLElement {
   }
 
   updateMasterId() {
-    this.currentVariant = this.getVariantData().find((variant) => {
-      return !variant.options
-        .map((option, index) => {
-          return this.options[index] === option
-        })
-        .includes(false)
-    })
+    this.currentVariant = this.getVariantData().find((variant) =>
+      variant.options.every((option, index) => this.options[index] === option)
+    )
   }
 
   updateURL() {
@@ -97,17 +95,45 @@ export default class VariantSelects extends window.HTMLElement {
   }
 
   async renderProductInfo() {
-    const sectionId = this.dataset.originalSection || this.dataset.section
-    const html = await this.fetchSectionHtml(sectionId as string)
+    const sectionId = (this.dataset.originalSection ||
+      this.dataset.section) as string
+    const variantId = this.currentVariant!.id
 
-    this.updatePriceFromHtml(html, sectionId as string)
-    this.updateSellingPlanFromHtml(html, sectionId as string)
-    this.updateAddButtonState()
+    // Abort any in-flight render — rapid variant switching must not let an
+    // older response land last and show the wrong price.
+    this.#fetchController?.abort()
+    this.#fetchController = new AbortController()
+
+    try {
+      const html =
+        this.#sectionCache.get(variantId) ??
+        (await this.fetchSectionHtml(
+          sectionId,
+          variantId,
+          this.#fetchController.signal
+        ))
+      this.#sectionCache.set(variantId, html)
+
+      // The selection may have moved on while this response was in flight.
+      if (this.currentVariant?.id !== variantId) return
+
+      this.updatePriceFromHtml(html, sectionId)
+      this.updateSellingPlanFromHtml(html, sectionId)
+      this.updateAddButtonState()
+    } catch (e) {
+      if (e instanceof DOMException && e.name === 'AbortError') return
+      captureException(e, { tags: { island: 'variant-selects' } })
+    }
   }
 
-  async fetchSectionHtml(sectionId: string) {
-    const url = `${this.dataset.url}?variant=${this.currentVariant!.id}&section_id=${sectionId}`
-    const response = await fetch(url)
+  async fetchSectionHtml(
+    sectionId: string,
+    variantId: number,
+    signal: AbortSignal
+  ) {
+    const url = `${this.dataset.url}?variant=${variantId}&section_id=${sectionId}`
+    const response = await fetch(url, { signal })
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const text = await response.text()
     return new window.DOMParser().parseFromString(text, 'text/html')
   }
@@ -138,10 +164,7 @@ export default class VariantSelects extends window.HTMLElement {
     )
   }
 
-  toggleAddButton(disable = true, text?: string, _unavailable?: boolean) {
-    // _unavailable is accepted for call-site compatibility but was already
-    // unused in the pre-conversion JS (dead parameter, preserved as-is).
-    void _unavailable
+  toggleAddButton(disable = true, text?: string) {
     const productForm = document.getElementById(
       `product-form-${this.dataset.section}`
     )
@@ -150,28 +173,28 @@ export default class VariantSelects extends window.HTMLElement {
     const addButtonText = productForm.querySelector<HTMLElement>(
       '[name="add"] > span'
     )
-    if (!addButton) return
+    if (!addButton || !addButtonText) return
 
     if (disable) {
       addButton.setAttribute('disabled', 'disabled')
-      if (text) addButtonText!.textContent = text
+      if (text) addButtonText.textContent = text
     } else {
       addButton.removeAttribute('disabled')
-      addButtonText!.textContent = window.variantStrings.addToCart
+      addButtonText.textContent = window.variantStrings.addToCart
     }
   }
 
   setUnavailable() {
-    const button = document.getElementById(
+    const productForm = document.getElementById(
       `product-form-${this.dataset.section}`
     )
-    const addButton = button!.querySelector('[name="add"]')
-    const addButtonText = button!.querySelector<HTMLElement>(
+    const addButtonText = productForm?.querySelector<HTMLElement>(
       '[name="add"] > span'
     )
     const price = document.getElementById(`price-${this.dataset.section}`)
-    if (!addButton) return
-    addButtonText!.textContent = window.variantStrings.unavailable
+    if (addButtonText) {
+      addButtonText.textContent = window.variantStrings.unavailable
+    }
     if (price) price.classList.add('invisible')
   }
 

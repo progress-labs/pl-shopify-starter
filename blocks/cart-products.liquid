@@ -18,6 +18,7 @@
         <div id="main-cart-items" data-id="{{ section.id }}" class="js-contents">
           {%- render 'cart-line-item' for cart.items as item -%}
         </div>
+        <div class="text-copy text-red-500 empty:hidden" id="cart-errors" role="alert"></div>
       </div>
 
       <div class="sticky top-nav grid w-full gap-6 rounded bg-primary/5 p-4 md:translate-y-4 md:px-6">

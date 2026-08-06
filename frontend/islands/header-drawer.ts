@@ -55,6 +55,13 @@ class HeaderDrawer extends DetailsModal {
 
     window.requestAnimationFrame(handleAnimation)
   }
+
+  disconnectedCallback() {
+    if (this.isOpen()) {
+      document.body.classList.remove('lg:overflow-auto')
+    }
+    super.disconnectedCallback()
+  }
 }
 
 window.customElements.define('header-drawer', HeaderDrawer)
